@@ -50,3 +50,7 @@ rsconnect/
 
 # Temp folder
 temp/
+
+# Datasets
+data/Collar\ Keys
+data/raw_detections.csv

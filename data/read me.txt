@@ -1,0 +1,10 @@
+#### creation of captures_2024.xlsx
+
+- reduced to only fields of animal id, primary animal id, capture date, status, end monitoring dttm
+- cleaned end monitoring dttm field (new field end_monitoring_date) to only date and NA values
+- removed one animal that died in capture (removed that row)
+- delete status field
+- made Date field (capture date) to capture_date. Made type be text.
+- renamed Pimary WLH-ID to Primary WLH-ID
+- left capture_ID in as a reference when revisiting the sheet
+- manually made capture date have full 4 digits for year
