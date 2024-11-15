@@ -273,16 +273,6 @@
       ],
       "Hash": "50c838a310445e954bc13f26f26a6ecf"
     },
-    "audio": {
-      "Package": "audio",
-      "Version": "0.1-11",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "4ea781155975a6d220888443f5e823dc"
-    },
     "backports": {
       "Package": "backports",
       "Version": "1.5.0",
@@ -312,16 +302,6 @@
         "backports"
       ],
       "Hash": "0c54cf3a08cc0e550fbd64ad33166143"
-    },
-    "beepr": {
-      "Package": "beepr",
-      "Version": "2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "audio"
-      ],
-      "Hash": "4ca24fd5ccfa7397a722aaee347e918d"
     },
     "bit": {
       "Package": "bit",
@@ -815,18 +795,6 @@
       ],
       "Hash": "a722b946e99fd7a006ab1239c0d1b2bc"
     },
-    "geosphere": {
-      "Package": "geosphere",
-      "Version": "1.5-20",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "Rcpp",
-        "sp"
-      ],
-      "Hash": "b7618e0757988cf65e47e23a4561c8e1"
-    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "3.5.1",
@@ -851,16 +819,6 @@
         "withr"
       ],
       "Hash": "44c6a2f8202d5b7e878ea274b1092426"
-    },
-    "ggsignif": {
-      "Package": "ggsignif",
-      "Version": "0.6.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "ggplot2"
-      ],
-      "Hash": "a57f0f5dbcfd0d77ad4ff33032f5dc79"
     },
     "glue": {
       "Package": "glue",
@@ -1229,47 +1187,6 @@
       ],
       "Hash": "18e9c28c1d3ca1560ce30658b22ce104"
     },
-    "move": {
-      "Package": "move",
-      "Version": "4.2.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "Rcpp",
-        "geosphere",
-        "httr",
-        "memoise",
-        "methods",
-        "raster",
-        "sp",
-        "terra",
-        "xml2"
-      ],
-      "Hash": "c30075fd22d3d98200bd8fdd4143017f"
-    },
-    "move2": {
-      "Package": "move2",
-      "Version": "0.3.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "assertthat",
-        "bit64",
-        "cli",
-        "dplyr",
-        "methods",
-        "rlang",
-        "sf",
-        "tibble",
-        "tidyselect",
-        "units",
-        "vctrs",
-        "vroom"
-      ],
-      "Hash": "3d30188ce75e46bd69cb764aa26b797e"
-    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.1",
@@ -1366,17 +1283,6 @@
         "utils"
       ],
       "Hash": "01f28d4278f15c76cddbea05899c5d6f"
-    },
-    "plyr": {
-      "Package": "plyr",
-      "Version": "1.8.9",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "Rcpp"
-      ],
-      "Hash": "6b8177fd19982f0020743fadbfdbd933"
     },
     "png": {
       "Package": "png",
@@ -1753,20 +1659,6 @@
       ],
       "Hash": "5c47e84dc0a3ca761ae1d307889e796d"
     },
-    "smoothr": {
-      "Package": "smoothr",
-      "Version": "1.0.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "sf",
-        "stats",
-        "terra",
-        "units"
-      ],
-      "Hash": "b73468a7f92d388ca6ddf763f2d8228b"
-    },
     "snakecase": {
       "Package": "snakecase",
       "Version": "0.11.1",
@@ -1860,6 +1752,27 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "de342ebfebdbf40477d0758d05426646"
+    },
+    "tarchetypes": {
+      "Package": "tarchetypes",
+      "Version": "0.10.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "dplyr",
+        "fs",
+        "parallel",
+        "rlang",
+        "secretbase",
+        "targets",
+        "tibble",
+        "tidyselect",
+        "utils",
+        "vctrs",
+        "withr"
+      ],
+      "Hash": "554afb784cbe615ae628dfed026cf77f"
     },
     "targets": {
       "Package": "targets",

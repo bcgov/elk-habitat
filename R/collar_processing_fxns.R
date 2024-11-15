@@ -1,11 +1,16 @@
-## Functions
+## PROCESS COLLAR KEYS
+
+# Functions to pull collar data off Vectronix website, using
+# the supplied collar keys, then process and clean data.
+
+# AUTHORSHIP: Angus Smith @angus-smith
 
 
 ## collar data cleaning
 
-load_collar_data <- function(collar_keys_dir){
+load_collar_data <- function(collar_keys){
   
-  collar_data <- collar::fetch_vectronics(collar::get_paths(collar_keys_dir)) |>
+  collar_data <- collar::fetch_vectronics(collar_keys) |>
     dplyr::rename(collar_id = "idcollar",
            dttm = "acquisitiontime",
            lat = "latitude",
@@ -24,12 +29,50 @@ load_collar_data <- function(collar_keys_dir){
   return(collar_data)
 }
 
-load_capture_data <- function(capture_data_full_path){
-  capture_data <- readxl::read_excel(capture_data_full_path, sheet = 1) |>
-    dplyr::mutate(capture_date = lubridate::dmy(capture_date, tz = "Canada/Pacific"),
-                  monitoring_end_date =  lubridate::ymd(monitoring_end_date, tz = "Canada/Pacific")) |>
-    dplyr::rename(animal_id = "Primary WLH-ID",
-                  collar_id = "Serial Number")
+load_capture_data <- function(path){
+  # SP: rewrote this fxn to include all columns
+  capture_data <- readxl::read_xlsx(path, sheet = 1)
+  capture_data <- janitor::clean_names(capture_data)
+  
+  names(capture_data)[grep("monitoring_end_date", names(capture_data))] <- "monitoring_end"
+  
+  # Clean up dates
+  
+  # dart 1
+  lubridate::date(capture_data$dart_1) <- capture_data$date
+  
+  # dart 2
+  capture_data$dart_2 <- janitor::convert_to_datetime(as.numeric(capture_data$dart_2), tz = "America/Vancouver")
+  lubridate::date(capture_data$dart_2) <- capture_data$date
+  
+  # elk down
+  capture_data$elk_down <- janitor::convert_to_datetime(as.numeric(capture_data$elk_down), tz = "America/Vancouver")
+  lubridate::date(capture_data$elk_down) <- capture_data$date
+  
+  # reversal time
+  lubridate::date(capture_data$reversal_time) <- capture_data$date
+  
+  # standing
+  capture_data$standing <- janitor::convert_to_datetime(as.numeric(capture_data$standing), tz = "America/Vancouver")
+  lubridate::date(capture_data$standing) <- capture_data$date
+  
+  # monitoring end date
+  capture_data$monitoring_end <- janitor::convert_to_datetime(as.numeric(capture_data$monitoring_end), tz = "America/Vancouver")
+  
+  
+  # Create capture_date col
+  # If elk_down is NULL, use simply date
+  capture_data$capture_date <- capture_data$elk_down
+  capture_data$capture_date[is.na(capture_data$capture_date)] <- lubridate::as_datetime(capture_data$date[is.na(capture_data$elk_down)]) |> lubridate::force_tz("America/Vancouver")
+  
+  # Reorder cols
+  capture_data <- dplyr::select(capture_data, capture_id, primary_wlh_id, 
+                                serial_number, capture_date, monitoring_end, 
+                                dplyr::everything()) |>
+    dplyr::arrange(primary_wlh_id, elk_down)
+  
+  names(capture_data)[2] <- "animal_id"
+  names(capture_data)[3] <- "collar_id"
   
   return(capture_data)
 }
@@ -40,10 +83,10 @@ attribute_animal_id <- function(collar_data, capture_data){
     dplyr::filter(collar_id %in% collar_data$collar_id)
   
   if(!all(collar_data$collar_id %in% capture_data$collar_id)){
-    print("Some collar ids in collar data do not have capture data. Review supplied collar keys and
-          capture data.")
-    print(paste("Missing collar id:", collar_data$collar_id[!collar_data$collar_id %in% capture_data$collar_id] |> unique()))
+    warning("Some collar ids in collar data do not have capture data. Review supplied collar keys and capture data. \n",
+            paste("Missing collar id:", collar_data$collar_id[!collar_data$collar_id %in% capture_data$collar_id] |> unique(), "\n"))
   }
+  
   
   # For loop through capture data, row by row.
   # Identify:
@@ -57,37 +100,37 @@ attribute_animal_id <- function(collar_data, capture_data){
   #   ○ the collar id is the capture row's collar id AND data within the start date and end date (inclusive)
   # Then, for that collar data, assign the animal id to the animal id field
   
+  collar_data$animal_id <- NA
+  
   for (i in 1:nrow(capture_data)){
     collar_id_temp <- capture_data$collar_id[i]
     animal_id_temp <- capture_data$animal_id[i]
     start_date <- capture_data$capture_date[i]
-    end_date <- capture_data$monitoring_end_date[i]
+    end_date <- capture_data$monitoring_end[i]
     if (is.na(end_date)){
-      end_date <- max(collar_data$dttm, na.rm = TRUE)
+      end_date <- max(collar_data[["dttm"]][collar_data$collar_id == collar_id_temp], na.rm = TRUE)
     }
     
-    collar_data$animal_id[collar_data$collar_id == collar_id_temp &
-                            collar_data$dttm >= start_date &
-                            collar_data$dttm <= end_date] <- animal_id_temp
+    collar_data[["animal_id"]][collar_data$collar_id == collar_id_temp &
+                                 collar_data$dttm >= start_date &
+                                 collar_data$dttm <= end_date] <- animal_id_temp
   }
   
   # make animal id a factor
   collar_data$animal_id <- as.factor(collar_data$animal_id)
   
   # remove collar data from before and after period collar was on animal
-  collar_data <- collar_data |>
-    dplyr::filter(!is.na(animal_id))
+  # SP: keep that in for data QC down the line.
+  # collar_data <- collar_data |>
+  #   dplyr::filter(!is.na(animal_id))
   
   # order data by animal id, dttm
   collar_data <- collar_data |>
     dplyr::arrange(animal_id, dttm)
   
-  ## add epsg 3005 x and y
-  collar_data <- sf::st_as_sf(collar_data, 
-                              coords = c("long", "lat"), 
-                              crs = 4326,
-                              remove = FALSE) |>
-    sf::st_transform(crs = 3005) 
+  # reorder cols
+  collar_data <- collar_data |>
+    dplyr::select(animal_id, collar_id, dplyr::everything())
   
   return(collar_data)
 }
@@ -95,14 +138,21 @@ attribute_animal_id <- function(collar_data, capture_data){
 remove_imprecise_locations <- function(collar_data){
   # 3 = 2D, 4 = 3D, 5 = 3D Validated
   # dop/fix_type cutoffs are what I found asking around the lab.
-  collar_data <- collar_data |>
-    dplyr::filter(((fix_type == 4 | fix_type == 5) & dop < 10) |
-             fix_type == 3 & dop < 5)
+  collar_data <- collar_data[((collar_data$fix_type == 4 | collar_data$fix_type == 5) & collar_data$dop < 10) 
+                             | (collar_data$fix_type == 3 & collar_data$dop < 5), ]
   
   return(collar_data)
 }
 
-add_mvt_metrics <- function(mvt_data, remove_names = FALSE){
+add_mvt_metrics <- function(mvt_data, 
+                            X = "long", Y = "lat",
+                            remove_names = FALSE){
+  
+  # Assign data to `X` and `Y` cols from the supplied column names
+  # to then run the next fxns
+  mvt_data$X <- mvt_data[[X]]
+  mvt_data$Y <- mvt_data[[Y]]
+  
   ## Angus Smith 2021
   
   # relative and absolute direction in angles between -pi and pi
@@ -117,7 +167,7 @@ add_mvt_metrics <- function(mvt_data, remove_names = FALSE){
   
   if (remove_names){
     mvt_data <- mvt_data |>
-      dplyr::select(-c(dir_rel, dir_abs, step_length_m, NSD, spd_kph, DT))
+      dplyr::select(-dir_rel, -dir_abs, -step_length_m, -NSD, -spd_kph, -DT)
   }
   
   mvt_data <- mvt_data |>
@@ -164,14 +214,22 @@ add_mvt_metrics <- function(mvt_data, remove_names = FALSE){
     dplyr::ungroup()
   
   mvt_data <- mvt_data |>
-    dplyr::select(-Year)
+    dplyr::select(-Year, -X, -Y)
   
   return(mvt_data)
 }
 
-clean_collar_data_moorter_moe <- function(collar_data, window_size = 21,
+clean_collar_data_moorter_moe <- function(collar_data, 
+                                          X = "long", Y = "lat",
+                                          window_size = 21,
                                           mediancrit = 4000, meancrit = 6000,
                                           spikesp = 1, spikecos = (-0.97)){
+  
+  # Assign data to `X` and `Y` cols from the supplied column names
+  # to then run the next fxns
+  collar_data$X <- collar_data[[X]]
+  collar_data$Y <- collar_data[[Y]]
+  
   ## Angus Smith 2021
   
   ### TESTING ###
@@ -313,12 +371,8 @@ clean_collar_data_moorter_moe <- function(collar_data, window_size = 21,
     ## Here is where I remove the data that is flagged as bad by the median and
     ## the mean error flags.
     dplyr::filter(mean_error == FALSE & median_error == FALSE) |>
-    dplyr::select(-c(x_mean_left, x_mean_center, x_mean_right, y_mean_left,
-                     y_mean_center, y_mean_right, x_median_left,
-                     x_median_center, x_median_right, y_median_left,
-                     y_median_center, y_median_right, x_mean, y_mean,
-                     dist_to_mean, x_median, y_median, dist_to_median,
-                     mean_error, median_error)) |>
+    dplyr::select(1:x_mean_left) |>
+    dplyr::select(-x_mean_left) |>
     add_mvt_metrics(remove_names = FALSE)
   
   ## find spikes
@@ -341,8 +395,26 @@ clean_collar_data_moorter_moe <- function(collar_data, window_size = 21,
            spike_error = spd_error & lag_spd_error & angle_error) |>
     dplyr::ungroup() |>
     dplyr::filter(spike_error == FALSE) |>
-    dplyr::select(-c(spd_error, lag_spd_error, angle_error, spike_error)) |>
+    dplyr::select(-spd_error, -lag_spd_error, -angle_error, -spike_error) |>
     add_mvt_metrics(remove_names = TRUE)
   
   return(collar_data)
+}
+
+
+
+# Merge all cleaning fxns into one
+
+clean_collar_data <- function(collar_data) {
+  
+  # make sf object
+  collar_data <- sf::st_as_sf(collar_data, 
+                              coords = c("long", "lat"), 
+                              crs = 4326,
+                              remove = FALSE) |>
+    sf::st_transform(3005)
+  
+  cd <- remove_imprecise_locations(collar_data)
+  cd <- clean_collar_data_moorter_moe(cd)
+  return(cd)
 }
