@@ -795,6 +795,18 @@
       ],
       "Hash": "a722b946e99fd7a006ab1239c0d1b2bc"
     },
+    "geosphere": {
+      "Package": "geosphere",
+      "Version": "1.5-20",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "sp"
+      ],
+      "Hash": "b7618e0757988cf65e47e23a4561c8e1"
+    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "3.5.1",
@@ -1186,6 +1198,47 @@
         "tools"
       ],
       "Hash": "18e9c28c1d3ca1560ce30658b22ce104"
+    },
+    "move": {
+      "Package": "move",
+      "Version": "4.2.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "geosphere",
+        "httr",
+        "memoise",
+        "methods",
+        "raster",
+        "sp",
+        "terra",
+        "xml2"
+      ],
+      "Hash": "c30075fd22d3d98200bd8fdd4143017f"
+    },
+    "move2": {
+      "Package": "move2",
+      "Version": "0.3.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "assertthat",
+        "bit64",
+        "cli",
+        "dplyr",
+        "methods",
+        "rlang",
+        "sf",
+        "tibble",
+        "tidyselect",
+        "units",
+        "vctrs",
+        "vroom"
+      ],
+      "Hash": "3d30188ce75e46bd69cb764aa26b797e"
     },
     "munsell": {
       "Package": "munsell",
@@ -1658,6 +1711,20 @@
         "stats"
       ],
       "Hash": "5c47e84dc0a3ca761ae1d307889e796d"
+    },
+    "smoothr": {
+      "Package": "smoothr",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "sf",
+        "stats",
+        "terra",
+        "units"
+      ],
+      "Hash": "b73468a7f92d388ca6ddf763f2d8228b"
     },
     "snakecase": {
       "Package": "snakecase",
