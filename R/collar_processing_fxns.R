@@ -20,7 +20,10 @@ load_collar_data <- function(collar_keys){
            mort_status = "idmortalitystatus",
            temp_C = "temperature") |>
     #dplyr::select(collar_id, dttm, lat, long, elev_m, fix_type, mort_status, temp_C, dop) |>
-    dplyr::mutate(dttm = lubridate::ymd_hms(dttm) |> lubridate::with_tz("Canada/Pacific")) |>
+    dplyr::mutate(dttm = lubridate::ymd_hms(dttm) |> lubridate::with_tz("Canada/Pacific"),
+                  year = lubridate::year(dttm),
+                  month = lubridate::month(dttm), 
+                  doy = lubridate::yday(dttm)) |>
     dplyr::group_by(collar_id) |>
     dplyr::arrange(dttm, .by_group = TRUE) |>
     dplyr::ungroup() |>
@@ -406,15 +409,9 @@ clean_collar_data_moorter_moe <- function(collar_data,
 # Merge all cleaning fxns into one
 
 clean_collar_data <- function(collar_data) {
-  
-  # make sf object
-  collar_data <- sf::st_as_sf(collar_data, 
-                              coords = c("long", "lat"), 
-                              crs = 4326,
-                              remove = FALSE) |>
-    sf::st_transform(3005)
-  
   cd <- remove_imprecise_locations(collar_data)
   cd <- clean_collar_data_moorter_moe(cd)
+  cd <- sf::st_as_sf(cd, coords = c("long", "lat"), crs = 4326) |>
+    sf::st_transform(3005)
   return(cd)
 }

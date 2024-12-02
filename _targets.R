@@ -13,8 +13,14 @@ tar_option_set(
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
 
+# Set static variables
+winter <- c("01-01", "03-31")
+spring <- c("04-01", "05-31")
+summer <- c("06-01", "07-15")
+
 # Replace the target list below with your own:
 list(
+  #### SETUP ####
   # Pull and track all collar keys files
   tar_target(collar_keys, collar::get_paths("data/Collar Keys"), format = "file"),
   # Download off Vectronix website
@@ -27,5 +33,25 @@ list(
   tar_target(unassigned_detections, full_collar_data[is.na(full_collar_data$animal_id), ]),
   tar_target(collar_data, full_collar_data[!is.na(full_collar_data$animal_id), ]),
   # Clean collar data
-  tar_target(elk, clean_collar_data(collar_data))
+  tar_target(elk, clean_collar_data(collar_data)),
+  tar_target(elk_dotplot, logger_dotplot(elk)),
+  # TODO: possibly move some of the summary stats script stuff into here
+  #### HOME RANGE ESTIMATES ####
+  ## MINIMUM CONVEX POLYGONS
+  # For now, just doing 100% MCP, because getting 95% MCP takes an inordinate
+  # amount of time.
+  # TODO: filter to only those where 90% of days present.
+  tar_target(winter_mcps, elk_mcp(elk = elk, season = winter)),
+  tar_target(spring_mcps, elk_mcp(elk = elk, season = spring)),
+  tar_target(summer_mcps, elk_mcp(elk = elk, season = summer)),
+  tar_target(MCP, dplyr::bind_rows(winter_mcps, spring_mcps, summer_mcps)),
+  tar_target(mcp_summary, summarize_area(MCP)),
+  # TODO: summary plots of MCP areas
+  ## DYNAMIC BROWNIAN BRIDGES
+  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, season = winter)),
+  tar_target(spring_dbbmm, elk_dbbmm(elk = elk, season = spring)),
+  tar_target(summer_dbbmm, elk_dbbmm(elk = elk, season = summer)),
+  tar_target(dBBMM, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
+  tar_target(dbbmm_summary, summarize_area(dBBMM))
+  # TODO: summary plots of dBBMM areas
 )
