@@ -44,7 +44,7 @@ individual_dbbmm <- function(elk_dat) {
 }
 
 
-elk_dbbmm <- function(elk, season) {
+elk_dbbmm <- function(elk, season, one_fix_per_day) {
   # Parse seasons into POSIX dates
   years <- unique(lubridate::year(elk$dttm))
   seasons <- lapply(years, function(x) paste0(season, "-", x) |> 
@@ -53,7 +53,21 @@ elk_dbbmm <- function(elk, season) {
   # Subset to only include season of interest
   elk_seasons <- lapply(seasons, function(x) elk[which(elk$dttm >= x[1] & elk$dttm <= x[2]), ])
   
-  # TODO: Subset to only include elk_seasons with at least one fix per day
+  # Subset to only include elk_seasons with at least one fix per day
+  if (one_fix_per_day) {
+    n_days_full <- floor(seasons[[1]][2] - seasons[[1]][1])
+    elk_seasons <- lapply(elk_seasons, function(x) {
+      tmp <- x |> 
+        sf::st_drop_geometry() |> 
+        dplyr::group_by(animal_id) |>
+        dplyr::summarise(n_days = ceiling(max(dttm) - min(dttm))) |>
+        dplyr::mutate(enough_days = n_days >= n_days_full)
+      animals_to_keep <- tmp[["animal_id"]][tmp$enough_days == TRUE]
+      # Now subset to only animals_to_keep
+      x <- x[which(x$animal_id %in% animals_to_keep), ]
+      return(x)
+    })
+  }
   
   # Loop through each season, then create dBBMM for each 
   # individual within that season
@@ -77,7 +91,12 @@ elk_dbbmm <- function(elk, season) {
   #   }))
   
   # Bind into one df
-  out <- lapply(tmp, dplyr::bind_rows) |> dplyr::bind_rows()
+  out <- lapply(tmp, dplyr::bind_rows)
+  out <- out[!is.na(out)]
+  filter <- lapply(out, nrow) |> unlist(use.names = FALSE) # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  out <- dplyr::bind_rows(out)
   out$season <- season
   out$elk_season <- paste0(out$animal_id, "_", out$season, "_", out$year)
   sf::st_geometry(out) <- "geometry"
@@ -89,6 +108,6 @@ elk_dbbmm <- function(elk, season) {
 
 
 # A few interesting plots
-ggplot(data = dBBMM, aes(x = area)) + geom_density() + facet_wrap(~ season)
-ggplot(data = dBBMM, aes(x = area)) + geom_density() + facet_grid(rows = vars(season), cols = vars(year))
-ggplot(data = dBBMM, aes(x = area, color = as.factor(year))) + geom_density() + facet_grid(rows = vars(season))
+#ggplot(data = dBBMM, aes(x = area)) + geom_density() + facet_wrap(~ season)
+#ggplot(data = dBBMM, aes(x = area)) + geom_density() + facet_grid(rows = vars(season), cols = vars(year))
+#ggplot(data = dBBMM, aes(x = area, color = as.factor(year))) + geom_density() + facet_grid(rows = vars(season))

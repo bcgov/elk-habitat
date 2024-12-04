@@ -6,7 +6,8 @@ library(tarchetypes) # for tar_map()
 
 # Set target options:
 tar_option_set(
-  packages = c("sf") # Packages that your targets need for their tasks.
+  packages = c("sf",
+               "ggplot2") # Packages that your targets need for their tasks.
   # format = "qs", # Optionally set the default storage format. qs is fast.
 )
 
@@ -15,8 +16,8 @@ tar_source()
 
 # Set static variables
 winter <- c("01-01", "03-31")
-spring <- c("04-01", "05-31")
-summer <- c("06-01", "07-15")
+spring <- c("04-01", "05-15")
+summer <- c("06-01", "07-31")
 
 # Replace the target list below with your own:
 list(
@@ -41,16 +42,16 @@ list(
   # For now, just doing 100% MCP, because getting 95% MCP takes an inordinate
   # amount of time.
   # TODO: filter to only those where 90% of days present.
-  tar_target(winter_mcps, elk_mcp(elk = elk, season = winter)),
-  tar_target(spring_mcps, elk_mcp(elk = elk, season = spring)),
-  tar_target(summer_mcps, elk_mcp(elk = elk, season = summer)),
+  tar_target(winter_mcps, elk_mcp(elk = elk, season = winter, one_fix_per_day = TRUE)),
+  tar_target(spring_mcps, elk_mcp(elk = elk, season = spring, one_fix_per_day = TRUE)),
+  tar_target(summer_mcps, elk_mcp(elk = elk, season = summer, one_fix_per_day = TRUE)),
   tar_target(MCP, dplyr::bind_rows(winter_mcps, spring_mcps, summer_mcps)),
   tar_target(mcp_summary, summarize_area(MCP)),
   # TODO: summary plots of MCP areas
   ## DYNAMIC BROWNIAN BRIDGES
-  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, season = winter)),
-  tar_target(spring_dbbmm, elk_dbbmm(elk = elk, season = spring)),
-  tar_target(summer_dbbmm, elk_dbbmm(elk = elk, season = summer)),
+  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, season = winter, one_fix_per_day = TRUE)),
+  tar_target(spring_dbbmm, elk_dbbmm(elk = elk, season = spring, one_fix_per_day = TRUE)),
+  tar_target(summer_dbbmm, elk_dbbmm(elk = elk, season = summer, one_fix_per_day = TRUE)),
   tar_target(dBBMM, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
   tar_target(dbbmm_summary, summarize_area(dBBMM))
   # TODO: summary plots of dBBMM areas
