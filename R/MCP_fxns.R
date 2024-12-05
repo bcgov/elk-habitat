@@ -20,7 +20,7 @@ individual_mcp <- function(elk_dat) {
 }
 
 
-elk_mcp <- function(elk, season, one_fix_per_day) {
+elk_mcp <- function(elk, season, min_days) {
   # Parse seasons into POSIX dates
   years <- unique(lubridate::year(elk$dttm))
   seasons <- lapply(years, function(x) paste0(season, "-", x) |> 
@@ -29,15 +29,17 @@ elk_mcp <- function(elk, season, one_fix_per_day) {
   # Subset to only include season of interest
   elk_seasons <- lapply(seasons, function(x) elk[which(elk$dttm >= x[1] & elk$dttm <= x[2]), ])
   
-  # Subset to only include elk_seasons with at least one fix per day
-  if (one_fix_per_day) {
-    n_days_full <- floor(seasons[[1]][2] - seasons[[1]][1])
+  # Subset to only include elk_seasons with fixes on at least X% of days
+  if (!missing(min_days)) {
+    if (min_days > 1) min_days <- min_days / 100 # ensure it's a percentage
+    n_days_min <- floor(seasons[[1]][2] - seasons[[1]][1])
+    n_days_min <- n_days_min * min_days # if we want to ensure one point per day SS, fix_days should == 1. Otherwise, if we want, e.g., 90% days covered, fix_days = 0.9
     elk_seasons <- lapply(elk_seasons, function(x) {
       tmp <- x |> 
         sf::st_drop_geometry() |> 
         dplyr::group_by(animal_id) |>
         dplyr::summarise(n_days = ceiling(max(dttm) - min(dttm))) |>
-        dplyr::mutate(enough_days = n_days >= n_days_full)
+        dplyr::mutate(enough_days = n_days >= n_days_min)
       animals_to_keep <- tmp[["animal_id"]][tmp$enough_days == TRUE]
       # Now subset to only animals_to_keep
       x <- x[which(x$animal_id %in% animals_to_keep), ]

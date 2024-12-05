@@ -17,7 +17,7 @@ tar_source()
 # Set static variables
 winter <- c("01-01", "03-31")
 spring <- c("04-01", "05-15")
-summer <- c("06-01", "07-31")
+summer <- c("07-01", "08-31")
 
 # Replace the target list below with your own:
 list(
@@ -41,17 +41,16 @@ list(
   ## MINIMUM CONVEX POLYGONS
   # For now, just doing 100% MCP, because getting 95% MCP takes an inordinate
   # amount of time.
-  # TODO: filter to only those where 90% of days present.
-  tar_target(winter_mcps, elk_mcp(elk = elk, season = winter, one_fix_per_day = TRUE)),
-  tar_target(spring_mcps, elk_mcp(elk = elk, season = spring, one_fix_per_day = TRUE)),
-  tar_target(summer_mcps, elk_mcp(elk = elk, season = summer, one_fix_per_day = TRUE)),
+  tar_target(winter_mcps, elk_mcp(elk = elk, season = winter, min_days = 0.9)), # we want a sample size of a minimum of 90% days in the dataset covered (previously: #one_fix_per_day = TRUE)
+  tar_target(spring_mcps, elk_mcp(elk = elk, season = spring, min_days = 0.9)),
+  tar_target(summer_mcps, elk_mcp(elk = elk, season = summer, min_days = 0.9)),
   tar_target(MCP, dplyr::bind_rows(winter_mcps, spring_mcps, summer_mcps)),
   tar_target(mcp_summary, summarize_area(MCP)),
   # TODO: summary plots of MCP areas
   ## DYNAMIC BROWNIAN BRIDGES
-  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, season = winter, one_fix_per_day = TRUE)),
-  tar_target(spring_dbbmm, elk_dbbmm(elk = elk, season = spring, one_fix_per_day = TRUE)),
-  tar_target(summer_dbbmm, elk_dbbmm(elk = elk, season = summer, one_fix_per_day = TRUE)),
+  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, season = winter, min_days = 0.9)),
+  tar_target(spring_dbbmm, elk_dbbmm(elk = elk, season = spring, min_days = 0.9)),
+  tar_target(summer_dbbmm, elk_dbbmm(elk = elk, season = summer, min_days = 0.9)),
   tar_target(dBBMM, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
   tar_target(dbbmm_summary, summarize_area(dBBMM))
   # TODO: summary plots of dBBMM areas
