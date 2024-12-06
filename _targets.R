@@ -60,9 +60,25 @@ list(
   ## MINIMUM CONVEX POLYGONS
   # For now, just doing 100% MCP, because getting 95% MCP takes an inordinate
   # amount of time.
-  tar_target(winter_mcps, elk_mcp(elk = elk, season = winter, min_days = 0.9)), # we want a sample size of a minimum of 90% days in the dataset covered
-  tar_target(spring_mcps, elk_mcp(elk = elk, season = spring, min_days = 0.9)),
-  tar_target(summer_mcps, elk_mcp(elk = elk, season = summer, min_days = 0.9)),
+  # TODO: got some kind of warning:
+  #There were 2 warnings in `dplyr::summarise()`.
+  #The first warning was:
+  #  ℹ In argument: `n_days = ceiling(max(dttm) - min(dttm))`.
+  #Caused by warning in `max.default()`:
+  #  ! no non-missing arguments to max; returning -Inf
+  #ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning. 
+  tar_target(winter_mcps, elk_mcp(elk = elk, 
+                                  season = winter, 
+                                  min_days = 0.9, # we want a sample size of a minimum of 90% days in the dataset covered
+                                  percent = 0.95)), # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.  
+  tar_target(spring_mcps, elk_mcp(elk = elk, 
+                                  season = spring, 
+                                  min_days = 0.9, 
+                                  percent = 0.95)),
+  tar_target(summer_mcps, elk_mcp(elk = elk, 
+                                  season = summer, 
+                                  min_days = 0.9,
+                                  0.95)),
   tar_target(MCP, dplyr::bind_rows(winter_mcps, spring_mcps, summer_mcps)),
   tar_target(mcp_summary, summarize_area(MCP)),
   # TODO: summary plots of MCP areas

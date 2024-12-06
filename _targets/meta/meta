@@ -19,18 +19,20 @@ elk_dbbmm|function|acc41f8d42c04018|||||||||||||||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|51beccd28057754e|94d5abc6f5fa7398|1fcab737c9d5a5ac|-2021513789||t20063.8322974843s|b6fc21081d9539e6|153411732|rds|local|vector|||0.02||
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
-elk_mcp|function|3661ca609493fcb8|||||||||||||||
+elk_mcp|function|3b35cd7083e2289d|||||||||||||||
 elk_per_month|stem|ed7e884f70bb5620|34b671afed2e2692|e9f6cdde7e0de880|-293717621||t20063.847589746s|1cff0a9d178e5f86|526|rds|local|vector|||0.08||
 elk_per_month_plot|function|3c1315b5423fb8cf|||||||||||||||
+find_center|function|738ee6d69ce867bc|||||||||||||||
+find_centre|function|738ee6d69ce867bc|||||||||||||||
 fix_rate|function|3693752ffe99c315|||||||||||||||
 full_collar_data|stem|4873579538aa5e46|fcaac25f0f6c862d|f1db434260a9a7da|1289326002||t20062.9548830136s|052310c4139bdebc|12023689|rds|local|vector|||2.04|Some collar ids in collar data do not have capture data. Review supplied collar keys and capture data. Missing collar id 94434 Missing collar id 94436 Missing collar id 94439 Missing collar id 94440 Missing collar id 94441|
 individual_dbbmm|function|ba5dda0759ce926d|||||||||||||||
-individual_mcp|function|80c2e503da4226a5|||||||||||||||
+individual_mcp|function|4d7797b1905ae888|||||||||||||||
 load_capture_data|function|72cfbb33fdca6f8d|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
-MCP|stem|42e141226850fdec|2f7f33e6ec9faeab|dad72dd7a31ec223|1294076992||t20062.9946320383s|ede8fc39b7d87b6b|87541|rds|local|vector|||0.01||
-mcp_summary|stem|3a4e7ed458db43ab|78a974aba03357cd|19d22e21ff132996|1448887047||t20062.9946338166s|7aee8b5c212acc18|883|rds|local|vector|||0.08||
+MCP|stem|face902f003fb777|2f7f33e6ec9faeab|c3b60ee1198e2399|1294076992||t20063.9913145393s|ae25d0f5d1125e63|91473|rds|local|vector|||0.01||
+mcp_summary|stem|31bb573cc2063c66|78a974aba03357cd|ad0d6fcec6bf6868|1448887047||t20063.991315906s|7aee8b5c212acc18|883|rds|local|vector|||0.1||
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|74c304c23b6873ff|||||||||||||||
 p_dets_per_elk|stem|aaa809425731181c|ef744c8c91fd6ab6|3afa8115c6d7cc7c|784997253||t20063.8476584047s|013c4a30652ece0f|30759367|rds|local|vector|||0.05||
@@ -40,13 +42,13 @@ raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|15161017
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 spring|object|6398ef5e90b44e6d|||||||||||||||
 spring_dbbmm|stem|cea7b75d3f81f19f|cebbd1e1fd7c69f2|88fd59c0017059a0|1234634189||t20062.9874035988s|92172a53d8af5200|3912043|rds|local|vector|||483.02|There were 2 warnings in dplyrsummarise.The first warning wasℹ In argument n_days  ceilingmaxdttm  mindttm.Caused by warning in max.default no nonmissing arguments to max returning Infℹ Run dplyrlast_dplyr_warnings to see the 1 remaining warning.|
-spring_mcps|stem|d757f0f691abc3be|b6079d92c05f76d5|45ee09d895aafa97|-237307033||t20062.9945758109s|fbb115123e817936|33040|rds|local|vector|||4.39|There were 2 warnings in dplyrsummarise.The first warning wasℹ In argument n_days  ceilingmaxdttm  mindttm.Caused by warning in max.default no nonmissing arguments to max returning Infℹ Run dplyrlast_dplyr_warnings to see the 1 remaining warning.|
+spring_mcps|stem|455148c966d9ed23|50506cc1cad35ba4|7e545951db6f1cfe|-237307033||t20063.9910932452s|4a3a45449d03eee5|34255|rds|local|vector|||14.93|There were 2 warnings in dplyrsummarise.The first warning wasℹ In argument n_days  ceilingmaxdttm  mindttm.Caused by warning in max.default no nonmissing arguments to max returning Infℹ Run dplyrlast_dplyr_warnings to see the 1 remaining warning.|
 summarize_area|function|905366437405a2cc|||||||||||||||
 summarize_mcp|function|ae622d58b971722c|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
 summer_dbbmm|stem|58c1746b394150c1|476077c594f4fcfd|be760c691c42c219|320407742||t20062.9818094536s|91519b95df5f7fb5|3724096|rds|local|vector|||541.83|There were 2 warnings in dplyrsummarise.The first warning wasℹ In argument n_days  ceilingmaxdttm  mindttm.Caused by warning in max.default no nonmissing arguments to max returning Infℹ Run dplyrlast_dplyr_warnings to see the 1 remaining warning.|
-summer_mcps|stem|2617365a09d1ff09|3c187da1d2dae2bd|f8d79ecae11052ac|1382408569||t20062.9945247315s|0ceb55c57b763763|31406|rds|local|vector|||4.01|There were 2 warnings in dplyrsummarise.The first warning wasℹ In argument n_days  ceilingmaxdttm  mindttm.Caused by warning in max.default no nonmissing arguments to max returning Infℹ Run dplyrlast_dplyr_warnings to see the 1 remaining warning.|
+summer_mcps|stem|2617365a09d1ff09|4915f1ddcd9bd112|f7d88a3cc6c98cfe|1382408569||t20063.9911394879s|0ceb55c57b763763|31406|rds|local|vector|||3.97|There were 2 warnings in dplyrsummarise.The first warning wasℹ In argument n_days  ceilingmaxdttm  mindttm.Caused by warning in max.default no nonmissing arguments to max returning Infℹ Run dplyrlast_dplyr_warnings to see the 1 remaining warning.|
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|a616d1624e30d447|d11353d1a9e77cda|3739115c18bed344|-99852116||t20062.9944779155s|abab299038a616aa|3731816|rds|local|vector|||610.92||
-winter_mcps|stem|e10c56e64a4e50b9|5a7d5c14b93963fa|97a8137aa7aaf02c|-2023390367||t20062.9946168809s|5ca3581abc503334|26781|rds|local|vector|||3.53||
+winter_mcps|stem|508233c9a2f45f8c|0eb5d2b04ffb3a93|5cee67c6ba051f0d|-2023390367||t20063.9913132836s|b2d8d7d5bf1dc66f|29497|rds|local|vector|||14.98||
