@@ -1,0 +1,45 @@
+---
+title: "N detections per day per elk"
+output: pdf_document
+date: "`r Sys.Date()`"
+params: 
+  elk_data: "elk"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+elk <- sf::st_drop_geometry(params$elk_data)
+
+daily_dets_plot <- function(elk, id) {
+  p <- 
+    elk |>
+    dplyr::filter(animal_id == id) |>
+    dplyr::mutate(date = lubridate::date(dttm)) |>
+    dplyr::group_by(animal_id, collar_id, date) |>
+    dplyr::summarise(n_dets = dplyr::n()) |>
+    ggplot(aes(x = date,
+               y = n_dets,
+               color = as.factor(collar_id))) +
+    geom_point() +
+    ggplot2::scale_x_date(labels = scales::date_format("%b %y"),
+                              date_breaks = "3 months") +
+    labs(title = paste(id),
+         y = "N detections",
+         color = "Collar ID") +
+    theme_minimal() +
+    ggplot2::theme(axis.title = element_blank(),
+                   axis.ticks.x = element_line(color = "black"),
+                   axis.text.x = element_text(size = 7, angle = 90))
+  return(p)
+}
+
+ids <- unique(elk$animal_id)
+```
+
+```{r plots, fig.align='center', fig.height=3.5}
+for (i in ids) {
+  p <- suppressMessages(daily_dets_plot(elk, i))
+  print(p)
+}
+```

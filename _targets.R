@@ -44,14 +44,18 @@ list(
   # Logger dotplot
   tar_target(elk_dotplot, logger_dotplot(elk)),
   # N elk online per month
-  tar_target(n_elk_per_month, n_elk_per_month(elk)),
-  tar_target(elk_per_month_plot, elk_per_month_plot(elk)),
+  tar_target(elk_per_month, n_elk_per_month(elk)),
+  tar_target(p_elk_per_month, elk_per_month_plot(elk)),
   # N detections per elk summary
-  tar_target(n_dets_per_elk, n_dets_per_elk(elk)),
-  tar_target(elk_dets_hist, elk_dets_hist(elk)),
+  tar_target(dets_per_elk, n_dets_per_elk(elk)),
+  tar_target(p_dets_per_elk, elk_dets_hist(elk)),
   # Fix success / detection efficiency
   tar_target(detection_efficiency, fix_rate(elk)),
-  tar_target(efficiency_hist, elk_fix_hist(detection_efficiency)),
+  tar_target(p_efficiency, elk_fix_hist(detection_efficiency)),
+  tar_render(daily_dets_plots, 
+             "reports/elk_dets_per_day.Rmd", 
+             output_file = "elk_dets_per_day.pdf",
+             params = list(elk_data = elk)),
   #### HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
   # For now, just doing 100% MCP, because getting 95% MCP takes an inordinate
