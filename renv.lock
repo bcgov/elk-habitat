@@ -1960,6 +1960,13 @@
       ],
       "Hash": "3ec7e3ddcacc2d34a9046941222bf94d"
     },
+    "tripack": {
+      "Package": "tripack",
+      "Version": "1.3-9.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "02dbb13210b5bd2d8388c8f95d9c2936"
+    },
     "tzdb": {
       "Package": "tzdb",
       "Version": "0.4.0",

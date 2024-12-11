@@ -39,7 +39,8 @@ list(
   tar_target(collar_data, full_collar_data[!is.na(full_collar_data$animal_id), ]),
   # Clean collar data AND filter to cutoff date
   tar_target(elk, clean_collar_data(collar_data) |> 
-               dplyr::filter(dttm < cutoff_date)),
+               dplyr::filter(dttm < cutoff_date) |>
+               sf::st_write("temp/Pipeline outputs/elk_positions.shp", append = FALSE)),
   #### SUMMARY STATS + PLOTS ####
   # Logger dotplot
   tar_target(elk_dotplot, logger_dotplot(elk)),
@@ -58,8 +59,6 @@ list(
              params = list(elk_data = elk)),
   #### HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
-  # For now, just doing 100% MCP, because getting 95% MCP takes an inordinate
-  # amount of time.
   # TODO: got some kind of warning:
   #There were 2 warnings in `dplyr::summarise()`.
   #The first warning was:
@@ -70,20 +69,25 @@ list(
   tar_target(winter_mcps, elk_mcp(elk = elk, 
                                   season = winter, 
                                   min_days = 0.9, # we want a sample size of a minimum of 90% days in the dataset covered
-                                  percent = 0.95)), # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.  
+                                  percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.  
+               sf::st_write("temp/Pipeline outputs/Winter_MCP.shp")),
   tar_target(spring_mcps, elk_mcp(elk = elk, 
                                   season = spring, 
                                   min_days = 0.9, 
-                                  percent = 0.95)),
+                                  percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Spring_MCP.shp")),
   tar_target(summer_mcps, elk_mcp(elk = elk, 
                                   season = summer, 
                                   min_days = 0.9,
-                                  0.95)),
+                                  percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Summer_MCP.shp")),
   tar_target(MCP, dplyr::bind_rows(winter_mcps, spring_mcps, summer_mcps)),
   tar_target(mcp_summary, summarize_area(MCP)),
   # TODO: summary plots of MCP areas
   ## DYNAMIC BROWNIAN BRIDGES
-  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, season = winter, min_days = 0.9)),
+  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, 
+                                     season = winter, 
+                                     min_days = 0.9)),
   tar_target(spring_dbbmm, elk_dbbmm(elk = elk, season = spring, min_days = 0.9)),
   tar_target(summer_dbbmm, elk_dbbmm(elk = elk, season = summer, min_days = 0.9)),
   tar_target(dBBMM, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),

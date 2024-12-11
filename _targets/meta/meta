@@ -14,7 +14,7 @@ dbbmm_summary|stem|f354286b72934cef|01fd9da245500a61|5d6412cbfcb3b78a|722464450|
 detection_efficiency|stem|7ad19a8c3cdf5f1f|8d8488432aca6501|60438e1f2ae5350f|947972721||t20063.8321003514s|ee3968ee393f2694|2586|rds|local|vector|||0.53||
 dets_per_elk|stem|d4d056d70d3b0e54|cffc3ee6ced78c00|d14bebb7adb7ea81|-360331643||t20063.8625638392s|af94fcb8e6165bbe|176|rds|local|vector|||0.05||
 efficiency_hist|stem|c8524e6d28b4eb03|dc663c41ca62b40a|39afada529964d17|-1618567557||t20063.8323334792s|6f31f52a4408a943|111056|rds|local|vector|||0.02||
-elk|stem|7d543858fae44a32|72d973d7dfb6e1fb|a75db001e36e9feb|-188372202||t20062.9752440693s|8b36cf33e5355669|30646765|rds|local|vector|||30.82||
+elk|stem|7d543858fae44a32|9d2343e4bcd9ff42|a75db001e36e9feb|-188372202||t20068.7891350491s|8b36cf33e5355669|30646765|rds|local|vector|||26.11|Field names abbreviated for ESRI Shapefile driver|
 elk_dbbmm|function|acc41f8d42c04018|||||||||||||||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|51beccd28057754e|94d5abc6f5fa7398|1fcab737c9d5a5ac|-2021513789||t20063.8322974843s|b6fc21081d9539e6|153411732|rds|local|vector|||0.02||
@@ -22,6 +22,7 @@ elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
 elk_mcp|function|3b35cd7083e2289d|||||||||||||||
 elk_per_month|stem|ed7e884f70bb5620|34b671afed2e2692|e9f6cdde7e0de880|-293717621||t20063.847589746s|1cff0a9d178e5f86|526|rds|local|vector|||0.08||
 elk_per_month_plot|function|3c1315b5423fb8cf|||||||||||||||
+elk_positions_shp|stem||7dc46d2669f6a435|2d7f886e49dd7d85|2136383376||t20068.7793266042s||0|file|local|vector|||||_build_ target elk_positions_shp did not return a character. dynamic files targets with format  file must return character vectors of file or directory paths.
 find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
 fix_rate|function|3693752ffe99c315|||||||||||||||

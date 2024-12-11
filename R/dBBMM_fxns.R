@@ -53,6 +53,9 @@ elk_dbbmm <- function(elk, season, min_days) {
   # Subset to only include season of interest
   elk_seasons <- lapply(seasons, function(x) elk[which(elk$dttm >= x[1] & elk$dttm <= x[2]), ])
   
+  # Drop any empty seasons (e.g., Spring 2024 would be after the default cutoff date of March 31 2024)
+  elk_seasons <- Filter(function(x) dim(x) [1] > 0, elk_seasons)
+  
   # Subset to only include elk_seasons with at least one fix per day
   if (!missing(min_days)) {
     if (min_days > 1) min_days <- min_days / 100 # ensure it's a percentage
