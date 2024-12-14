@@ -38,7 +38,8 @@ list(
   tar_target(unassigned_detections, full_collar_data[is.na(full_collar_data$animal_id), ]),
   tar_target(collar_data, full_collar_data[!is.na(full_collar_data$animal_id), ]),
   # Clean collar data AND filter to cutoff date
-  tar_target(elk, clean_collar_data(collar_data) |> 
+  tar_target(elk, clean_collar_data(collar_data, 
+                                    rarefy_pts = TRUE) |> 
                dplyr::filter(dttm < cutoff_date) |>
                sf::st_write("temp/Pipeline outputs/elk_positions.shp", append = FALSE)),
   #### SUMMARY STATS + PLOTS ####
@@ -53,44 +54,53 @@ list(
   # Fix success / detection efficiency
   tar_target(detection_efficiency, fix_rate(elk)),
   tar_target(p_efficiency, elk_fix_hist(detection_efficiency)),
-  tar_render(daily_dets_plots, 
-             "reports/elk_dets_per_day.Rmd", 
+  tar_render(daily_dets_plots,
+             "reports/elk_dets_per_day.Rmd",
              output_file = "elk_dets_per_day.pdf",
              params = list(elk_data = elk)),
-  #### HOME RANGE ESTIMATES ####
+  #### SEASONAL HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
-  # TODO: got some kind of warning:
-  #There were 2 warnings in `dplyr::summarise()`.
-  #The first warning was:
-  #  ℹ In argument: `n_days = ceiling(max(dttm) - min(dttm))`.
-  #Caused by warning in `max.default()`:
-  #  ! no non-missing arguments to max; returning -Inf
-  #ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning. 
-  tar_target(winter_mcps, elk_mcp(elk = elk, 
-                                  season = winter, 
-                                  min_days = 0.9, # we want a sample size of a minimum of 90% days in the dataset covered
-                                  percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.  
-               sf::st_write("temp/Pipeline outputs/Winter_MCP.shp")),
-  tar_target(spring_mcps, elk_mcp(elk = elk, 
-                                  season = spring, 
-                                  min_days = 0.9, 
-                                  percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Spring_MCP.shp")),
-  tar_target(summer_mcps, elk_mcp(elk = elk, 
-                                  season = summer, 
-                                  min_days = 0.9,
-                                  percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Summer_MCP.shp")),
-  tar_target(MCP, dplyr::bind_rows(winter_mcps, spring_mcps, summer_mcps)),
-  tar_target(mcp_summary, summarize_area(MCP)),
+  tar_target(winter_mcp, seasonal_mcp(elk = elk,
+                                       season = winter,
+                                       min_days = 0.9, # we want a sample size of a minimum of 90% days in the dataset covered
+                                       percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
+               sf::st_write("temp/Pipeline outputs/Winter_MCP.shp", append = FALSE)),
+  tar_target(spring_mcp, seasonal_mcp(elk = elk,
+                                       season = spring,
+                                       min_days = 0.9,
+                                       percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Spring_MCP.shp", append = FALSE)),
+  tar_target(summer_mcp, seasonal_mcp(elk = elk,
+                                       season = summer,
+                                       min_days = 0.9,
+                                       percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Summer_MCP.shp", append = FALSE)),
+  tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp)),
+  tar_target(mcp_summary, summarize_area(all_seasons_mcp)),
   # TODO: summary plots of MCP areas
   ## DYNAMIC BROWNIAN BRIDGES
-  tar_target(winter_dbbmm, elk_dbbmm(elk = elk, 
-                                     season = winter, 
-                                     min_days = 0.9)),
-  tar_target(spring_dbbmm, elk_dbbmm(elk = elk, season = spring, min_days = 0.9)),
-  tar_target(summer_dbbmm, elk_dbbmm(elk = elk, season = summer, min_days = 0.9)),
-  tar_target(dBBMM, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
-  tar_target(dbbmm_summary, summarize_area(dBBMM))
+  tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
+                                          season = winter,
+                                          min_days = 0.9,
+                                          margin = 9, # 9 points ~= about ~1 day margin
+                                          window.size = 57, # 57 points / 8 points per day = window size of ~7 days long
+                                          ud_percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Winter_dBBMM_window57.shp", append = FALSE)),
+  tar_target(spring_dbbmm, seasonal_dbbmm(elk = elk,
+                                          season = spring,
+                                          min_days = 0.9,
+                                          margin = 9,
+                                          window.size = 57,
+                                          ud_percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Spring_dBBMM_window57.shp", append = FALSE)),
+  tar_target(summer_dbbmm, seasonal_dbbmm(elk = elk,
+                                          season = summer,
+                                          min_days = 0.9,
+                                          margin = 9,
+                                          window.size = 57,
+                                          ud_percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57.shp", append = FALSE)),
+  tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
+  tar_target(dbbmm_summary, summarize_area(all_seasons_dbbmm))
   # TODO: summary plots of dBBMM areas
 )
