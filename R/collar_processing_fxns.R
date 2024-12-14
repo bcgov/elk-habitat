@@ -408,10 +408,48 @@ clean_collar_data_moorter_moe <- function(collar_data,
 
 # Merge all cleaning fxns into one
 
-clean_collar_data <- function(collar_data) {
+# rarefy_pts = should high sample rate individuals be filtered down to
+# 8 pts per day, yes or no
+clean_collar_data <- function(collar_data, rarefy_pts = TRUE) {
   cd <- remove_imprecise_locations(collar_data)
   cd <- clean_collar_data_moorter_moe(cd)
-  cd <- sf::st_as_sf(cd, coords = c("long", "lat"), crs = 4326) |>
+  cd <- sf::st_as_sf(cd, 
+                     coords = c("long", "lat"), 
+                     crs = 4326,
+                     remove = FALSE) |>
     sf::st_transform(3005)
+  
+  if (rarefy_pts) {
+    median_pts <- cd |> 
+      sf::st_drop_geometry() |> 
+      dplyr::group_by(animal_id, lubridate::date(dttm)) |>
+      dplyr::summarise(n_dets = dplyr::n(), .groups = "drop") |>
+      dplyr::group_by(animal_id) |>
+      dplyr::summarise(med_daily_dets = median(n_dets), .groups = "drop")
+    elk_to_rarefy <- median_pts[["animal_id"]][median_pts$med_daily_dets > 8]
+    # Split cd into points to rarefy and points to leave alone
+    rarefy_dat <- cd[cd$animal_id %in% elk_to_rarefy, ]
+    cd <- cd[!(cd$animal_id %in% elk_to_rarefy), ]
+    # Rarefy the dense points
+    # For elk with 8 GPS points per day, the points are collected at
+    # 00:00, 03:00, 06:00, 09:00, 12:00, 15:00, 18:00, 21:00.
+    keep <- 
+      rarefy_dat |> 
+      dplyr::mutate(row_id = dplyr::row_number(),
+                    hour = lubridate::hour(dttm)) |> # assign hour of day to each point
+        sf::st_drop_geometry() |> # drop geometry, otherwise summarise tries to merge geoms into multipoints
+      dplyr::filter(hour %in% c(0, 3, 6, 9, 12, 15, 18, 21)) |> # filter to only the hours we care about
+      dplyr::group_by(animal_id, doy, hour) |> # group by animal ID and day of year
+      dplyr::summarise(dttm = min(dttm), # for each animal id and DOY, select the minimum timepoint
+                       row_id = min(row_id),# and the associated row_id
+                       .groups = "drop") |>
+      dplyr::pull(row_id)
+    rarefy_dat <- rarefy_dat[keep, ]
+    # Merge rarefied data back to cd
+    cd <- dplyr::bind_rows(cd, rarefy_dat)
+  }
+  
+  cd <- sf::st_collection_extract(cd, "POINT")
+  
   return(cd)
 }
