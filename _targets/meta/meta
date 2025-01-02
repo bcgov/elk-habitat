@@ -47,7 +47,8 @@ summer|object|292209e1f8fbf494|||||||||||||||
 summer_dbbmm|stem|e9a188e6fb17181d|fd55547b5cee2a09|dc7b6424a33c787e|320407742||t20071.0195750982s|0165d09bce7fa875|3760774|rds|local|vector|||440.95||
 summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|cbcbc5ee0dc8591d|1803065787||t20071.0144679753s|71cd02de9b892eb7|35005|rds|local|vector|||9.91||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
-weekly_mcp|function|da965b3db379ccd2|||||||||||||||
+weekly_mcp|function|48c9d17006abb7ad|||||||||||||||
+weekly_mcps|stem|192fc32818ae9026|a6fffbef013b773d|a430ae17f7f86022|-1315591038||t20090.6648645824s|a4fbaaab7f2bef3d|1160106|rds|local|vector|||217.09||
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|06807c980958b091|40d77cb119e446bc|f62cd3de666a4c2f|-99852116||t20071.0049128437s|30277aca97be249c|3735216|rds|local|vector|||519.83||
 winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|5503541e72a9a826|844460800||t20071.014253365s|bb32bb867029de36|29249|rds|local|vector|||10.43||

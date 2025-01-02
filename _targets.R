@@ -101,6 +101,16 @@ list(
                                           ud_percent = 0.95) |>
                sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57.shp", append = FALSE)),
   tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
-  tar_target(dbbmm_summary, summarize_area(all_seasons_dbbmm))
+  tar_target(dbbmm_summary, summarize_area(all_seasons_dbbmm)),
   # TODO: summary plots of dBBMM areas
+  #### WEEKLY HOME RANGE ESTIMATES ####
+  ## MINIMUM CONVEX POLYGONS
+  # For now, only only doing MCPs for weekly estimates. dBBMMs are a bit more
+  # sensitive to lower sample sizes. 
+  tar_target(weekly_mcps, weekly_mcp(elk = elk, 
+                                     min_days = 1, # percentage of days - we want 100% of days
+                                     min_dets_per_day = 7, # we also want at minimum 7 detections per day, otherwise that week of data is thrown out 
+                                     percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
+               sf::st_write("temp/Pipeline outputs/Weekly_MCP.shp", append = FALSE)
+             )
 )

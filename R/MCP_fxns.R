@@ -79,6 +79,8 @@ individual_mcp <- function(elk_dat, percent = 0.99, area_unit = "ha",...) {
   
 }
 
+# min_days is expressed as a percentage. What percentage of days must have a detection
+# in order to accept that subset of data for the MCP?
 seasonal_mcp <- function(elk, season, min_days, ...) {
   # Dots = args to pass on to `individual_mcp` (percent, area_unit) and `find_center` (method)
   # Parse seasons into POSIX dates
@@ -194,6 +196,93 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
 
   return(out)
 }
+
+# min_days is expressed as a percentage. What percentage of days must have a detection
+# in order to accept that subset of data for the MCP?
+weekly_mcp <- function(elk, min_days = 1, min_dets_per_day = 7, ...) {
+  # Dots = args to pass on to `individual_mcp` (percent, area_unit) or `find_center` (method)
+  
+  # First split up data into weekly bins
+  elk$week <- lubridate::week(elk$dttm)
+  elk_weekly <- split(elk, list(elk$year, elk$week))
+  
+  # Next subset to only include elk_weekly with fixes on at least X% of days
+  # For weekly, by default it's 100% of days
+  if (min_days > 1) min_days <- min_days / 100 # ensure it's a percentage
+  n_days_min <- ceiling(7 * min_days) # 7 days in a week
+  #n_dets_min <- n_days_min * min_dets_per_day
+  # Drop any empty dataframes in the weekly list
+  elk_weekly <- Filter(function(x) dim(x)[1] > 0, elk_weekly)
+  elk_weekly <- lapply(elk_weekly, function(x) {
+    # Group by animal_id + day, and if there's any days with < min_dets_per_day 
+    # detections, chuck the whole week.
+    tmp <- x |>
+      sf::st_drop_geometry() |>
+      dplyr::mutate(date = lubridate::date(dttm)) |>
+      dplyr::select(animal_id, week, date) |>
+      dplyr::group_by(animal_id, week, date) |>
+      dplyr::summarise(n_dets_per_day = dplyr::n(), .groups = "keep") |>
+      dplyr::reframe(cutoff_dets_per_day = n_dets_per_day >= min_dets_per_day) |>
+      dplyr::group_by(animal_id, week) |>
+      dplyr::mutate(enough_dets = dplyr::case_when(any(cutoff_dets_per_day == FALSE) ~ FALSE, TRUE ~ TRUE)) |>
+      dplyr::select(animal_id, week, enough_dets) |>
+      dplyr::distinct()
+    animals_to_keep <- tmp[["animal_id"]][tmp$enough_dets == TRUE]
+    # Now subset to only animals_to_keep
+    x <- x[which(x$animal_id %in% animals_to_keep), ]
+    return(x)
+  })
+  
+  # Loop through each week, then create MCP for each 
+  # individual within that season
+  # First unpack dots to check if percent cutoff and center method supplied
+  dots <- list(...)
+  args <- match(names(formals(individual_mcp)), names(dots))
+  mcp_dots <- dots[args[!is.na(args)]]
+  
+  tmp <- pbapply::pblapply(elk_weekly, function(x) {
+    elk_dat <- x
+    week <- unique(elk_dat$week)
+    individuals <- unique(elk_dat[["animal_id"]])
+    hulls <- lapply(individuals, function(i) { tryCatch({
+      #message("Calculating MCP for ", i, "...")
+      # Subset to individual
+      e <- elk_dat[which(elk_dat$animal_id == i), ]
+      # Calculate MCP
+      if (length(mcp_dots) == 0) {
+        out <- individual_mcp(elk_dat = e)
+      } else {
+        out <- do.call("individual_mcp", args = c(list(e), mcp_dots))
+      }
+      out$week <- week
+      return(out)
+    }, # end first tryCatch {}
+    error = function(i) {
+      message("Error with ", i)
+    }) # end tryCatch
+    }) # end hulls lapply
+    
+    names(hulls) <- individuals
+    return(hulls)
+    
+  }) # end tmp lapply
+  
+  names(tmp) <- names(elk_weekly)
+  
+  # Bind into one df
+  out <- lapply(tmp, dplyr::bind_rows)
+  out <- out[!is.na(out)]
+  filter <- lapply(out, nrow) |> unlist(use.names = FALSE) # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  out <- dplyr::bind_rows(out)
+  out <- out[,c("animal_id", "year", "week", "area", "x")] # Reorder cols
+  sf::st_geometry(out) <- "geometry" # Rename geometry column to "geometry"
+  
+  return(out)
+  
+}
+
 
 
 
