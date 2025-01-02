@@ -284,7 +284,66 @@ weekly_mcp <- function(elk, min_days = 1, min_dets_per_day = 7, ...) {
 }
 
 
-
+daily_mcp <- function(elk, min_dets_per_day = 8, ...) {
+  # Dots = args to pass on to `individual_mcp` (percent, area_unit) or `find_center` (method)
+  
+  # Add date column
+  elk$date <- lubridate::date(elk$dttm)
+  
+  # Next subset to only include elk data with 8 fixes (100%) per day
+  # It's fastest to filter the data after dropping the geometry. 
+  # But, we can't directly filter the elk data because we need to keep
+  # that geometry for the MCP operation. So, create a `tmp` df that 
+  # contains the number of fixes per day, then extract a `keep_yn` vector
+  # that will be used to quickly filter the full `elk` dataframe with geometry.
+  tmp <- elk |> 
+    sf::st_drop_geometry() |>
+    dplyr::group_by(animal_id, date) |>
+    dplyr::mutate(n_dets = dplyr::n()) |>
+    dplyr::select(animal_id, date, n_dets)
+  keep_yn <- tmp$n_dets >= min_dets_per_day # create filter vector
+  
+  # Filter the main elk df
+  elk <- elk[keep_yn,]
+  
+  # Group by animal_id and date and run MCP fxn
+  # First unpack dots to check if percent cutoff and center method supplied
+  dots <- list(...)
+  args <- match(names(formals(individual_mcp)), names(dots))
+  mcp_dots <- dots[args[!is.na(args)]]
+  
+  # Create list of animal-date combos to iterate over
+  elk$animal_date <- paste0(elk$animal_id, "_", elk$date)
+  animal_dates <- unique(elk$animal_date)
+  
+  tmp <- pbapply::pblapply(animal_dates, function(x) { 
+    tryCatch({
+      elk_dat <- elk[which(elk$animal_date == x), ]
+      date <- unique(elk_dat$date)
+      # Calculate MCP
+      if (length(mcp_dots) == 0) {
+        out <- individual_mcp(elk_dat = elk_dat)
+      } else {
+        out <- do.call("individual_mcp", args = c(list(elk_dat), mcp_dots))
+      }
+      out$date <- date
+      return(out)
+    }, # end first tryCatch {}
+    error = function(x) {
+      message("Error with ", x)
+    }) # end tryCatch
+  }) # end tmp lapply
+  
+  names(tmp) <- names(animal_dates) # for troubleshooting...
+  
+  # Bind into one df
+  out <- dplyr::bind_rows(tmp)
+  out <- out[,c("animal_id", "year", "date", "area", "x")] # Reorder cols
+  sf::st_geometry(out) <- "geometry" # Rename geometry column to "geometry"
+  
+  return(out)
+  
+}
 
 # A few interesting plots
 #ggplot(data = MCP, aes(x = area)) + geom_density() + facet_wrap(~ season)

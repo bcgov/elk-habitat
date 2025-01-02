@@ -1303,6 +1303,17 @@
       "Repository": "CRAN",
       "Hash": "7f5024cc7af45eeecef657fa62beb568"
     },
+    "pbapply": {
+      "Package": "pbapply",
+      "Version": "1.7-2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "parallel"
+      ],
+      "Hash": "68a2d681e10cf72f0afa1d84d45380e5"
+    },
     "pbivnorm": {
       "Package": "pbivnorm",
       "Version": "0.6.0",

@@ -105,12 +105,21 @@ list(
   # TODO: summary plots of dBBMM areas
   #### WEEKLY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
-  # For now, only only doing MCPs for weekly estimates. dBBMMs are a bit more
+  # For now, only doing MCPs for weekly estimates. dBBMMs are a bit more
   # sensitive to lower sample sizes. 
   tar_target(weekly_mcps, weekly_mcp(elk = elk, 
                                      min_days = 1, # percentage of days - we want 100% of days
                                      min_dets_per_day = 7, # we also want at minimum 7 detections per day, otherwise that week of data is thrown out 
                                      percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
                sf::st_write("temp/Pipeline outputs/Weekly_MCP.shp", append = FALSE)
-             )
+             ),
+  #### DAILY HOME RANGE ESTIMATES ####
+  ## MINIMUM CONVEX POLYGONS
+  # Only doing MCPs for weekly estimates. dBBMM window/margin params are too
+  # sensitive to lower sample sizes for daily home range estimates. 
+  tar_target(daily_mcps, daily_mcp(elk = elk, 
+                                    min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
+                                    percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
+               sf::st_write("temp/Pipeline outputs/Daily_MCP.shp", append = FALSE)
+  )
 )
