@@ -1,5 +1,9 @@
 #### SETUP ####
 
+# Wishlist
+# TODO: Summary stats of weekly/daily MCP area x Season
+
+# Libraries
 library(targets)
 library(sf)
 library(ggplot2)
