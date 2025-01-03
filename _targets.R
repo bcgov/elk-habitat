@@ -84,22 +84,25 @@ list(
                                           min_days = 0.9,
                                           margin = 9, # 9 points ~= about ~1 day margin
                                           window.size = 57, # 57 points / 8 points per day = window size of ~7 days long
+                                          location.error = 11.5, # GPS error in meters. Vectronic documentation indicates GPS error is on average 8-15m.
                                           ud_percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Winter_dBBMM_window57.shp", append = FALSE)),
+               sf::st_write("temp/Pipeline outputs/Winter_dBBMM_window57_le10m.shp", append = FALSE)),
   tar_target(spring_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = spring,
                                           min_days = 0.9,
                                           margin = 9,
                                           window.size = 57,
+                                          location.error = 11.5,
                                           ud_percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Spring_dBBMM_window57.shp", append = FALSE)),
+               sf::st_write("temp/Pipeline outputs/Spring_dBBMM_window57_le10m.shp", append = FALSE)),
   tar_target(summer_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = summer,
                                           min_days = 0.9,
                                           margin = 9,
                                           window.size = 57,
+                                          location.error = 11.5,
                                           ud_percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57.shp", append = FALSE)),
+               sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57_le10m.shp", append = FALSE)),
   tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
   tar_target(dbbmm_summary, summarize_area(all_seasons_dbbmm)),
   # TODO: summary plots of dBBMM areas

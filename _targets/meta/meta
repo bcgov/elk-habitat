@@ -1,6 +1,6 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 add_mvt_metrics|function|d5e2123084ca7319|||||||||||||||
-all_seasons_dbbmm|stem|c2c4637a0946671f|04c92914fe89f26c|5bbeec4cba4f8109|-436251714||t20071.0195884325s|554f2357e5df19db|11137570|rds|local|vector|||0.03||
+all_seasons_dbbmm|stem|45b8c654fb4d5941|04c92914fe89f26c|d600240675d8352a|-436251714||t20091.7745992807s|c9acfdd53513aed1|10482222|rds|local|vector|||0.03||
 all_seasons_mcp|stem|59b2f36d40e50747|49512c53edbb9f8e|1b3a859245a5491a|37521217||t20071.0195756537s|db785c39c5e7cebb|94522|rds|local|vector|||0.02||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
 capture_data|stem|98de33f683ee988c|e14ef5cd5be2470c|11f03e1aead2b0cd|1127347996||t20062.9547968275s|0420319ceef1893e|10494|rds|local|vector|||1.25|NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion|
@@ -13,7 +13,7 @@ cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20069.0476594968s|97880e85d9d4499c|2702655|file|local|vector|||41.92||
 daily_mcp|function|9d3055d14bbbeca0|||||||||||||||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|affb8bd8aab5af41|958011176||t20090.7343941928s|a682bbc1098cb845|4501904|rds|local|vector|||1531.1||
-dbbmm_summary|stem|96e698f1791720f4|9e9d3a471bcbeeca|0389eac585dbfb65|722464450||t20071.0195907002s|6632ce5cbfcda6f5|874|rds|local|vector|||0.06||
+dbbmm_summary|stem|e9b26b810734b27c|9e9d3a471bcbeeca|634fa3131c4e3877|722464450||t20091.7746007516s|3ee2761463b14a1e|871|rds|local|vector|||0.11||
 detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|71e452fdf147d3fc|947972721||t20069.0385290536s|c24c5d185b903301|2587|rds|local|vector|||0.35||
 dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6c6a5b45b4a3ce9a|-360331643||t20069.0515342632s|31cf8697cc750540|180|rds|local|vector|||0.05||
 elk|stem|e713751ba60ae25b|c437453ecb03737d|07a89ad0cceb919e|-188372202||t20069.0385247589s|7544662e75434240|32142164|rds|local|vector|||29|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
@@ -26,7 +26,7 @@ find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
 fix_rate|function|3693752ffe99c315|||||||||||||||
 full_collar_data|stem|4873579538aa5e46|fcaac25f0f6c862d|f1db434260a9a7da|1289326002||t20062.9548830136s|052310c4139bdebc|12023689|rds|local|vector|||2.04|Some collar ids in collar data do not have capture data. Review supplied collar keys and capture data. Missing collar id 94434 Missing collar id 94436 Missing collar id 94439 Missing collar id 94440 Missing collar id 94441|
-individual_dbbmm|function|696c697355ad008b|||||||||||||||
+individual_dbbmm|function|d1086e6cc2207b37|||||||||||||||
 individual_mcp|function|baa24645dd2b82b0|||||||||||||||
 load_capture_data|function|72cfbb33fdca6f8d|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
@@ -39,18 +39,18 @@ p_efficiency|stem|e90cf5b2efeee425|dc663c41ca62b40a|dc32d3bcff81c713|-1905756578
 p_elk_per_month|stem|ed5635bbc2b69a35|fb1b1ddd4d188b87|ae4616bccd90fecd|2139122293||t20069.0388838487s|0bc2645bba0dfe4b|32310422|rds|local|vector|||0.11||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
-seasonal_dbbmm|function|63feb8185b107a3b|||||||||||||||
+seasonal_dbbmm|function|7f890600c0d893ef|||||||||||||||
 seasonal_mcp|function|29f4a1582cd186f7|||||||||||||||
 spring|object|6398ef5e90b44e6d|||||||||||||||
-spring_dbbmm|stem|7770df1dd8a21564|4e459cc9a714e795|f8cc37030b80e5c9|1234634189||t20070.9988930119s|e5109c317a1b7828|3645620|rds|local|vector|||366.18|GDAL Error 4 Unable to open tempPipeline outputsSpring_dBBMM_window57.shx or tempPipeline outputsSpring_dBBMM_window57.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4 Unable to open tempPipeline outputsSpring_dBBMM_window57.shx or tempPipeline outputsSpring_dBBMM_window57.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.|
+spring_dbbmm|stem|fa639b5113a73f72|c5163b468618fab0|3d3583d5d503bb04|1234634189||t20091.7391075615s|b114ac6d13daf58a|3355342|rds|local|vector|||1309.46||
 spring_mcp|stem|ceed227076a6cb8c|834f0c31cd9ce1ad|4da12a4de6e0005c|2029814444||t20071.0143531366s|32b82eb965d4f678|34014|rds|local|vector|||8.6||
 summarize_area|function|7cda6faad68dee6d|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
-summer_dbbmm|stem|e9a188e6fb17181d|fd55547b5cee2a09|dc7b6424a33c787e|320407742||t20071.0195750982s|0165d09bce7fa875|3760774|rds|local|vector|||440.95||
+summer_dbbmm|stem|562527873ab79ab7|50a0f0332a641f85|5653727973154a42|320407742||t20091.7745890146s|c1ae9611350eb4ab|3624103|rds|local|vector|||1436.38||
 summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|cbcbc5ee0dc8591d|1803065787||t20071.0144679753s|71cd02de9b892eb7|35005|rds|local|vector|||9.91||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
 weekly_mcp|function|48c9d17006abb7ad|||||||||||||||
 weekly_mcps|stem|192fc32818ae9026|a6fffbef013b773d|a430ae17f7f86022|-1315591038||t20090.6648645824s|a4fbaaab7f2bef3d|1160106|rds|local|vector|||217.09||
 winter|object|326711d79cc870d3|||||||||||||||
-winter_dbbmm|stem|06807c980958b091|40d77cb119e446bc|f62cd3de666a4c2f|-99852116||t20071.0049128437s|30277aca97be249c|3735216|rds|local|vector|||519.83||
+winter_dbbmm|stem|10a25945b26c1148|be5d31123c90e4a2|5b12ffe4c29df3be|-99852116||t20091.7579597868s|5cd06dc7aaa4c448|3506746|rds|local|vector|||1628.56||
 winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|5503541e72a9a826|844460800||t20071.014253365s|bb32bb867029de36|29249|rds|local|vector|||10.43||

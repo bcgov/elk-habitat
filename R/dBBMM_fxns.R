@@ -1,7 +1,8 @@
 # Functions to calculate dynamic Brownian Bridge Movement Models
 # for elk relocations
 
-individual_dbbmm <- function(elk_dat, margin = 11, window.size = 31, res = 100, ud_percent = 0.99, area_unit = "ha") {
+individual_dbbmm <- function(elk_dat, margin = 11, window.size = 31, 
+                             res = 100, location.error = 5, ud_percent = 0.99, area_unit = "ha") {
   
     move_obj <- move2::mt_as_move2(elk_dat, 
                                    time_column = "dttm",
@@ -10,10 +11,10 @@ individual_dbbmm <- function(elk_dat, margin = 11, window.size = 31, res = 100, 
     
     dbbmm <- move::brownian.bridge.dyn(move_obj,
                                        margin = margin,
-                                       window.size = 31,
+                                       window.size = window.size,
                                        raster = res, # 100m resolution. Anything higher takes forever to run
-                                       location.error = 5, # GPS error in meters
-                                       ext = 10) # buffer around points in case dBBMM estimate goes "off the map"
+                                       location.error = location.error, # GPS error in meters
+                                       ext = 30) # buffer around points in case dBBMM estimate goes "off the map"
     
     dbbmm <- move::getVolumeUD(dbbmm)
     dbbmm <- dbbmm <= ud_percent # default percent is 99% (almost all area extracted)
@@ -34,6 +35,9 @@ individual_dbbmm <- function(elk_dat, margin = 11, window.size = 31, res = 100, 
 
 
 seasonal_dbbmm <- function(elk, season, min_days = NA, ...) {
+  # Dots pass arguments to individual_dbbmm - margin, window.size, res,
+  # location.error, ud_percent, and area_unit
+  
   # Parse seasons into POSIX dates
   years <- unique(lubridate::year(elk$dttm))
   seasons <- lapply(years, function(x) paste0(season, "-", x) |> 
@@ -137,6 +141,8 @@ seasonal_dbbmm <- function(elk, season, min_days = NA, ...) {
   
   return(out)
 }
+
+
 
 
 # A few interesting plots
