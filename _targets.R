@@ -77,7 +77,7 @@ list(
                sf::st_write("temp/Pipeline outputs/Summer_MCP.shp", append = FALSE)),
   tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp)),
   tar_target(mcp_summary, summarize_area(all_seasons_mcp)),
-  # TODO: summary plots of MCP areas
+  # TODO: summary plots of MCP areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   ## DYNAMIC BROWNIAN BRIDGES
   tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = winter,
@@ -105,7 +105,7 @@ list(
                sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57_le10m.shp", append = FALSE)),
   tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
   tar_target(dbbmm_summary, summarize_area(all_seasons_dbbmm)),
-  # TODO: summary plots of dBBMM areas
+  # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   #### WEEKLY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
   # For now, only doing MCPs for weekly estimates. dBBMMs are a bit more

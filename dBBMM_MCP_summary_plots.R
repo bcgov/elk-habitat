@@ -37,6 +37,7 @@ dBBMM <- dBBMM |>
                                           season == "Summer" ~ 61))
 dBBMM$area_per_day <- dBBMM$area / dBBMM$n_days
 
+
 #### SEASONAL MCP PLOTS ####
 
 # Summary plots of MCPs
@@ -307,6 +308,9 @@ weekly_mcps |>
              group = week)) +
   geom_boxplot(outlier.shape = NA) +
   scale_y_continuous(limits = c(0, 800)) +
+  labs(title = "Mean weekly MCP size through time",
+       subtitle = "Outliers removed",
+       caption = "For December 2023, the range of all the 'outliers' for that week actually lined up \nwith the mean for the weeks before and after it.\nJust a quirk that they were removed automatically.") +
   theme_minimal()
   
 
@@ -317,6 +321,8 @@ weekly_mcps |>
              y = area,
              color = year)) +
   geom_point() +
+  labs(title = "All weekly MCP areas through time",
+       subtitle = "Including outliers") +
   theme_minimal()
 
 # weekly_mcps |>
@@ -353,7 +359,8 @@ weekly_mcps |>
                 y = mean_area)) +
   coord_cartesian(expand = FALSE,
                   ylim=c(0, 3700)) +
-  labs(title = "Mean weekly MCP area over time") +
+  labs(title = "Mean weekly MCP area over time",
+       caption = "Confidence intervals narrow over time as more samples are added.") +
   theme_minimal()
 
 
@@ -400,6 +407,31 @@ daily_mcps |>
 
 
 daily_mcps |>
+  dplyr::mutate(area = units::drop_units(area)) |>
+  ggplot(aes(x = date,
+             y = area,
+             #color = year,
+             group = date)) +
+  geom_boxplot(outlier.shape = NA) +
+  scale_y_continuous(limits = c(0, 450)) +
+  #facet_wrap(~year, ncol = 1) +
+  labs(title = "Mean daily MCP size through time",
+       subtitle = "Outliers removed") +
+  theme_minimal()
+
+
+daily_mcps |>
+  sf::st_drop_geometry() |>
+  ggplot(aes(x = date, y = area)) +
+  geom_point(aes(color = year),
+             alpha = 0.3) + 
+  #geom_smooth(span = 0.1) +
+  labs(title = "All daily MCP areas through time",
+       subtitle = "Including outliers") +
+  theme_minimal()
+
+
+daily_mcps |>
   sf::st_drop_geometry() |>
   dplyr::group_by(date) |>
   dplyr::summarise(mean_area = mean(area),
@@ -421,16 +453,10 @@ daily_mcps |>
                 y = mean_area)) +
   coord_cartesian(expand = FALSE,
                   ylim=c(0, 300)) +
-  labs(title = "Mean daily MCP area over time") +
+  labs(title = "Mean daily MCP area over time",
+       caption = "Confidence intervals narrow over time as more samples are added.") +
   theme_minimal()
 
 
-daily_mcps |>
-  sf::st_drop_geometry() |>
-  ggplot(aes(x = date, y = area)) +
-  geom_point(alpha = 0.3) + 
-  geom_smooth(span = 0.1) +
-  labs(title = "Mean daily MCP area over time") +
-  theme_minimal()
 
 
