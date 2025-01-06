@@ -14,6 +14,7 @@ daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-131882
 daily_mcp|function|9d3055d14bbbeca0|||||||||||||||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|affb8bd8aab5af41|958011176||t20090.7343941928s|a682bbc1098cb845|4501904|rds|local|vector|||1531.1||
 dbbmm_summary|stem|e9b26b810734b27c|9e9d3a471bcbeeca|634fa3131c4e3877|722464450||t20091.7746007516s|3ee2761463b14a1e|871|rds|local|vector|||0.11||
+dbbmm_winter_spring_overlap|stem|0337b3cd506e3664|b930075dc00053b3|3006aef62ca1c0a2|-1789060891||t20094.822573502s|9e0f404cffed73d7|4963|rds|local|vector|||6.96||
 detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|71e452fdf147d3fc|947972721||t20069.0385290536s|c24c5d185b903301|2587|rds|local|vector|||0.35||
 dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6c6a5b45b4a3ce9a|-360331643||t20069.0515342632s|31cf8697cc750540|180|rds|local|vector|||0.05||
 elk|stem|e713751ba60ae25b|c437453ecb03737d|07a89ad0cceb919e|-188372202||t20069.0385247589s|7544662e75434240|32142164|rds|local|vector|||29|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
@@ -32,11 +33,13 @@ load_capture_data|function|72cfbb33fdca6f8d|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
 mcp_summary|stem|899f384ea2b09715|14bb1b9a0a627205|dbd00c971f3f941b|1448887047||t20071.0195896704s|1261c6cb2cb36362|876|rds|local|vector|||0.1||
+mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|2d9ba63851c93707|-1809842540||t20094.8224920703s|f6c4cf74567fc89a|5013|rds|local|vector|||6.85||
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|74c304c23b6873ff|||||||||||||||
 p_dets_per_elk|stem|c2b7a0d9981414ec|ef744c8c91fd6ab6|2f89263cf258d1dd|784997253||t20069.0471743298s|98bb26d1d1c7fbcc|32256322|rds|local|vector|||0.03||
 p_efficiency|stem|e90cf5b2efeee425|dc663c41ca62b40a|dc32d3bcff81c713|-1905756578||t20069.0515349809s|dc6edb64f692b7ad|111065|rds|local|vector|||0||
 p_elk_per_month|stem|ed5635bbc2b69a35|fb1b1ddd4d188b87|ae4616bccd90fecd|2139122293||t20069.0388838487s|0bc2645bba0dfe4b|32310422|rds|local|vector|||0.11||
+prct_overlap|function|5c4249dba9eb0132|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 seasonal_dbbmm|function|7f890600c0d893ef|||||||||||||||

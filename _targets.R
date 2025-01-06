@@ -124,5 +124,14 @@ list(
                                     min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
                                     percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
                sf::st_write("temp/Pipeline outputs/Daily_MCP.shp", append = FALSE)
-  )
+  ),
+  #### SEASONAL HOME RANGE OVERLAP ####
+  tar_target(mcp_winter_spring_overlap, prct_overlap(shp_1 = winter_mcp,
+                                                     shp_2 = spring_mcp,
+                                                     shp_1_name = "winter",
+                                                     shp_2_name = "spring")),
+  tar_target(dbbmm_winter_spring_overlap, prct_overlap(shp_1 = winter_dbbmm,
+                                                       shp_2 = spring_dbbmm,
+                                                       shp_1_name = "winter",
+                                                       shp_2_name = "spring"))
 )
