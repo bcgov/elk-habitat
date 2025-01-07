@@ -5,7 +5,8 @@ prct_overlap <- function(shp_1, shp_2,
                          join_cols = c("animal_id", "year"),
                          shp_1_name = NA, # e.g., if shp_1 is winter season, `shp_1_name` could be "winter"
                          shp_2_name = NA,
-                         area_unit = "ha") {
+                         area_unit = "ha",
+                         show_progress = TRUE) {
   # Data health checks
   stopifnot("`shp_1` and `shp_2` must be in the same CRS." = sf::st_crs(shp_1) == sf::st_crs(shp_2))
   # Pull list of unique join_cols (by default, animal_id + year)
@@ -15,6 +16,11 @@ prct_overlap <- function(shp_1, shp_2,
   join_list <- unique(sf::st_drop_geometry(all_shp[join_cols]))
   # Now for each animal_id + year in the list, pull the correct polygon,
   # intersect, and calculate % overlap
+  if (!show_progress) {
+    # Suppress pbapply loading bar if show_progress == FALSE
+    pbo <- pbapply::pboptions(type = "none")
+    on.exit(pbapply::pboptions(pbo), add = TRUE)
+  }
   ovrlp_out <- pbapply::pblapply(1:nrow(join_list), function(x) {
     row_to_pull <- join_list[x, ]
     #print(x) # for bugfixing
@@ -109,3 +115,65 @@ prct_overlap <- function(shp_1, shp_2,
   
   
 }
+
+
+yearly_prct_overlap <- function(shp,
+                                area_unit = "ha") {
+  # Pull list of unique individuals
+  individuals <- unique(shp$animal_id)
+  # Loop through each individual and calc percent overlap
+  overlaps <- pbapply::pblapply(individuals, function(x) {
+    #print(x) # for bugfixing
+    o <- shp[which(shp$animal_id == x), ]
+    # Order by year
+    o <- o[order(o$year),]
+    rownames(o) <- NULL # reset row index
+    # Overlap lag (next row) polygon with current row polygon
+    # Except for, of course, the last row polygon, because there's
+    # no 'next row' to overlap it with (hence `nrow(o) - 1`)
+    # Also, only run this if o is more than one year of data!
+    if (nrow(o) > 1) {
+      z <- lapply(1:(nrow(o) - 1), function(i) {
+        i_year <- o[i,][["year"]]
+        i2_year <- o[i+1,][["year"]] # do it this way in case one year in the data was skipped
+        po <- prct_overlap(shp_1 = o[i, ],
+                     shp_2 = o[i+1, ],
+                     join_cols = "animal_id",
+                     #shp_1_name = i_year,
+                     #shp_2_name = i2_year,
+                     shp_1_name = "year_1",
+                     shp_2_name = "year_2",
+                     area_unit = area_unit,
+                     show_progress = FALSE)
+        po$year_1 <- i_year
+        po$year_2 <- i2_year
+        return(po)
+      })
+      # Merge results of z together
+      z <- dplyr::bind_rows(z)
+      
+      return(z)
+    } 
+    
+  }) # close overlaps pbapply
+  
+  # Now clean up and merge `overlaps` list
+  overlaps <- dplyr::bind_rows(overlaps)
+  overlaps$year_to_year <- paste0(overlaps$year_1, "-", overlaps$year_2)
+  
+  overlaps <- dplyr::select(overlaps, animal_id, year_1, year_2, year_to_year,
+                            year_1_area, year_2_area, overlap_area,
+                            prct_year_1_within_year_2, prct_year_2_within_year_1)
+  
+  return(overlaps)
+}
+
+
+
+
+# Helpful example for lead/lag distances between points
+# Ultimately wasn't useful for overlap, but may be useful for step-length.
+# https://stackoverflow.com/questions/49853696/distances-of-points-between-rows-with-sf
+#dplyr::mutate(dist = st_distance(geometry, dplyr::lead(geometry), by_element = T))
+
+

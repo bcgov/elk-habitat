@@ -126,6 +126,7 @@ list(
                sf::st_write("temp/Pipeline outputs/Daily_MCP.shp", append = FALSE)
   ),
   #### SEASONAL HOME RANGE OVERLAP ####
+  # Winter to Spring
   tar_target(mcp_winter_spring_overlap, prct_overlap(shp_1 = winter_mcp,
                                                      shp_2 = spring_mcp,
                                                      shp_1_name = "winter",
@@ -133,5 +134,15 @@ list(
   tar_target(dbbmm_winter_spring_overlap, prct_overlap(shp_1 = winter_dbbmm,
                                                        shp_2 = spring_dbbmm,
                                                        shp_1_name = "winter",
-                                                       shp_2_name = "spring"))
+                                                       shp_2_name = "spring")),
+  #### YEARLY SEASONAL SITE FIDELITY ####
+  # Year-to-year overlap within a season
+  # MCP
+  tar_target(mcp_winter_yearly_overlap, yearly_prct_overlap(shp = winter_mcp)),
+  tar_target(mcp_spring_yearly_overlap, yearly_prct_overlap(shp = spring_mcp)),
+  tar_target(mcp_summer_yearly_overlap, yearly_prct_overlap(shp = summer_mcp)),
+  # dBBMM
+  tar_target(dbbmm_winter_yearly_overlap, yearly_prct_overlap(shp = winter_dbbmm)),
+  tar_target(dbbmm_spring_yearly_overlap, yearly_prct_overlap(shp = spring_dbbmm)),
+  tar_target(dbbmm_summer_yearly_overlap, yearly_prct_overlap(shp = summer_dbbmm))
 )

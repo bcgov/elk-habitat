@@ -13,8 +13,11 @@ cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20069.0476594968s|97880e85d9d4499c|2702655|file|local|vector|||41.92||
 daily_mcp|function|9d3055d14bbbeca0|||||||||||||||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|affb8bd8aab5af41|958011176||t20090.7343941928s|a682bbc1098cb845|4501904|rds|local|vector|||1531.1||
+dbbmm_spring_yearly_overlap|stem|d8d2faf77839b989|39a9b295d50aa699|aa58b74f551567cf|-2038073459||t20095.6512183346s|2c6efe778cb8c49b|3914|rds|local|vector|||7.81||
 dbbmm_summary|stem|e9b26b810734b27c|9e9d3a471bcbeeca|634fa3131c4e3877|722464450||t20091.7746007516s|3ee2761463b14a1e|871|rds|local|vector|||0.11||
-dbbmm_winter_spring_overlap|stem|0337b3cd506e3664|b930075dc00053b3|3006aef62ca1c0a2|-1789060891||t20094.822573502s|9e0f404cffed73d7|4963|rds|local|vector|||6.96||
+dbbmm_summer_yearly_overlap|stem|9fb73716535a15f3|22432e9590bfe93c|f0634db9a432270a|408432813||t20095.6518663446s|eb88f2ebc46f1d65|3763|rds|local|vector|||8.07||
+dbbmm_winter_spring_overlap|stem|0337b3cd506e3664|b930075dc00053b3|c962f21eb3d27f33|-1789060891||t20095.6514304139s|9e0f404cffed73d7|4963|rds|local|vector|||12.91||
+dbbmm_winter_yearly_overlap|stem|436193586a85d484|3a8acfeaffe76901|1ea5728828b7c062|2111524819||t20095.6512807108s|bf2e87f978a909e1|2696|rds|local|vector|||5.31||
 detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|71e452fdf147d3fc|947972721||t20069.0385290536s|c24c5d185b903301|2587|rds|local|vector|||0.35||
 dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6c6a5b45b4a3ce9a|-360331643||t20069.0515342632s|31cf8697cc750540|180|rds|local|vector|||0.05||
 elk|stem|e713751ba60ae25b|c437453ecb03737d|07a89ad0cceb919e|-188372202||t20069.0385247589s|7544662e75434240|32142164|rds|local|vector|||29|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
@@ -32,14 +35,17 @@ individual_mcp|function|baa24645dd2b82b0|||||||||||||||
 load_capture_data|function|72cfbb33fdca6f8d|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
+mcp_spring_yearly_overlap|stem|bc320e2144ad7c22|36e1a77fe1c04832|1d0b86a7f267d922|410806255||t20095.6515043587s|50c307229575faba|3969|rds|local|vector|||6.34||
 mcp_summary|stem|899f384ea2b09715|14bb1b9a0a627205|dbd00c971f3f941b|1448887047||t20071.0195896704s|1261c6cb2cb36362|876|rds|local|vector|||0.1||
-mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|2d9ba63851c93707|-1809842540||t20094.8224920703s|f6c4cf74567fc89a|5013|rds|local|vector|||6.85||
+mcp_summer_yearly_overlap|stem|0166051ead72c028|ceb332a84eacf958|cb7d3a3cad768f98|-1442130744||t20095.6517714411s|aba510ceca05becd|3755|rds|local|vector|||6.7||
+mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|d5e6c52926b52753|-1809842540||t20095.6516350319s|f6c4cf74567fc89a|5013|rds|local|vector|||11.25||
+mcp_winter_yearly_overlap|stem|837343aca2161fea|7582a03bec5b992d|a24c3bbf98761aac|-1053605382||t20095.6516932097s|ea4411d9df097ea2|2741|rds|local|vector|||5||
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|74c304c23b6873ff|||||||||||||||
 p_dets_per_elk|stem|c2b7a0d9981414ec|ef744c8c91fd6ab6|2f89263cf258d1dd|784997253||t20069.0471743298s|98bb26d1d1c7fbcc|32256322|rds|local|vector|||0.03||
 p_efficiency|stem|e90cf5b2efeee425|dc663c41ca62b40a|dc32d3bcff81c713|-1905756578||t20069.0515349809s|dc6edb64f692b7ad|111065|rds|local|vector|||0||
 p_elk_per_month|stem|ed5635bbc2b69a35|fb1b1ddd4d188b87|ae4616bccd90fecd|2139122293||t20069.0388838487s|0bc2645bba0dfe4b|32310422|rds|local|vector|||0.11||
-prct_overlap|function|5c4249dba9eb0132|||||||||||||||
+prct_overlap|function|1b450fa46dbba418|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 seasonal_dbbmm|function|7f890600c0d893ef|||||||||||||||
@@ -57,3 +63,4 @@ weekly_mcps|stem|192fc32818ae9026|a6fffbef013b773d|a430ae17f7f86022|-1315591038|
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|10a25945b26c1148|be5d31123c90e4a2|5b12ffe4c29df3be|-99852116||t20091.7579597868s|5cd06dc7aaa4c448|3506746|rds|local|vector|||1628.56||
 winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|5503541e72a9a826|844460800||t20071.014253365s|bb32bb867029de36|29249|rds|local|vector|||10.43||
+yearly_prct_overlap|function|a191d863aa6bf109|||||||||||||||
