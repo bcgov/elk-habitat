@@ -350,7 +350,16 @@ weekly_mcps |>
                    margin_error = units::set_units(t_score * se, "ha"),
                    lower_bound = mean_area - margin_error,
                    upper_bound = mean_area + margin_error) |>
+  units::drop_units() |>
   ggplot() +
+  annotate("rect",
+           xmin = lubridate::date("2021-12-18"), 
+           xmax = lubridate::date("2022-01-14"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#e1eeff",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
   geom_ribbon(aes(x = date, 
                   ymin = lower_bound,
                   ymax = upper_bound),
@@ -360,7 +369,43 @@ weekly_mcps |>
   coord_cartesian(expand = FALSE,
                   ylim=c(0, 3700)) +
   labs(title = "Mean weekly MCP area over time",
-       caption = "Confidence intervals narrow over time as more samples are added.") +
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022.") +
+  theme_minimal()
+
+
+#### SEVERE WINTER PERIOD PLOTS ####
+
+# Severe winter period was 18 Dec 2021 - 14 Jan 2022
+swp <- c(51, 52, 53, 1, 2) # weeks 51 thru 1
+
+weekly_mcps |>
+  dplyr::filter(week %in% swp) |>
+  dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  ggplot(aes(x = as.factor(year), 
+             y = area,
+             color = as.factor(year))) +
+  geom_boxplot(fill = NA) +
+  geom_jitter() +
+  scale_color_manual(values = okabe) +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              y_position = 5000,
+              color = "black") +
+  coord_trans(y = "log10") +
+  labs(title = "Weekly MCP area during the severe winter \nperiod weeks, across years",
+       subtitle = "18 Dec - 14 Jan",
+       caption = "Each boxplot contains weekly MCP sizes during week 51 through week 2 (inclusive).\nEach dot is the MCP size for one individual for one week.",
+       x = "Year",
+       y = "Area", 
+       color = "Year") +
   theme_minimal()
 
 
