@@ -360,6 +360,14 @@ weekly_mcps |>
            fill = "#e1eeff",
            #fill = "#F0F0F0",
            alpha = 0.6) +
+  annotate("rect",
+           xmin = lubridate::date("2021-06-25"), 
+           xmax = lubridate::date("2021-07-07"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#fff4e1",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
   geom_ribbon(aes(x = date, 
                   ymin = lower_bound,
                   ymax = upper_bound),
@@ -369,7 +377,7 @@ weekly_mcps |>
   coord_cartesian(expand = FALSE,
                   ylim=c(0, 3700)) +
   labs(title = "Mean weekly MCP area over time",
-       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022.") +
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022.\nIn red, the 2021 PNW Heat Dome.") +
   theme_minimal()
 
 
@@ -407,6 +415,41 @@ weekly_mcps |>
        y = "Area", 
        color = "Year") +
   theme_minimal()
+
+
+#### HEAT DOME PERIOD PLOTS ####
+
+# Heat dome was June 25 2021 - July 07 2021
+hd <- c(lubridate::week("2021-06-25"):lubridate::week("2021-07-7")) # weeks 26-27
+
+weekly_mcps |>
+  dplyr::filter(week %in% hd) |>
+  ggplot(aes(x = as.factor(year), 
+             y = area,
+             color = as.factor(year))) +
+  geom_boxplot(fill = NA) +
+  geom_jitter() +
+  scale_color_manual(values = okabe) +
+  geom_signif(comparisons = list(c("2019", "2020"),
+                                 c("2020", "2021"),
+                                 c("2021", "2022"),
+                                 c("2022", "2023")),
+              map_signif_level = TRUE,
+              color = "black") +
+  geom_signif(comparisons = list(c("2021", "2019"),
+                                 c("2021", "2023")),
+              map_signif_level = TRUE,
+              y_position = 5000,
+              color = "black") +
+  coord_trans(y = "log10") +
+  labs(title = "Weekly MCP area during the heat dome weeks, across years",
+       subtitle = "Heat dome was 25 June 2021 - 07 July 2021 (weeks 26 and 27 of the year)",
+       caption = "Each boxplot contains weekly MCP sizes during weeks 26-27.\nEach dot is the MCP size for one individual for one week.",
+       x = "Year",
+       y = "Area", 
+       color = "Year") +
+  theme_minimal()
+
 
 
 #### DAILY MCP SUMMARY PLOTS ####
