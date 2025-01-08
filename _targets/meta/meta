@@ -53,6 +53,8 @@ seasonal_mcp|function|31f048fa99a50e51|||||||||||||||
 spring|object|6398ef5e90b44e6d|||||||||||||||
 spring_dbbmm|stem|fa639b5113a73f72|d0252e815f1d2ada|3d3583d5d503bb04|1234634189||t20095.9778325073s|b114ac6d13daf58a|3355342|rds|local|vector|||1596.03||
 spring_mcp|stem|ceed227076a6cb8c|834f0c31cd9ce1ad|82761fdd7caf2310|2029814444||t20096.7083048972s|32b82eb965d4f678|34014|rds|local|vector|||8.73||
+step_lengths|stem|e734e97cb350f83c|74a70bf1f4791d0c|ec3638c901d430c8|-712256869||t20096.8639439047s|a8e9b9ccfe730bc7|13772588|rds|local|vector|||18.79||
+steplength|function|97a0717a017cb942|||||||||||||||
 summarize_area|function|7cda6faad68dee6d|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
 summer_dbbmm|stem|562527873ab79ab7|ac31abcc43274c1e|5653727973154a42|320407742||t20096.0163011982s|c1ae9611350eb4ab|3624103|rds|local|vector|||1558.76||
