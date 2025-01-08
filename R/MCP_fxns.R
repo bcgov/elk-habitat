@@ -285,17 +285,16 @@ weekly_mcp <- function(elk,...) {
     
   }) # end tmp lapply
   
-  # Assign year to the polygons
-  invisible(lapply(names(tmp), function(x) {
-    tmp[[x]][[1]]$isoyear_week <<- x
-  }))
-  
   # Bind into one df
   out <- lapply(tmp, dplyr::bind_rows)
   out <- out[!is.na(out)]
   filter <- lapply(out, nrow) |> unlist(use.names = FALSE) # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  # Assign year to the polygons
+  invisible(lapply(names(out), function(x) {
+    out[[x]]$isoyear_week <<- x
+  }))
   out <- dplyr::bind_rows(out)
   out$isoyear <- as.numeric(stringr::str_split(out$isoyear_week, "\\.", simplify = TRUE)[,1]) # extract year
   out <- out[,c("animal_id", "isoyear", "week", "isoyear_week", "area", "x")] # Reorder cols
