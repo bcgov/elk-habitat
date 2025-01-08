@@ -27,7 +27,7 @@ individual_dbbmm <- function(elk_dat, margin = 11, window.size = 31,
     
     # Add cols of interest
     dbbmm$animal_id <- unique(elk_dat$animal_id)
-    dbbmm$year <- unique(elk_dat$year)
+    #dbbmm$year <- unique(elk_dat$year)
     dbbmm$area <- units::set_units(sf::st_area(dbbmm), value = area_unit, mode = "standard")
     return(dbbmm) 
   
@@ -133,6 +133,11 @@ seasonal_dbbmm <- function(elk, season, min_days = NA, ...) {
   filter <- lapply(out, nrow) |> unlist(use.names = FALSE) # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  # Assign year to the polygons
+  invisible(lapply(names(out), function(x) {
+    year <- as.numeric(gsub("x", "", x))
+    out[[x]]$year <<- year
+  }))
   out <- dplyr::bind_rows(out)
   out$season <- season
   out$elk_season <- paste0(out$animal_id, "_", out$season, "_", out$year)
