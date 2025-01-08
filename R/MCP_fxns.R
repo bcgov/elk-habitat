@@ -194,12 +194,6 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
        
   }) # end tmp lapply
   
-  # Assign year to the polygons
-  invisible(lapply(names(tmp), function(x) {
-    year <- as.numeric(gsub("x", "", x))
-    tmp[[x]][[1]]$year <<- year
-  }))
-  
   # Rename hulls
   # Desired output: MCP_<animal_id>_<season>_<year>
   
@@ -222,6 +216,11 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
   filter <- lapply(out, nrow) |> unlist(use.names = FALSE) # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  # Assign year to the polygons
+  invisible(lapply(names(out), function(x) {
+    year <- as.numeric(gsub("x", "", x))
+    out[[x]]$year <<- year
+  }))
   out <- dplyr::bind_rows(out)
   out$season <- season_txt
   out$elk_season <- paste0(out$animal_id, "_", out$season, "_", out$year)
