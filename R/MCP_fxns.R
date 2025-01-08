@@ -162,25 +162,13 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
   # this function on a single individual)
   elk_seasons <- Filter(function(x) dim(x) [1] > 0, elk_seasons)
   
-  # Loop through each season, then create MCP for each 
-  # individual within that season
   # First unpack dots to check if percent cutoff and center method supplied
   dots <- list(...)
   args <- match(names(formals(individual_mcp)), names(dots))
   mcp_dots <- dots[args[!is.na(args)]]
-  # if ("percent" %in% names(dots)) percent <- dots$percent
-  # if ("method" %in% names(dots)) method <- dots$method
-  # # I'm sure there's a better way of doing this, but... this is it for now
-  # # Perhaps match.call?
-  # # https://stackoverflow.com/questions/64156034/handling-missing-arguments-handled-with-missing-to-call-a-function-inside-a
-  # if (exists("percent") & exists("method")) {
-  #   tmp <- lapply(elk_seasons, individual_mcp, percent = percent, method = method)
-  # } else if (exists("percent")) {
-  #   tmp <- lapply(elk_seasons, individual_mcp, percent = percent)
-  # } else {
-  #   tmp <- lapply(elk_seasons, individual_mcp)
-  # }
   
+  # Loop through each season, then create MCP for each 
+  # individual within that season
   tmp <- lapply(elk_seasons, function(x) {
     elk_dat <- x
     individuals <- unique(elk_dat[["animal_id"]])
@@ -206,16 +194,20 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
        
   }) # end tmp lapply
   
-  names(tmp) <- names(elk_seasons)
+  # Assign year to the polygons
+  invisible(lapply(names(tmp), function(x) {
+    year <- as.numeric(gsub("x", "", x))
+    tmp[[x]][[1]]$year <<- year
+  }))
   
   # Rename hulls
   # Desired output: MCP_<animal_id>_<season>_<year>
   
   # Parse season into clean name
-  season <- dplyr::case_when("01-01" %in% season ~ "Winter",
-                             "04-01" %in% season ~ "Spring", 
-                             "07-01" %in% season ~ "Summer",
-                             TRUE ~ "Unknown")
+  season_txt <- dplyr::case_when("01-01" %in% season ~ "Winter",
+                                 "04-01" %in% season ~ "Spring", 
+                                 "07-01" %in% season ~ "Summer",
+                                 TRUE ~ "Unknown")
   
   # Now actually rename them
   # JK, pointless step, but keeping the code in case it's useful
@@ -231,7 +223,7 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
   filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   out <- dplyr::bind_rows(out)
-  out$season <- season
+  out$season <- season_txt
   out$elk_season <- paste0(out$animal_id, "_", out$season, "_", out$year)
   sf::st_geometry(out) <- "geometry"
   out <- out[,c("elk_season", "animal_id", "season", "year", "area", "geometry")] # Reorder cols
