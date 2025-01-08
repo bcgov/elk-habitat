@@ -16,6 +16,49 @@ summarize_area <- function(polygons, area_unit = "ha") {
 }
 
 
+# This function groups elk data into weekly bins, including accounting
+# for partial weeks at the end/start of the year (i.e., merging the 
+# final few days of December with the first few days of January into
+# one single 7-day week.) Weekly binned elk data are then used for either
+# MCPs or dBBMMs.
+weekly_binning <- function(elk, min_days = 1, min_dets_per_day = 7) {
+  # First split up data into weekly bins
+  elk$isoyear <- lubridate::isoyear(elk$dttm) # gotta use isoyear so that the last week of December/first week of Jan is still chopped up into an even 7 days! E.g. cases where Dec 31 is on, for example, a Tuesday. So week 53 = 3 days long while week 1 = 4 days long.
+  elk$week <- lubridate::isoweek(elk$dttm) # similar to isoyear, need to use isoweek for cases where last week of Dec is split in half
+  elk_weekly <- split(elk, list(elk$isoyear, elk$week))
+  
+  # Next subset to only include elk_weekly with fixes on at least X% of days
+  # For weekly, by default it's 100% of days
+  if (min_days > 1) min_days <- min_days / 100 # ensure it's a percentage
+  n_days_min <- ceiling(7 * min_days) # 7 days in a week
+  #n_dets_min <- n_days_min * min_dets_per_day
+  # Drop any empty dataframes in the weekly list
+  elk_weekly <- Filter(function(x) dim(x)[1] > 0, elk_weekly)
+  elk_weekly <- lapply(elk_weekly, function(x) {
+    # Group by animal_id + day, and if there's any days with < min_dets_per_day 
+    # detections, chuck the whole week.
+    animals_to_keep <- 
+      x |>
+      sf::st_drop_geometry() |>
+      dplyr::mutate(date = lubridate::date(dttm)) |>
+      dplyr::select(animal_id, week, date) |>
+      dplyr::group_by(animal_id, week, date) |>
+      dplyr::summarise(n_dets_per_day = dplyr::n(), .groups = "keep") |>
+      dplyr::filter(n_dets_per_day >= min_dets_per_day) |> # filter out days with less than min dets cutoff
+      dplyr::group_by(animal_id, week) |> # next filter out any animal_ids with not enough total days
+      dplyr::summarise(n_days = dplyr::n(), .groups = "drop") |>
+      dplyr::filter(n_days >= n_days_min) |>
+      dplyr::pull(animal_id)
+    # Now subset to only animals_to_keep
+    x <- x[which(x$animal_id %in% animals_to_keep), ]
+    return(x)
+  })
+  # Drop any subsequently empty dataframes in the weekly list
+  elk_weekly <- Filter(function(x) dim(x)[1] > 0, elk_weekly)
+  return(elk_weekly)
+}
+
+
 find_centre <- find_center <- function(coords, method = "delaunay") {
   xy <- coords
   # 3 options: Delaunay triangulation, mean, or median geographic center.
@@ -52,7 +95,6 @@ individual_mcp <- function(elk_dat, percent = 0.99, area_unit = "ha",...) {
   
   if (percent > 1) percent <- percent / 100 # ensure percent is btwn 0 and 1
   if (percent < 1) { 
-    
     # Only bother calculating center/distance to center etc. if the user
     # specifies they want an MCP for <100% of the points
     # Calculate the geographic center of the points
@@ -72,7 +114,7 @@ individual_mcp <- function(elk_dat, percent = 0.99, area_unit = "ha",...) {
   
   # Add cols of interest
   e$animal_id <- unique(elk_dat$animal_id)
-  e$year <- unique(elk_dat$year)
+  #e$year <- unique(elk_dat$year) # this fails in cases where last week of the year contains two years. Better to let the user assign the year how they want after the fact
   e$area <- units::set_units(sf::st_area(e), value = area_unit, mode = "standard")
   
   return(e)
@@ -199,47 +241,32 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
 
 # min_days is expressed as a percentage. What percentage of days must have a detection
 # in order to accept that subset of data for the MCP?
-weekly_mcp <- function(elk, min_days = 1, min_dets_per_day = 7, ...) {
-  # Dots = args to pass on to `individual_mcp` (percent, area_unit) or `find_center` (method)
+weekly_mcp <- function(elk,...) {
+  # Dots = args to pass on to:
+  # -> `weekly_binning` (min_days = 1, min_dets_per_day = 7)
+  # -> `individual_mcp` (percent, area_unit) 
+  # |-> `find_center` (method) - supplied via `individual_mcp`
   
+  # First unpack dots to check if weekly binning options, 
+  # percent cutoff and center method supplied
+  dots <- list(...)
+  # weekly_binning args
+  wb_args <- match(names(formals(weekly_binning)), names(dots))
+  wb_dots <- dots[wb_args[!is.na(wb_args)]]
+  # individual_mcp args
+  imcp_args <- match(names(formals(individual_mcp)), names(dots))
+  imcp_dots <- dots[imcp_args[!is.na(imcp_args)]]
+  
+  # Now actually run the functions
   # First split up data into weekly bins
-  elk$week <- lubridate::week(elk$dttm)
-  elk_weekly <- split(elk, list(elk$year, elk$week))
-  
-  # Next subset to only include elk_weekly with fixes on at least X% of days
-  # For weekly, by default it's 100% of days
-  if (min_days > 1) min_days <- min_days / 100 # ensure it's a percentage
-  n_days_min <- ceiling(7 * min_days) # 7 days in a week
-  #n_dets_min <- n_days_min * min_dets_per_day
-  # Drop any empty dataframes in the weekly list
-  elk_weekly <- Filter(function(x) dim(x)[1] > 0, elk_weekly)
-  elk_weekly <- lapply(elk_weekly, function(x) {
-    # Group by animal_id + day, and if there's any days with < min_dets_per_day 
-    # detections, chuck the whole week.
-    tmp <- x |>
-      sf::st_drop_geometry() |>
-      dplyr::mutate(date = lubridate::date(dttm)) |>
-      dplyr::select(animal_id, week, date) |>
-      dplyr::group_by(animal_id, week, date) |>
-      dplyr::summarise(n_dets_per_day = dplyr::n(), .groups = "keep") |>
-      dplyr::reframe(cutoff_dets_per_day = n_dets_per_day >= min_dets_per_day) |>
-      dplyr::group_by(animal_id, week) |>
-      dplyr::mutate(enough_dets = dplyr::case_when(any(cutoff_dets_per_day == FALSE) ~ FALSE, TRUE ~ TRUE)) |>
-      dplyr::select(animal_id, week, enough_dets) |>
-      dplyr::distinct()
-    animals_to_keep <- tmp[["animal_id"]][tmp$enough_dets == TRUE]
-    # Now subset to only animals_to_keep
-    x <- x[which(x$animal_id %in% animals_to_keep), ]
-    return(x)
-  })
+  if (length(wb_dots) == 0) {
+    elk_weekly <- weekly_binning(elk = elk)
+  } else {
+    elk_weekly <- do.call("weekly_binning", args = c(list(elk), wb_dots))
+  }
   
   # Loop through each week, then create MCP for each 
   # individual within that season
-  # First unpack dots to check if percent cutoff and center method supplied
-  dots <- list(...)
-  args <- match(names(formals(individual_mcp)), names(dots))
-  mcp_dots <- dots[args[!is.na(args)]]
-  
   tmp <- pbapply::pblapply(elk_weekly, function(x) {
     elk_dat <- x
     week <- unique(elk_dat$week)
@@ -249,10 +276,10 @@ weekly_mcp <- function(elk, min_days = 1, min_dets_per_day = 7, ...) {
       # Subset to individual
       e <- elk_dat[which(elk_dat$animal_id == i), ]
       # Calculate MCP
-      if (length(mcp_dots) == 0) {
+      if (length(imcp_dots) == 0) {
         out <- individual_mcp(elk_dat = e)
       } else {
-        out <- do.call("individual_mcp", args = c(list(e), mcp_dots))
+        out <- do.call("individual_mcp", args = c(list(e), imcp_dots))
       }
       out$week <- week
       return(out)
@@ -267,7 +294,10 @@ weekly_mcp <- function(elk, min_days = 1, min_dets_per_day = 7, ...) {
     
   }) # end tmp lapply
   
-  names(tmp) <- names(elk_weekly)
+  # Assign year to the polygons
+  invisible(lapply(names(tmp), function(x) {
+    tmp[[x]][[1]]$isoyear_week <<- x
+  }))
   
   # Bind into one df
   out <- lapply(tmp, dplyr::bind_rows)
@@ -276,7 +306,8 @@ weekly_mcp <- function(elk, min_days = 1, min_dets_per_day = 7, ...) {
   filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
   out <- dplyr::bind_rows(out)
-  out <- out[,c("animal_id", "year", "week", "area", "x")] # Reorder cols
+  out$isoyear <- as.numeric(stringr::str_split(out$isoyear_week, "\\.", simplify = TRUE)[,1]) # extract year
+  out <- out[,c("animal_id", "isoyear", "week", "isoyear_week", "area", "x")] # Reorder cols
   sf::st_geometry(out) <- "geometry" # Rename geometry column to "geometry"
   
   return(out)
