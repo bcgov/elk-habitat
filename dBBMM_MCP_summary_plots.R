@@ -386,11 +386,11 @@ weekly_mcps |>
   theme_minimal()
 
 
-#### SEVERE WINTER PERIOD PLOTS ####
+#### WEEKLY SEVERE WINTER PERIOD PLOTS ####
 
 # Severe winter period was 18 Dec 2021 - 14 Jan 2022
 #lubridate::isoweek("2021-12-18")
-#lubridate::isoweek("2022-01-14)
+#lubridate::isoweek("2022-01-14")
 swp <- c(50, 51, 52, 53, 1, 2) # weeks 51 thru 1
 
 weekly_mcps |>
@@ -409,12 +409,14 @@ weekly_mcps |>
                                  c("2021-2022", "2022-2023"),
                                  c("2022-2023", "2023-2024")),
               map_signif_level = TRUE,
-              color = "black") +
+              color = "black",
+              tip_length = 0.2) +
   geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
                                  c("2021-2022", "2023-2024")),
               map_signif_level = TRUE,
               y_position = 5000,
-              color = "black") +
+              color = "black",
+              tip_length = 0.3) +
   coord_trans(y = "log10") +
   labs(title = "Weekly MCP area during the severe winter \nperiod weeks, across years",
        subtitle = "18 Dec - 14 Jan",
@@ -470,24 +472,6 @@ daily_mcps |>
   dplyr::mutate(year = as.factor(year),
                 area = units::drop_units(area)) |>
   ggplot() +
-  # Winter
-  annotate("rect",
-           xmin = 0, xmax = 91, ymin = 0, ymax = Inf,
-           fill = "#e1eeff",
-           #fill = "#F0F0F0",
-           alpha = 0.6) +
-  # Spring
-  annotate("rect",
-           xmin = 91, xmax = 137, ymin = 0, ymax = Inf,
-           #fill = "#F0F0F0",
-           fill = "#f7ffe1",
-           alpha = 0.6) +
-  # Summer
-  annotate("rect",
-           xmin = 182, xmax = 245, ymin = 0, ymax = Inf,
-           #fill = "#F0F0F0",
-           fill = "#fff4e1",
-           alpha = 0.6) +
   geom_smooth(aes(x = doy,
                   y = area,
                   color = year,
@@ -502,18 +486,18 @@ daily_mcps |>
   theme_minimal()
 
 
-daily_mcps |>
-  dplyr::mutate(area = units::drop_units(area)) |>
-  ggplot(aes(x = date,
-             y = area,
-             #color = year,
-             group = date)) +
-  geom_boxplot(outlier.shape = NA) +
-  scale_y_continuous(limits = c(0, 450)) +
-  #facet_wrap(~year, ncol = 1) +
-  labs(title = "Mean daily MCP size through time",
-       subtitle = "Outliers removed") +
-  theme_minimal()
+# daily_mcps |>
+#   dplyr::mutate(area = units::drop_units(area)) |>
+#   ggplot(aes(x = date,
+#              y = area,
+#              #color = year,
+#              group = date)) +
+#   geom_boxplot(outlier.shape = NA) +
+#   scale_y_continuous(limits = c(0, 450)) +
+#   #facet_wrap(~year, ncol = 1) +
+#   labs(title = "Mean daily MCP size through time",
+#        subtitle = "Outliers removed") +
+#   theme_minimal()
 
 
 daily_mcps |>
@@ -540,7 +524,24 @@ daily_mcps |>
                    margin_error = units::set_units(t_score * se, "ha"),
                    lower_bound = mean_area - margin_error,
                    upper_bound = mean_area + margin_error) |>
+  units::drop_units() |>
   ggplot() +
+  annotate("rect",
+           xmin = lubridate::date("2021-12-18"), 
+           xmax = lubridate::date("2022-01-14"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#c1dcfe",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  annotate("rect",
+           xmin = lubridate::date("2021-06-25"), 
+           xmax = lubridate::date("2021-07-07"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#f9c56b",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
   geom_ribbon(aes(x = date, 
                   ymin = lower_bound,
                   ymax = upper_bound),
@@ -550,9 +551,67 @@ daily_mcps |>
   coord_cartesian(expand = FALSE,
                   ylim=c(0, 300)) +
   labs(title = "Mean daily MCP area over time",
-       caption = "Confidence intervals narrow over time as more samples are added.") +
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022.\nIn red, the 2021 PNW Heat Dome.") +
+  theme_minimal()
+
+
+#### DAILY SEVERE WINTER PERIOD PLOTS ####
+
+
+# Severe winter period was 18 Dec 2021 - 14 Jan 2022
+#lubridate::yday("2021-12-18")
+#lubridate::isoweek("2022-01-14")
+swp <- c(lubridate::yday("2021-12-18"):max(daily_mcps$doy), 1:14)
+
+daily_mcps |>
+  dplyr::filter(doy %in% swp) |>
+  dplyr::mutate(year = dplyr::if_else(doy < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year), 
+             y = area,
+             color = as.factor(year))) +
+  geom_boxplot(fill = NA) +
+  geom_jitter(alpha = 0.3,
+              stroke = NA) +
+  scale_color_manual(values = okabe) +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              color = "black",
+              tip_length = 0.3) +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              y_position = 3000,
+              color = "black",
+              tip_length = 1.5) +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              y_position = 8000,
+              color = "black",
+              tip_length = 5) +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              y_position = 15000,
+              color = "black",
+              tip_length = 5) +
+  coord_trans(y = "log10") +
+  labs(title = "Daily MCP area during the severe winter \nperiod weeks, across years",
+       subtitle = "18 Dec - 14 Jan",
+       caption = "Each boxplot contains daily MCP sizes from Dec 18-Jan 14 (inclusive) for each year.\nEach dot is the MCP size for one individual for one day.",
+       x = "Year",
+       y = "Area", 
+       color = "Year") +
   theme_minimal()
 
 
 
-
+daily_mcps |>
+  dplyr::filter(doy %in% swp) |>
+  dplyr::mutate(year = dplyr::if_else(doy < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  units::drop_units() |>
+  oneway.test(formula = area ~ year, var.equal = TRUE)
