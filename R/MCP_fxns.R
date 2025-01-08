@@ -357,10 +357,11 @@ daily_mcp <- function(elk, min_dets_per_day = 8, ...) {
     }) # end tryCatch
   }) # end tmp lapply
   
-  names(tmp) <- names(animal_dates) # for troubleshooting...
+  names(tmp) <- animal_dates # for troubleshooting...
   
   # Bind into one df
   out <- dplyr::bind_rows(tmp)
+  out$year <- lubridate::year(out$date)
   out <- out[,c("animal_id", "year", "date", "area", "x")] # Reorder cols
   sf::st_geometry(out) <- "geometry" # Rename geometry column to "geometry"
   
