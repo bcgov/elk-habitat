@@ -15,7 +15,6 @@ daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|277db6c58ad9a1b2|958011176||t20096.6948848394s|a682bbc1098cb845|4501904|rds|local|vector|||1559.69||
 dbbmm_seasonal_summary|stem|e9b26b810734b27c|9e9d3a471bcbeeca|634fa3131c4e3877|1789842921||t20097.1028061595s|3ee2761463b14a1e|871|rds|local|vector|||0.09||
 dbbmm_spring_yearly_overlap|stem|d8d2faf77839b989|39a9b295d50aa699|aa58b74f551567cf|-2038073459||t20095.6512183346s|2c6efe778cb8c49b|3914|rds|local|vector|||7.81||
-dbbmm_summary|stem|e9b26b810734b27c|9e9d3a471bcbeeca|634fa3131c4e3877|722464450||t20091.7746007516s|3ee2761463b14a1e|871|rds|local|vector|||0.11||
 dbbmm_summer_yearly_overlap|stem|9fb73716535a15f3|22432e9590bfe93c|f0634db9a432270a|408432813||t20095.6518663446s|eb88f2ebc46f1d65|3763|rds|local|vector|||8.07||
 dbbmm_winter_spring_overlap|stem|0337b3cd506e3664|b930075dc00053b3|c962f21eb3d27f33|-1789060891||t20095.6514304139s|9e0f404cffed73d7|4963|rds|local|vector|||12.91||
 dbbmm_winter_yearly_overlap|stem|436193586a85d484|3a8acfeaffe76901|1ea5728828b7c062|2111524819||t20095.6512807108s|bf2e87f978a909e1|2696|rds|local|vector|||5.31||
@@ -38,7 +37,6 @@ load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
 mcp_seasonal_summary|stem|899f384ea2b09715|14bb1b9a0a627205|dbd00c971f3f941b|-939293508||t20097.1028072359s|1261c6cb2cb36362|876|rds|local|vector|||0.07||
 mcp_spring_yearly_overlap|stem|bc320e2144ad7c22|36e1a77fe1c04832|1d0b86a7f267d922|410806255||t20096.7085900487s|50c307229575faba|3969|rds|local|vector|||5.12||
-mcp_summary|stem|899f384ea2b09715|14bb1b9a0a627205|dbd00c971f3f941b|1448887047||t20071.0195896704s|1261c6cb2cb36362|876|rds|local|vector|||0.1||
 mcp_summer_yearly_overlap|stem|0166051ead72c028|ceb332a84eacf958|cb7d3a3cad768f98|-1442130744||t20095.6517714411s|aba510ceca05becd|3755|rds|local|vector|||6.7||
 mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|d5e6c52926b52753|-1809842540||t20096.7086921996s|f6c4cf74567fc89a|5013|rds|local|vector|||8.81||
 mcp_winter_yearly_overlap|stem|837343aca2161fea|7582a03bec5b992d|a24c3bbf98761aac|-1053605382||t20095.6516932097s|ea4411d9df097ea2|2741|rds|local|vector|||5||
