@@ -15,9 +15,9 @@ tar_option_set(
 tar_source()
 
 # Set static variables
-winter <- c("01-01", "03-31")
-spring <- c("04-01", "05-15")
-summer <- c("07-01", "08-31")
+winter <- c("01-01", "03-31") # month-day format
+spring <- c("04-01", "05-15") # month-day format
+summer <- c("07-01", "08-31") # month-day format
 
 # Set max date for the study overall - we only want to use detections
 # up to March 31 2024.
