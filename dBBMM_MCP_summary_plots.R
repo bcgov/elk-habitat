@@ -13,6 +13,11 @@ library(units)
 # Color palette
 okabe <- c("#CC79A7", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00")
 
+# Season dates
+winter <- c("01-01", "03-31") # month-day format
+spring <- c("04-01", "05-15") # month-day format
+summer <- c("07-01", "08-31") # month-day format
+
 # How many days per season?
 lubridate::date("2024-03-31") - lubridate::date("2024-01-01") # Winter
 lubridate::date("2024-05-15") - lubridate::date("2024-04-01") # Spring
@@ -263,6 +268,10 @@ dBBMM |>
 
 tar_load(weekly_mcps)
 
+weekly_mcps <- assign_weekly_seasons(weekly_mcps, seasons = list("winter" = winter,
+                                                                 "spring" = spring,
+                                                                 "summer" = summer))
+
 # # Remove weekly MCP outliers
 # # Pull out area data
 # dat <- sf::st_drop_geometry(weekly_mcps["area"])
@@ -410,10 +419,35 @@ weekly_mcps |>
   theme_minimal()
 
 
+weekly_mcps |>
+  dplyr::filter(!is.na(season)) |>
+  ggplot(aes(x = season, y = area, color = season)) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.3, stroke = NA) +
+  scale_color_manual(values = okabe[1:3]) +
+  scale_fill_manual(values = okabe[1:3]) +
+  geom_signif(comparisons = list(c("Spring", "Summer"),
+                                 c("Summer", "Winter")),
+              map_signif_level = TRUE,
+              color = "black") +
+  geom_signif(comparisons = list(c("Spring", "Winter")),
+              map_signif_level = TRUE,
+              y_position = 30000,
+              color = "black") +
+  labs(title = "Log Weekly 95% MCP areas") +
+  coord_trans(y = "log10") +
+  theme_minimal()
+
+
 #### WEEKLY DBBMM PLOTS ####
 
 
 tar_load(weekly_dbbmms)
+
+weekly_dbbmms <- assign_weekly_seasons(weekly_dbbmms,
+                                       seasons = list("winter" = winter,
+                                                      "spring" = spring,
+                                                      "summer" = summer))
 
 # First remove outliers!! A few really funky large dBBMM blobs
 
@@ -549,6 +583,25 @@ weekly_dbbmms |>
        caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022.\nIn red, the 2021 PNW Heat Dome.") +
   theme_minimal()
 
+
+weekly_dbbmms |>
+  dplyr::filter(area < outlier_cutoff) |>
+  dplyr::filter(!is.na(season)) |>
+  ggplot(aes(x = season, y = area, color = season)) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.3, stroke = NA) +
+  scale_color_manual(values = okabe[1:3]) +
+  scale_fill_manual(values = okabe[1:3]) +
+  geom_signif(comparisons = list(c("Spring", "Summer"),
+                                 c("Summer", "Winter")),
+              map_signif_level = TRUE,
+              color = "black") +
+  geom_signif(comparisons = list(c("Spring", "Winter")),
+              map_signif_level = TRUE,
+              y_position = 800,
+              color = "black") +
+  labs(title = "Weekly 95% dBBMM areas") +
+  theme_minimal()
 
 
 
