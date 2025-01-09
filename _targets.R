@@ -76,7 +76,7 @@ list(
                                        percent = 0.95) |>
                sf::st_write("temp/Pipeline outputs/Summer_MCP.shp", append = FALSE)),
   tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp)),
-  tar_target(mcp_summary, summarize_area(all_seasons_mcp)),
+  tar_target(mcp_seasonal_summary, summarize_area(all_seasons_mcp)),
   # TODO: summary plots of MCP areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   ## DYNAMIC BROWNIAN BRIDGES
   tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
@@ -104,7 +104,7 @@ list(
                                           ud_percent = 0.95) |>
                sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57_le11m.shp", append = FALSE)),
   tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
-  tar_target(dbbmm_summary, summarize_area(all_seasons_dbbmm)),
+  tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm)),
   # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   #### WEEKLY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
@@ -116,6 +116,11 @@ list(
                                      percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
                sf::st_write("temp/Pipeline outputs/Weekly_MCP.shp", append = FALSE)
              ),
+  tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
+                                         min_days = 1,
+                                         min_dets_per_day = 7,
+                                         percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Weekly_dBBMM.shp", append = FALSE)),
   #### DAILY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
   # Only doing MCPs for weekly estimates. dBBMM window/margin params are too

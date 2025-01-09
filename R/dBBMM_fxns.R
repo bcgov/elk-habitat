@@ -148,7 +148,78 @@ seasonal_dbbmm <- function(elk, season, min_days = NA, ...) {
 }
 
 
-
+# min_days is expressed as a percentage. What percentage of days must have a detection
+# in order to accept that subset of data for the MCP?
+weekly_dbbmm <- function(elk,...) {
+  # Dots = args to pass on to:
+  # -> `weekly_binning` (min_days = 1, min_dets_per_day = 7)
+  # -> `individual_dbbmm` (margin = 11, window.size = 31, res = 100, location.error = 5, ud_percent = 0.99, area_unit = "ha")
+  
+  # First unpack dots to check if weekly binning options, 
+  # percent cutoff and center method supplied
+  dots <- list(...)
+  # weekly_binning args
+  wb_args <- match(names(formals(weekly_binning)), names(dots))
+  wb_dots <- dots[wb_args[!is.na(wb_args)]]
+  # individual_mcp args
+  idbbmm_args <- match(names(formals(individual_dbbmm)), names(dots))
+  idbbmm_dots <- dots[idbbmm_args[!is.na(idbbmm_args)]]
+  
+  # Now actually run the functions
+  # First split up data into weekly bins
+  if (length(wb_dots) == 0) {
+    elk_weekly <- weekly_binning(elk = elk)
+  } else {
+    elk_weekly <- do.call("weekly_binning", args = c(list(elk), wb_dots))
+  }
+  
+  # Loop through each week, then create MCP for each 
+  # individual within that week
+  tmp <- pbapply::pblapply(elk_weekly, function(x) {
+    elk_dat <- x
+    week <- unique(elk_dat$week)
+    individuals <- unique(elk_dat[["animal_id"]])
+    hulls <- lapply(individuals, function(i) { tryCatch({
+      #message("Calculating MCP for ", i, "...")
+      # Subset to individual
+      e <- elk_dat[which(elk_dat$animal_id == i), ]
+      # Calculate dBBMM
+      if (length(idbbmm_dots) == 0) {
+        out <- individual_dbbmm(elk_dat = e)
+      } else {
+        out <- do.call("individual_dbbmm", args = c(list(e), imcp_dots))
+      }
+      out$week <- week
+      return(out)
+    }, # end first tryCatch {}
+    error = function(i) {
+      message("Error with ", i)
+    }) # end tryCatch
+    }) # end hulls lapply
+    
+    names(hulls) <- individuals
+    return(hulls)
+    
+  }) # end tmp lapply
+  
+  # Bind into one df
+  out <- lapply(tmp, dplyr::bind_rows)
+  out <- out[!is.na(out)]
+  filter <- lapply(out, nrow) |> unlist(use.names = FALSE) # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  # Assign year to the polygons
+  invisible(lapply(names(out), function(x) {
+    out[[x]]$isoyear_week <<- x
+  }))
+  out <- dplyr::bind_rows(out)
+  out$isoyear <- as.numeric(stringr::str_split(out$isoyear_week, "\\.", simplify = TRUE)[,1]) # extract year
+  out <- out[,c("animal_id", "isoyear", "week", "isoyear_week", "area", "geometry")] # Reorder cols
+  # sf::st_geometry(out) <- "geometry" # Rename geometry column to "geometry"
+  
+  return(out)
+  
+}
 
 # A few interesting plots
 #ggplot(data = dBBMM, aes(x = area)) + geom_density() + facet_wrap(~ season)
