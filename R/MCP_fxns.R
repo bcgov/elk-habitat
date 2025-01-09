@@ -3,15 +3,16 @@
 
 # This function summarizes the area of any seasonal polygons,
 # incl. either MCP or dBBMM.
-summarize_area <- function(polygons, area_unit = "ha") {
+summarize_area <- function(polygons, group_by = c("year", "season"), area_unit = "ha") {
   out <- polygons |> 
     sf::st_drop_geometry() |> 
     dplyr::mutate(area = units::set_units(area, value = area_unit, mode = "standard")) |>
-    dplyr::group_by(season, year) |> 
+    dplyr::group_by_at(group_by) |> 
     dplyr::summarize(mean_area = mean(area),
                      sd = sd(area),
                      median = median(area),
-                     N = dplyr::n())
+                     N = dplyr::n(),
+                     .groups = "keep")
   return(out)
 }
 

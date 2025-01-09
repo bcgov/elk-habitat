@@ -13,7 +13,7 @@ cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20069.0476594968s|97880e85d9d4499c|2702655|file|local|vector|||41.92||
 daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|277db6c58ad9a1b2|958011176||t20096.6948848394s|a682bbc1098cb845|4501904|rds|local|vector|||1559.69||
-dbbmm_seasonal_summary|stem|e9b26b810734b27c|9e9d3a471bcbeeca|634fa3131c4e3877|1789842921||t20097.1028061595s|3ee2761463b14a1e|871|rds|local|vector|||0.09||
+dbbmm_seasonal_summary|stem|a3559165b0735f97|9e9d3a471bcbeeca|f56631714f91b9af|1789842921||t20097.6172899292s|016a14ea951b13e5|884|rds|local|vector|||0.06||
 dbbmm_spring_yearly_overlap|stem|d8d2faf77839b989|39a9b295d50aa699|aa58b74f551567cf|-2038073459||t20095.6512183346s|2c6efe778cb8c49b|3914|rds|local|vector|||7.81||
 dbbmm_summer_yearly_overlap|stem|9fb73716535a15f3|22432e9590bfe93c|f0634db9a432270a|408432813||t20095.6518663446s|eb88f2ebc46f1d65|3763|rds|local|vector|||8.07||
 dbbmm_winter_spring_overlap|stem|0337b3cd506e3664|b930075dc00053b3|c962f21eb3d27f33|-1789060891||t20095.6514304139s|9e0f404cffed73d7|4963|rds|local|vector|||12.91||
@@ -35,7 +35,7 @@ individual_mcp|function|a5b63584ab3a100b|||||||||||||||
 load_capture_data|function|72cfbb33fdca6f8d|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
-mcp_seasonal_summary|stem|899f384ea2b09715|14bb1b9a0a627205|dbd00c971f3f941b|-939293508||t20097.1028072359s|1261c6cb2cb36362|876|rds|local|vector|||0.07||
+mcp_seasonal_summary|stem|f6f074fe3f1f381a|14bb1b9a0a627205|d44b43eda29870ee|-939293508||t20097.6172905949s|724295bd8f9b83e0|892|rds|local|vector|||0.03||
 mcp_spring_yearly_overlap|stem|bc320e2144ad7c22|36e1a77fe1c04832|1d0b86a7f267d922|410806255||t20096.7085900487s|50c307229575faba|3969|rds|local|vector|||5.12||
 mcp_summer_yearly_overlap|stem|0166051ead72c028|ceb332a84eacf958|cb7d3a3cad768f98|-1442130744||t20095.6517714411s|aba510ceca05becd|3755|rds|local|vector|||6.7||
 mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|d5e6c52926b52753|-1809842540||t20096.7086921996s|f6c4cf74567fc89a|5013|rds|local|vector|||8.81||
@@ -55,7 +55,7 @@ spring_dbbmm|stem|fa639b5113a73f72|d0252e815f1d2ada|f13ed8bf7031a485|1234634189|
 spring_mcp|stem|ceed227076a6cb8c|834f0c31cd9ce1ad|82761fdd7caf2310|2029814444||t20096.7083048972s|32b82eb965d4f678|34014|rds|local|vector|||8.73||
 step_lengths|stem|e734e97cb350f83c|74a70bf1f4791d0c|ec3638c901d430c8|-712256869||t20096.8639439047s|a8e9b9ccfe730bc7|13772588|rds|local|vector|||18.79||
 steplength|function|97a0717a017cb942|||||||||||||||
-summarize_area|function|7cda6faad68dee6d|||||||||||||||
+summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
 summer_dbbmm|stem|562527873ab79ab7|ac31abcc43274c1e|40ceed9a422a5253|320407742||t20096.8941123564s|c1ae9611350eb4ab|3624103|rds|local|vector|||1538.06||
 summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t20096.7085302842s|71cd02de9b892eb7|35005|rds|local|vector|||9.67||
