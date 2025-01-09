@@ -1,22 +1,6 @@
 # Functions to calculate minimum convex polygons for elk
 # relocations 
 
-# This function summarizes the area of any seasonal polygons,
-# incl. either MCP or dBBMM.
-summarize_area <- function(polygons, group_by = c("year", "season"), area_unit = "ha") {
-  out <- polygons |> 
-    sf::st_drop_geometry() |> 
-    dplyr::mutate(area = units::set_units(area, value = area_unit, mode = "standard")) |>
-    dplyr::group_by_at(group_by) |> 
-    dplyr::summarize(mean_area = mean(area),
-                     sd = sd(area),
-                     median = median(area),
-                     N = dplyr::n(),
-                     .groups = "keep")
-  return(out)
-}
-
-
 # This function groups elk data into weekly bins, including accounting
 # for partial weeks at the end/start of the year (i.e., merging the 
 # final few days of December with the first few days of January into

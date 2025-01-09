@@ -62,4 +62,128 @@ fix_rate <- function(elk) {
 }
 
 
+# Summary functions for the resulting outputs/results, 
+# plus miscellaneous helper functions
 
+# This function summarizes the area of any seasonal polygons,
+# incl. either MCP or dBBMM.
+summarize_area <- function(polygons, group_by = c("year", "season"), area_unit = "ha") {
+  out <- polygons |> 
+    sf::st_drop_geometry() |> 
+    dplyr::mutate(area = units::set_units(area, value = area_unit, mode = "standard")) |>
+    dplyr::group_by_at(group_by) |> 
+    dplyr::summarize(mean_area = mean(area),
+                     sd = sd(area),
+                     median = median(area),
+                     N = dplyr::n(),
+                     .groups = "keep")
+  return(out)
+}
+
+
+
+# Assign season to the weekly_* polygons
+# `seasons` param must be passed as a named list, where
+# the names are the names of the seasons, while 
+# the values are month-day pairs. 
+# E.g., c(winter = c("01-01", "03-31"),
+#         spring = c("04-01", "05-15"),
+#         summer = c("07-01", "08-31"))
+assign_weekly_seasons <- function(weekly_shp, seasons) {
+  # Assign seasons to weekly data
+  
+  shp <- weekly_shp
+  
+  # Create an empty 'season' column in the data, to later
+  # assign season to
+  shp$season <- NA
+  
+  # Extract unique years from the data
+  years <- unique(shp$isoyear)
+  
+  # This code snippet will produce
+  # a little matrix for each season 
+  # that's provided. Each matrix row 
+  # corresponds to a year in the dataset, 
+  # while the columns correspond to week
+  # number. 
+  seasons_years <- lapply(seasons, function(season) {
+    outer(years, season, FUN = function(years, season) {
+      paste0(years, "-", season)
+    }) |>
+      as.POSIXct(format = "%Y-%m-%d", tz = "America/Vancouver") |>
+      lubridate::isoyear() |>
+      matrix(length(years), length(season))
+  })
+  
+  seasons_weeks <- lapply(seasons, function(season) {
+    outer(years, season, FUN = function(years, season) {
+      paste0(years, "-", season)
+    }) |>
+      as.POSIXct(format = "%Y-%m-%d", tz = "America/Vancouver") |>
+      lubridate::isoweek() |>
+      matrix(length(years), length(season))
+  })
+  
+  year_starts <- lapply(seasons_years, function(x){ x[, 1]})
+  year_ends <- lapply(seasons_years, function(x){ x[, 2]})
+  
+  week_starts <- lapply(seasons_weeks, function(x){ x[, 1]})
+  week_ends <- lapply(seasons_weeks, function(x){ x[, 2]})
+  
+  # Now, using start and end years + weeks, assign the
+  # season to the supplied shp dataframe.
+  # lapply loop through each of the supplied seasons
+  lapply(names(seasons), function(szn) {
+    # Pull the list of week starts for that given season (`szn`)
+    szn_week_starts <- week_starts[[szn]]
+    szn_week_ends <- week_ends[[szn]]
+    
+    # Then loop through the week starts for that season (`szn`)
+    # and combine with the week ends to get a list of year-week
+    # combos for each season
+    yr_wk_list <- lapply(1:length(szn_week_starts), function(w_index) {
+      # Pull the starting and ending week numbers
+      w_start <- szn_week_starts[w_index]
+      w_end <- szn_week_ends[w_index]
+      if (tolower(szn) == "winter" & w_start > 40) {
+        # Because winter can cross the year line, if the week_start number
+        # is greater than 40 (the first week of november), we need to build
+        # the week range in a special way to include the last 1-2 weeks of the year.
+        
+        # Just in case assume 53 is always the last/max week of the year
+        week_range_1 <- w_start:53
+        week_range_2 <- 1:w_end
+        # Assign the correct ISO year to the separate week ranges
+        week_range_1 <- paste0(year_starts[[szn]][w_index], ".", week_range_1)
+        week_range_2 <- paste0(year_ends[[szn]][w_index], ".", week_range_2)
+        # Combine
+        week_range <- c(week_range_1, week_range_2)
+        
+      } else {
+        # Else, if it's not a winter that crosses the year line,
+        # we can simply pull together the week range from w_start 
+        # and w_end with no issue.
+        week_range <- w_start:w_end
+        
+        # Assign the year to the week range
+        # Then, because we're not crossing the year line, we can just
+        # use the year in year_starts and assign it, rather than 
+        # having to pull from both year_starts and year_ends.
+        week_range <- paste0(year_starts[[szn]][w_index], ".", week_range)
+        
+      }
+      
+      # And finally don't forget to return week_range!
+      return(week_range)
+    })
+    
+    yr_wk_list <- unlist(yr_wk_list)
+    
+    # Finally, assign the season to the shp!
+    shp[["season"]][shp$isoyear_week %in% yr_wk_list] <<- stringr::str_to_title(szn)
+    
+  })
+  
+  return(shp)
+}
