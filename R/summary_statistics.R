@@ -1,5 +1,15 @@
 # Summary stats for the elk GPS dataset
 
+# TODO: assign season to daily dataset
+# For each season...
+# Create a list of start/end dates for each season-year combo
+# Get a sequential list of the dates between the start and end
+# Spit it out
+# Merge the season results
+# Assign the season text to the season column
+# Re-enter loop for the next season
+# Spit out resulting polygon
+
 # We need the following:
 # 1. N elk online per month for the study period
 # 2. Mean/median/min/max etc. N days tracked 
