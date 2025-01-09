@@ -108,19 +108,30 @@ list(
   # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   #### WEEKLY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
-  # For now, only doing MCPs for weekly estimates. dBBMMs are a bit more
-  # sensitive to lower sample sizes. 
   tar_target(weekly_mcps, weekly_mcp(elk = elk, 
                                      min_days = 1, # percentage of days - we want 100% of days
                                      min_dets_per_day = 7, # we also want at minimum 7 detections per day, otherwise that week of data is thrown out 
                                      percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
                sf::st_write("temp/Pipeline outputs/Weekly_MCP.shp", append = FALSE)
              ),
+  tar_target(weekly_mcp_seasonal_summary, assign_weekly_seasons(weekly_shp = weekly_mcps,
+                                                                seasons = list("winter" = winter, # defined toward the top of this document
+                                                                               "spring" = spring, # defined toward the top of this document
+                                                                               "summer" = summer) # defined toward the top of this document
+                                                                ) |> 
+               summarize_area(group_by = c("isoyear", "season"))),
+  ## dBBMM
   tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
                                          min_days = 1,
                                          min_dets_per_day = 7,
                                          percent = 0.95) |>
                sf::st_write("temp/Pipeline outputs/Weekly_dBBMM.shp", append = FALSE)),
+  tar_target(weekly_dbbmm_seasonal_summary, assign_weekly_seasons(weekly_shp = weekly_dbbmms,
+                                                                  seasons = list("winter" = winter, # defined toward the top of this document
+                                                                                 "spring" = spring, # defined toward the top of this document
+                                                                                 "summer" = summer) # defined toward the top of this document
+                                                                  ) |> 
+               summarize_area(group_by = c("isoyear", "season"))),
   #### DAILY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
   # Only doing MCPs for weekly estimates. dBBMM window/margin params are too

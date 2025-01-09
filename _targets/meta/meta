@@ -2,6 +2,7 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 add_mvt_metrics|function|d5e2123084ca7319|||||||||||||||
 all_seasons_dbbmm|stem|45b8c654fb4d5941|04c92914fe89f26c|d600240675d8352a|-436251714||t20091.7745992807s|c9acfdd53513aed1|10482222|rds|local|vector|||0.03||
 all_seasons_mcp|stem|59b2f36d40e50747|49512c53edbb9f8e|1b3a859245a5491a|37521217||t20071.0195756537s|db785c39c5e7cebb|94522|rds|local|vector|||0.02||
+assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
 capture_data|stem|98de33f683ee988c|e14ef5cd5be2470c|11f03e1aead2b0cd|1127347996||t20062.9547968275s|0420319ceef1893e|10494|rds|local|vector|||1.25|NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion|
 capture_data_path|stem|a4f2d2dc8481b6d5|65ec0aaf8e8ca777|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20241127.xlsx|t20054.9131591889s|3c37f8b350e57321|67427|file|local|vector|||2.34|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
@@ -62,8 +63,10 @@ summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|7e3373b3e9affe04|||||||||||||||
+weekly_dbbmm_seasonal_summary|stem|08822a387894f338|bca33755c401c151|419163da3fcfcd0e|35394069||t20097.7706567971s|d2c209ad5018d763|1089|rds|local|vector|||0.33||
 weekly_dbbmms|stem|d2176289833f230d|ee010cae28c30457|791b92bccc9b3a30|-2101101675||t20097.1028031137s|5249b174a1b0f3dc|35274255|rds|local|vector|||6148.48|Field names abbreviated for ESRI Shapefile driver|
 weekly_mcp|function|f3ffc9f2781e03b7|||||||||||||||
+weekly_mcp_seasonal_summary|stem|24a1bbbbdedec6d9|1f33dcc8d0eb9f6a|385df2081b6babd0|-1911070737||t20097.7706578392s|6a398f62def3f957|1085|rds|local|vector|||0.07||
 weekly_mcps|stem|666ce6e264178d6f|a6fffbef013b773d|33d5c18ea1c4d015|-1315591038||t20096.7348008209s|eeffcb9158f046b0|1146202|rds|local|vector|||216.47|Field names abbreviated for ESRI Shapefile driver|
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|10a25945b26c1148|f945eaa59d5f507d|425441c969437297|-99852116||t20096.9315428933s|5cd06dc7aaa4c448|3506746|rds|local|vector|||1756.64||
