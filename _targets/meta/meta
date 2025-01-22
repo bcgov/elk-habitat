@@ -1,6 +1,6 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 add_mvt_metrics|function|d5e2123084ca7319|||||||||||||||
-all_seasons_dbbmm|stem|45b8c654fb4d5941|04c92914fe89f26c|d600240675d8352a|-436251714||t20091.7745992807s|c9acfdd53513aed1|10482222|rds|local|vector|||0.03||
+all_seasons_dbbmm|stem|4eb058644e34322a|04c92914fe89f26c|669b712cb3f7bc40|-436251714||t20110.6463219638s|43db21a265ae0f32|10563057|rds|local|vector|||0.01||
 all_seasons_mcp|stem|59b2f36d40e50747|49512c53edbb9f8e|1b3a859245a5491a|37521217||t20071.0195756537s|db785c39c5e7cebb|94522|rds|local|vector|||0.02||
 assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
@@ -14,11 +14,11 @@ cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20069.0476594968s|97880e85d9d4499c|2702655|file|local|vector|||41.92||
 daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|277db6c58ad9a1b2|958011176||t20096.6948848394s|a682bbc1098cb845|4501904|rds|local|vector|||1559.69||
-dbbmm_seasonal_summary|stem|a3559165b0735f97|9e9d3a471bcbeeca|f56631714f91b9af|1789842921||t20097.6172899292s|016a14ea951b13e5|884|rds|local|vector|||0.06||
-dbbmm_spring_yearly_overlap|stem|d8d2faf77839b989|39a9b295d50aa699|aa58b74f551567cf|-2038073459||t20095.6512183346s|2c6efe778cb8c49b|3914|rds|local|vector|||7.81||
-dbbmm_summer_yearly_overlap|stem|9fb73716535a15f3|22432e9590bfe93c|f0634db9a432270a|408432813||t20095.6518663446s|eb88f2ebc46f1d65|3763|rds|local|vector|||8.07||
-dbbmm_winter_spring_overlap|stem|0337b3cd506e3664|b930075dc00053b3|c962f21eb3d27f33|-1789060891||t20095.6514304139s|9e0f404cffed73d7|4963|rds|local|vector|||12.91||
-dbbmm_winter_yearly_overlap|stem|436193586a85d484|3a8acfeaffe76901|1ea5728828b7c062|2111524819||t20095.6512807108s|bf2e87f978a909e1|2696|rds|local|vector|||5.31||
+dbbmm_seasonal_summary|stem|de130b4306d74872|953aea498725d956|2cd9a45f4490c1e3|1789842921||t20110.6463635903s|ba8390797232be64|474|rds|local|vector|||0.02||
+dbbmm_spring_yearly_overlap|stem|626d66220cea13fa|39a9b295d50aa699|975458486144cc73|-2038073459||t20110.6462439783s|09812e1229965cdd|3918|rds|local|vector|||3.81||
+dbbmm_summer_yearly_overlap|stem|867cdc869d0404c8|22432e9590bfe93c|1139e5d8b1416e8c|408432813||t20110.6463632892s|3bffdc5c1d64df30|3764|rds|local|vector|||3.55||
+dbbmm_winter_spring_overlap|stem|318b4b87bf98de18|b930075dc00053b3|fd66b94ca786de0a|-1789060891||t20110.6463148925s|a99ab78527fee2f6|4968|rds|local|vector|||6.13||
+dbbmm_winter_yearly_overlap|stem|f7404fffc5be7e12|3a8acfeaffe76901|25e0ecd5a82641f1|2111524819||t20110.6461997314s|c3af5cd0b7cca478|2721|rds|local|vector|||2.72||
 detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|71e452fdf147d3fc|947972721||t20069.0385290536s|c24c5d185b903301|2587|rds|local|vector|||0.35||
 dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6c6a5b45b4a3ce9a|-360331643||t20069.0515342632s|31cf8697cc750540|180|rds|local|vector|||0.05||
 elk|stem|e713751ba60ae25b|c437453ecb03737d|07a89ad0cceb919e|-188372202||t20069.0385247589s|7544662e75434240|32142164|rds|local|vector|||29|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
@@ -36,7 +36,7 @@ individual_mcp|function|a5b63584ab3a100b|||||||||||||||
 load_capture_data|function|72cfbb33fdca6f8d|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
-mcp_seasonal_summary|stem|f6f074fe3f1f381a|14bb1b9a0a627205|d44b43eda29870ee|-939293508||t20097.6172905949s|724295bd8f9b83e0|892|rds|local|vector|||0.03||
+mcp_seasonal_summary|stem|42559019e10b8e6a|41c36d11592ebd28|d44b43eda29870ee|-939293508||t20109.6899855224s|3ce37e60061c012b|477|rds|local|vector|||0.04||
 mcp_spring_yearly_overlap|stem|bc320e2144ad7c22|36e1a77fe1c04832|1d0b86a7f267d922|410806255||t20096.7085900487s|50c307229575faba|3969|rds|local|vector|||5.12||
 mcp_summer_yearly_overlap|stem|0166051ead72c028|ceb332a84eacf958|cb7d3a3cad768f98|-1442130744||t20095.6517714411s|aba510ceca05becd|3755|rds|local|vector|||6.7||
 mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|d5e6c52926b52753|-1809842540||t20096.7086921996s|f6c4cf74567fc89a|5013|rds|local|vector|||8.81||
@@ -52,23 +52,23 @@ remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 seasonal_dbbmm|function|6c03db33d638a2b1|||||||||||||||
 seasonal_mcp|function|31f048fa99a50e51|||||||||||||||
 spring|object|6398ef5e90b44e6d|||||||||||||||
-spring_dbbmm|stem|fa639b5113a73f72|d0252e815f1d2ada|f13ed8bf7031a485|1234634189||t20096.9112071655s|b114ac6d13daf58a|3355342|rds|local|vector|||1476.72||
+spring_dbbmm|stem|3e608989db640d89|f205dfdb4c0311a3|f13ed8bf7031a485|1234634189||t20110.1718719905s|33d2cc2ad026b521|3545375|rds|local|vector|||1242.81||
 spring_mcp|stem|ceed227076a6cb8c|834f0c31cd9ce1ad|82761fdd7caf2310|2029814444||t20096.7083048972s|32b82eb965d4f678|34014|rds|local|vector|||8.73||
 step_lengths|stem|e734e97cb350f83c|74a70bf1f4791d0c|ec3638c901d430c8|-712256869||t20096.8639439047s|a8e9b9ccfe730bc7|13772588|rds|local|vector|||18.79||
 steplength|function|97a0717a017cb942|||||||||||||||
 summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
-summer_dbbmm|stem|562527873ab79ab7|ac31abcc43274c1e|40ceed9a422a5253|320407742||t20096.8941123564s|c1ae9611350eb4ab|3624103|rds|local|vector|||1538.06||
+summer_dbbmm|stem|4ea0dfa3c8e6260b|96d68f6b232f6858|40ceed9a422a5253|320407742||t20110.6461679053s|c922e72751bbec8a|3556806|rds|local|vector|||40978.93||
 summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t20096.7085302842s|71cd02de9b892eb7|35005|rds|local|vector|||9.67||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|7e3373b3e9affe04|||||||||||||||
-weekly_dbbmm_seasonal_summary|stem|08822a387894f338|bca33755c401c151|419163da3fcfcd0e|35394069||t20097.7706567971s|d2c209ad5018d763|1089|rds|local|vector|||0.33||
-weekly_dbbmms|stem|d2176289833f230d|ee010cae28c30457|791b92bccc9b3a30|-2101101675||t20097.1028031137s|5249b174a1b0f3dc|35274255|rds|local|vector|||6148.48|Field names abbreviated for ESRI Shapefile driver|
+weekly_dbbmm_seasonal_summary|stem|2948afef854249c3|f17c3ed425db58d1|419163da3fcfcd0e|35394069||t20109.6899839415s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.45||
+weekly_dbbmms|stem|d2176289833f230d|70f4e208bf7b697e|791b92bccc9b3a30|-2101101675||t20110.1574847381s|5249b174a1b0f3dc|35274255|rds|local|vector|||5335.23|Field names abbreviated for ESRI Shapefile driver|
 weekly_mcp|function|f3ffc9f2781e03b7|||||||||||||||
-weekly_mcp_seasonal_summary|stem|24a1bbbbdedec6d9|1f33dcc8d0eb9f6a|385df2081b6babd0|-1911070737||t20097.7706578392s|6a398f62def3f957|1085|rds|local|vector|||0.07||
+weekly_mcp_seasonal_summary|stem|45ba099715c2c832|76f418a931433e0b|385df2081b6babd0|-1911070737||t20109.6899846877s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.02||
 weekly_mcps|stem|666ce6e264178d6f|a6fffbef013b773d|33d5c18ea1c4d015|-1315591038||t20096.7348008209s|eeffcb9158f046b0|1146202|rds|local|vector|||216.47|Field names abbreviated for ESRI Shapefile driver|
 winter|object|326711d79cc870d3|||||||||||||||
-winter_dbbmm|stem|10a25945b26c1148|f945eaa59d5f507d|425441c969437297|-99852116||t20096.9315428933s|5cd06dc7aaa4c448|3506746|rds|local|vector|||1756.64||
+winter_dbbmm|stem|77f85a78fdcf5827|93ab5c460629c9d4|425441c969437297|-99852116||t20110.0957124035s|75f3b8712bb493d7|3464743|rds|local|vector|||1468.39||
 winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|905284f9fe9e35b8|844460800||t20096.7084179695s|bb32bb867029de36|29249|rds|local|vector|||9.75||
 yearly_prct_overlap|function|a191d863aa6bf109|||||||||||||||

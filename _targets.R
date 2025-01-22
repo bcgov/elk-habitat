@@ -76,7 +76,7 @@ list(
                                        percent = 0.95) |>
                sf::st_write("temp/Pipeline outputs/Summer_MCP.shp", append = FALSE)),
   tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp)),
-  tar_target(mcp_seasonal_summary, summarize_area(all_seasons_mcp)),
+  tar_target(mcp_seasonal_summary, summarize_area(all_seasons_mcp, group_by = "season")),
   # TODO: summary plots of MCP areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   ## DYNAMIC BROWNIAN BRIDGES
   tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
@@ -85,26 +85,26 @@ list(
                                           margin = 9, # 9 points ~= about ~1 day margin
                                           window.size = 57, # 57 points / 8 points per day = window size of ~7 days long
                                           location.error = 11.5, # GPS error in meters. Vectronic documentation indicates GPS error is on average 8-15m.
-                                          ud_percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Winter_dBBMM_window57_le11m.shp", append = FALSE)),
+                                          ud_percent = 0.99) |>
+               sf::st_write("temp/Pipeline outputs/Winter_dBBMM_window57_le11m_99ud.shp", append = FALSE)),
   tar_target(spring_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = spring,
                                           min_days = 0.9,
                                           margin = 9,
                                           window.size = 57,
                                           location.error = 11.5,
-                                          ud_percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Spring_dBBMM_window57_le11m.shp", append = FALSE)),
+                                          ud_percent = 0.99) |>
+               sf::st_write("temp/Pipeline outputs/Spring_dBBMM_window57_le11m_99ud.shp", append = FALSE)),
   tar_target(summer_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = summer,
                                           min_days = 0.9,
                                           margin = 9,
                                           window.size = 57,
                                           location.error = 11.5,
-                                          ud_percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57_le11m.shp", append = FALSE)),
+                                          ud_percent = 0.99) |>
+               sf::st_write("temp/Pipeline outputs/Summer_dBBMM_window57_le11m_99ud.shp", append = FALSE)),
   tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
-  tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm)),
+  tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm, group_by = "season")),
   # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   #### WEEKLY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
@@ -119,19 +119,19 @@ list(
                                                                                "spring" = spring, # defined toward the top of this document
                                                                                "summer" = summer) # defined toward the top of this document
                                                                 ) |> 
-               summarize_area(group_by = c("isoyear", "season"))),
+               summarize_area(group_by = c("season"))),
   ## dBBMM
   tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
                                          min_days = 1,
                                          min_dets_per_day = 7,
-                                         percent = 0.95) |>
-               sf::st_write("temp/Pipeline outputs/Weekly_dBBMM.shp", append = FALSE)),
+                                         ud_percent = 0.95) |>
+               sf::st_write("temp/Pipeline outputs/Weekly_dBBMM_95ud.shp", append = FALSE)),
   tar_target(weekly_dbbmm_seasonal_summary, assign_weekly_seasons(weekly_shp = weekly_dbbmms,
                                                                   seasons = list("winter" = winter, # defined toward the top of this document
                                                                                  "spring" = spring, # defined toward the top of this document
                                                                                  "summer" = summer) # defined toward the top of this document
                                                                   ) |> 
-               summarize_area(group_by = c("isoyear", "season"))),
+               summarize_area(group_by = c("season"))),
   #### DAILY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
   # Only doing MCPs for weekly estimates. dBBMM window/margin params are too

@@ -187,7 +187,7 @@ weekly_dbbmm <- function(elk,...) {
       if (length(idbbmm_dots) == 0) {
         out <- individual_dbbmm(elk_dat = e)
       } else {
-        out <- do.call("individual_dbbmm", args = c(list(e), imcp_dots))
+        out <- do.call("individual_dbbmm", args = c(list(e), idbbmm_dots))
       }
       out$week <- week
       return(out)
