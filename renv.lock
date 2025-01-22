@@ -238,6 +238,13 @@
       ],
       "Hash": "24a964d2cf75ad25d7b843856c8d4c93"
     },
+    "RhpcBLASctl": {
+      "Package": "RhpcBLASctl",
+      "Version": "0.23-42",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c966ea2957ff75e77afa5c908dfc89e1"
+    },
     "Rmpfr": {
       "Package": "Rmpfr",
       "Version": "0.9-5",
@@ -1160,6 +1167,20 @@
         "utils"
       ],
       "Hash": "0080607b4a1a7b28979aecef976d8bc2"
+    },
+    "isotree": {
+      "Package": "isotree",
+      "Version": "0.6.1-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "RhpcBLASctl",
+        "jsonlite",
+        "methods"
+      ],
+      "Hash": "03deae0526243712bef3dee653a091ab"
     },
     "janitor": {
       "Package": "janitor",
