@@ -139,8 +139,13 @@ list(
   tar_target(daily_mcps, daily_mcp(elk = elk, 
                                     min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
                                     percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
-               sf::st_write("temp/Pipeline outputs/Daily_MCP.shp", append = FALSE)
-  ),
+               sf::st_write("temp/Pipeline outputs/Daily_MCP.shp", append = FALSE)),
+  tar_target(daily_mcp_seasonal_summary, assign_daily_seasons(daily_shp = daily_mcps,
+                                                              seasons = list("winter" = winter, # defined toward the top of this document
+                                                                             "spring" = spring, # defined toward the top of this document
+                                                                             "summer" = summer) # defined toward the top of this document
+                                                              ) |> 
+               summarize_area(group_by = c("season"))),
   #### SEASONAL HOME RANGE OVERLAP ####
   # Winter to Spring
   tar_target(mcp_winter_spring_overlap, prct_overlap(shp_1 = winter_mcp,

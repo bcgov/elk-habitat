@@ -197,3 +197,67 @@ assign_weekly_seasons <- function(weekly_shp, seasons) {
   
   return(shp)
 }
+
+
+# Assign season to the daily_* polygons
+# `seasons` param must be passed as a named list, where
+# the names are the names of the seasons, while 
+# the values are month-day pairs. 
+# E.g., c(winter = c("01-01", "03-31"),
+#         spring = c("04-01", "05-15"),
+#         summer = c("07-01", "08-31"))
+assign_daily_seasons <- function(daily_shp, seasons) {
+  # Assign seasons to daily data
+  shp <- daily_shp
+  
+  # Create an empty 'season' column in the data, to later
+  # assign season to
+  shp$season <- NA
+  
+  # Extract unique years from the data
+  years <- unique(shp$year)
+  
+  # This code snippet will produce
+  # a little matrix for each season 
+  # that's provided. Each matrix row 
+  # corresponds to a year in the dataset, 
+  # while the columns correspond to min
+  # date and max date of the season.
+  seasons_years <- lapply(seasons, function(season) {
+    outer(years, season, FUN = function(years, season) {
+      paste0(years, "-", season)
+    }) 
+  })
+  
+  # For each start and end date within each
+  # season, extract the full sequence of
+  # dates between the start and end dates (inclusive).
+  # Then just collapse those dates into one 
+  # giant list containing every date for 
+  # every year for each season.
+  seasons_dates <- lapply(seasons_years, function(season) {
+    n_years <- nrow(season)
+    dates_x <- lapply(1:n_years, function(year_x) {
+      start_x <- season[year_x, 1]
+      end_x <- season[year_x, 2]
+      dates_x <- seq(lubridate::ymd(start_x),
+                     lubridate::ymd(end_x), 
+                     by = 'days')
+    })
+    out_dates <- do.call(c, dates_x) # use c() fxn to merge all the dates for all years of that season into one list
+    return(out_dates)
+  })
+  
+  # Finally assign each day within the 
+  # `shp` dataset a season. Assume the 
+  # name of the dates list == the name
+  # of the season itself.
+  invisible(
+    lapply(names(seasons_dates), function(szn) {
+      dates_szn <- seasons_dates[[szn]]
+      shp[["season"]][shp$date %in% dates_szn] <<- stringr::str_to_title(szn)
+    })
+  )
+  
+  return(shp)
+}

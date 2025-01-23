@@ -2,6 +2,7 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 add_mvt_metrics|function|d5e2123084ca7319|||||||||||||||
 all_seasons_dbbmm|stem|4eb058644e34322a|04c92914fe89f26c|669b712cb3f7bc40|-436251714||t20110.6463219638s|43db21a265ae0f32|10563057|rds|local|vector|||0.01||
 all_seasons_mcp|stem|59b2f36d40e50747|49512c53edbb9f8e|1b3a859245a5491a|37521217||t20071.0195756537s|db785c39c5e7cebb|94522|rds|local|vector|||0.02||
+assign_daily_seasons|function|f8faa823c34e05e9|||||||||||||||
 assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
 capture_data|stem|98de33f683ee988c|e14ef5cd5be2470c|11f03e1aead2b0cd|1127347996||t20062.9547968275s|0420319ceef1893e|10494|rds|local|vector|||1.25|NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion|
@@ -13,6 +14,7 @@ collar_keys|stem|e065fe1973201e6b|532970a144734d7b|2c530c1562a7fbd1|34646257|C:/
 cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20069.0476594968s|97880e85d9d4499c|2702655|file|local|vector|||41.92||
 daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
+daily_mcp_seasonal_summary|stem|04dcda9903f47a56|27a431966e8c0005|965a293fa0179b3b|-282887321||t20111.0117722877s|ffeb2fb5fa1a1d60|518|rds|local|vector|||0.47||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|277db6c58ad9a1b2|958011176||t20096.6948848394s|a682bbc1098cb845|4501904|rds|local|vector|||1559.69||
 dbbmm_seasonal_summary|stem|de130b4306d74872|953aea498725d956|2cd9a45f4490c1e3|1789842921||t20110.6463635903s|ba8390797232be64|474|rds|local|vector|||0.02||
 dbbmm_spring_yearly_overlap|stem|626d66220cea13fa|39a9b295d50aa699|975458486144cc73|-2038073459||t20110.6462439783s|09812e1229965cdd|3918|rds|local|vector|||3.81||
