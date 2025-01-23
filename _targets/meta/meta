@@ -62,9 +62,9 @@ summer_dbbmm|stem|4ea0dfa3c8e6260b|96d68f6b232f6858|40ceed9a422a5253|320407742||
 summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t20096.7085302842s|71cd02de9b892eb7|35005|rds|local|vector|||9.67||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
-weekly_dbbmm|function|7e3373b3e9affe04|||||||||||||||
-weekly_dbbmm_seasonal_summary|stem|2948afef854249c3|f17c3ed425db58d1|419163da3fcfcd0e|35394069||t20109.6899839415s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.45||
-weekly_dbbmms|stem|d2176289833f230d|70f4e208bf7b697e|791b92bccc9b3a30|-2101101675||t20110.1574847381s|5249b174a1b0f3dc|35274255|rds|local|vector|||5335.23|Field names abbreviated for ESRI Shapefile driver|
+weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
+weekly_dbbmm_seasonal_summary|stem|1e56e021866a7911|f17c3ed425db58d1|6f9cae2d2ad5793c|35394069||t20110.8199238556s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.06||
+weekly_dbbmms|stem|00fd1482ed80d40a|5cebf5580f0a8be6|84bba84ab5e9f4f6|-2101101675||t20110.8199223616s|92f787c56ef4e048|33981739|rds|local|vector|||6112.38|Field names abbreviated for ESRI Shapefile driver|
 weekly_mcp|function|f3ffc9f2781e03b7|||||||||||||||
 weekly_mcp_seasonal_summary|stem|45ba099715c2c832|76f418a931433e0b|385df2081b6babd0|-1911070737||t20109.6899846877s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.02||
 weekly_mcps|stem|666ce6e264178d6f|a6fffbef013b773d|33d5c18ea1c4d015|-1315591038||t20096.7348008209s|eeffcb9158f046b0|1146202|rds|local|vector|||216.47|Field names abbreviated for ESRI Shapefile driver|
