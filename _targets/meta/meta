@@ -15,6 +15,7 @@ cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20069.0476594968s|97880e85d9d4499c|2702655|file|local|vector|||41.92||
 daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
 daily_mcp_seasonal_summary|stem|04dcda9903f47a56|27a431966e8c0005|965a293fa0179b3b|-282887321||t20111.0117722877s|ffeb2fb5fa1a1d60|518|rds|local|vector|||0.47||
+daily_mcp_swp_summary|stem|a3b533c737de3a11|b1b723ecf468bcbb|11bd9d4ce28c0d2e|-2092308185||t20111.0619912241s|d9b313b107b3c446|554|rds|local|vector|||0.1||
 daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|277db6c58ad9a1b2|958011176||t20096.6948848394s|a682bbc1098cb845|4501904|rds|local|vector|||1559.69||
 dbbmm_seasonal_summary|stem|de130b4306d74872|953aea498725d956|2cd9a45f4490c1e3|1789842921||t20110.6463635903s|ba8390797232be64|474|rds|local|vector|||0.02||
 dbbmm_spring_yearly_overlap|stem|626d66220cea13fa|39a9b295d50aa699|975458486144cc73|-2038073459||t20110.6462439783s|09812e1229965cdd|3918|rds|local|vector|||3.81||
@@ -45,6 +46,7 @@ mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|d5e6c52926b5275
 mcp_winter_yearly_overlap|stem|837343aca2161fea|7582a03bec5b992d|a24c3bbf98761aac|-1053605382||t20095.6516932097s|ea4411d9df097ea2|2741|rds|local|vector|||5||
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|74c304c23b6873ff|||||||||||||||
+non_swp_elk|object|2c07bcfc1260c6a8|||||||||||||||
 p_dets_per_elk|stem|c2b7a0d9981414ec|ef744c8c91fd6ab6|2f89263cf258d1dd|784997253||t20069.0471743298s|98bb26d1d1c7fbcc|32256322|rds|local|vector|||0.03||
 p_efficiency|stem|e90cf5b2efeee425|dc663c41ca62b40a|dc32d3bcff81c713|-1905756578||t20069.0515349809s|dc6edb64f692b7ad|111065|rds|local|vector|||0||
 p_elk_per_month|stem|ed5635bbc2b69a35|fb1b1ddd4d188b87|ae4616bccd90fecd|2139122293||t20069.0388838487s|0bc2645bba0dfe4b|32310422|rds|local|vector|||0.11||
@@ -62,13 +64,17 @@ summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
 summer_dbbmm|stem|4ea0dfa3c8e6260b|96d68f6b232f6858|40ceed9a422a5253|320407742||t20110.6461679053s|c922e72751bbec8a|3556806|rds|local|vector|||40978.93||
 summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t20096.7085302842s|71cd02de9b892eb7|35005|rds|local|vector|||9.67||
+swp_days|object|a66a035b5e000a9e|||||||||||||||
+swp_weeks|object|b40b8812ed5a52af|||||||||||||||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
 weekly_dbbmm_seasonal_summary|stem|1e56e021866a7911|f17c3ed425db58d1|6f9cae2d2ad5793c|35394069||t20110.8199238556s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.06||
+weekly_dbbmm_swp_summary|stem|7ee761a57c481764|4114bd9eda70e5ea|dbc3f73d40c836b0|-1052199150||t20111.0619970404s|baf9ff9f6b5aaee8|551|rds|local|vector|||0.16||
 weekly_dbbmms|stem|00fd1482ed80d40a|5cebf5580f0a8be6|84bba84ab5e9f4f6|-2101101675||t20110.8199223616s|92f787c56ef4e048|33981739|rds|local|vector|||6112.38|Field names abbreviated for ESRI Shapefile driver|
 weekly_mcp|function|f3ffc9f2781e03b7|||||||||||||||
 weekly_mcp_seasonal_summary|stem|45ba099715c2c832|76f418a931433e0b|385df2081b6babd0|-1911070737||t20109.6899846877s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.02||
+weekly_mcp_swp_summary|stem|93167d465093f8da|21c78168eb8e0959|43215aa2d9aeedb8|-1290166597||t20111.0619978299s|c4562ec57f43f223|552|rds|local|vector|||0.02||
 weekly_mcps|stem|666ce6e264178d6f|a6fffbef013b773d|33d5c18ea1c4d015|-1315591038||t20096.7348008209s|eeffcb9158f046b0|1146202|rds|local|vector|||216.47|Field names abbreviated for ESRI Shapefile driver|
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|77f85a78fdcf5827|93ab5c460629c9d4|425441c969437297|-99852116||t20110.0957124035s|75f3b8712bb493d7|3464743|rds|local|vector|||1468.39||

@@ -14,7 +14,9 @@ tar_option_set(
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
 
-# Set static variables
+#### STATIC VARIABLES ####
+
+# Seasons
 winter <- c("01-01", "03-31") # month-day format
 spring <- c("04-01", "05-15") # month-day format
 summer <- c("07-01", "08-31") # month-day format
@@ -23,7 +25,22 @@ summer <- c("07-01", "08-31") # month-day format
 # up to March 31 2024.
 cutoff_date <- "2024-04-01"
 
-# Replace the target list below with your own:
+# Two elk did not experience severe winter conditions, per Mario's
+# work looking at snow depth data on cameras deployed across the
+# study region. Remove these two elk from the severe winter
+# comparison.
+non_swp_elk <- c("20-1001", "20-1002")
+
+# Severe winter period was 18 Dec 2021 - 14 Jan 2022
+#lubridate::isoweek("2021-12-18")
+#lubridate::isoweek("2022-01-14")
+swp_weeks <- c(50, 51, 52, 53, 1, 2) # weeks 51 thru 1
+
+#lubridate::yday("2021-12-18")
+#lubridate::yday("2022-01-14")
+swp_days <- c(lubridate::yday("2021-12-18"):366, 1:14)
+
+#### PIPELINE ####
 list(
   #### SETUP ####
   # Pull and track all collar keys files
@@ -120,6 +137,14 @@ list(
                                                                                "summer" = summer) # defined toward the top of this document
                                                                 ) |> 
                summarize_area(group_by = c("season"))),
+  # Severe Winter Period MCPs
+  tar_target(weekly_mcp_swp_summary, weekly_mcps |>
+               dplyr::filter(!animal_id %in% non_swp_elk) |>
+               dplyr::filter(week %in% swp_weeks) |>
+               dplyr::mutate(year = isoyear) |>
+               dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
+               dplyr::mutate(year = paste0(year, "-", year+1)) |>
+               summarize_area(group_by = "year")),
   ## dBBMM
   tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
                                          min_days = 1,
@@ -132,6 +157,14 @@ list(
                                                                                  "summer" = summer) # defined toward the top of this document
                                                                   ) |> 
                summarize_area(group_by = c("season"))),
+  # Severe Winter Period dBBMMs
+  tar_target(weekly_dbbmm_swp_summary, weekly_dbbmms |>
+               dplyr::filter(!animal_id %in% non_swp_elk) |>
+               dplyr::filter(week %in% swp_weeks) |>
+               dplyr::mutate(year = isoyear) |>
+               dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
+               dplyr::mutate(year = paste0(year, "-", year+1)) |>
+               summarize_area(group_by = "year")),
   #### DAILY HOME RANGE ESTIMATES ####
   ## MINIMUM CONVEX POLYGONS
   # Only doing MCPs for weekly estimates. dBBMM window/margin params are too
@@ -146,6 +179,14 @@ list(
                                                                              "summer" = summer) # defined toward the top of this document
                                                               ) |> 
                summarize_area(group_by = c("season"))),
+  # Severe Winter Period daily MCPs
+  tar_target(daily_mcp_swp_summary, daily_mcps |>
+               dplyr::mutate(doy = lubridate::yday(date)) |>
+               dplyr::filter(!animal_id %in% non_swp_elk) |>
+               dplyr::filter(doy %in% swp_days) |>
+               dplyr::mutate(year = dplyr::if_else(doy < 15, year-1, year)) |>
+               dplyr::mutate(year = paste0(year, "-", year+1)) |>
+               summarize_area(group_by = "year")),
   #### SEASONAL HOME RANGE OVERLAP ####
   # Winter to Spring
   tar_target(mcp_winter_spring_overlap, prct_overlap(shp_1 = winter_mcp,
