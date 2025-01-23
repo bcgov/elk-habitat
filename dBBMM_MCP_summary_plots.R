@@ -1,7 +1,7 @@
 #### SETUP ####
 
 # Wishlist
-# TODO: Summary stats of weekly/daily MCP area x Season
+# No TODOs for now!
 
 # Libraries
 library(targets)
@@ -26,8 +26,8 @@ lubridate::date("2024-08-31") - lubridate::date("2024-07-01") # Summer
 # Load data
 MCP <- tar_read(all_seasons_mcp)
 dBBMM <- tar_read(all_seasons_dbbmm)
-tar_load(mcp_summary)
-tar_load(dbbmm_summary)
+tar_load(mcp_seasonal_summary)
+tar_load(dbbmm_seasonal_summary)
 
 # Make a column of area normalized by N days
 MCP <- MCP |>
@@ -608,6 +608,12 @@ weekly_dbbmms |>
 
 #### WEEKLY SEVERE WINTER PERIOD PLOTS ####
 
+# Two elk did not experience severe winter conditions, per Mario's
+# work looking at snow depth data on cameras deployed across the
+# study region. Remove these two elk from the severe winter
+# comparison.
+non_swp_elk <- c("20-1001", "20-1002")
+
 # Severe winter period was 18 Dec 2021 - 14 Jan 2022
 #lubridate::isoweek("2021-12-18")
 #lubridate::isoweek("2022-01-14")
@@ -625,6 +631,10 @@ weekly_mcps |>
   geom_boxplot(fill = NA) +
   geom_jitter() +
   scale_color_manual(values = okabe) +
+  geom_jitter(data = ~subset(., animal_id %in% non_swp_elk),
+              aes(x = as.factor(year), 
+                  y = area),
+              color = "red") +
   geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
                                  c("2021-2022", "2020-2021"),
                                  c("2021-2022", "2022-2023"),
@@ -641,7 +651,7 @@ weekly_mcps |>
   coord_trans(y = "log10") +
   labs(title = "Weekly MCP area during the severe winter \nperiod weeks, across years",
        subtitle = "18 Dec - 14 Jan",
-       caption = "Each boxplot contains weekly MCP sizes during week 50 through week 2 (inclusive).\nEach dot is the MCP size for one individual for one week.",
+       caption = "Each boxplot contains weekly MCP sizes during week 50 through week 2 (inclusive).\nEach dot is the MCP size for one individual for one week.\nIn red: weekly MCPs of two elk, 20-1001 and 20-1002, that did not experience severe winter conditions.",
        x = "Year",
        y = "Area", 
        color = "Year") +
@@ -862,6 +872,12 @@ daily_mcps |>
   geom_jitter(alpha = 0.3,
               stroke = NA) +
   scale_color_manual(values = okabe) +
+  geom_jitter(data = ~subset(., animal_id %in% non_swp_elk),
+              aes(x = as.factor(year), 
+                  y = area),
+              color = "red", 
+              alpha = 0.3,
+              stroke = NA) +
   geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
                                  c("2021-2022", "2020-2021"),
                                  c("2021-2022", "2022-2023"),
@@ -888,7 +904,7 @@ daily_mcps |>
   coord_trans(y = "log10") +
   labs(title = "Daily MCP area during the severe winter \nperiod weeks, across years",
        subtitle = "18 Dec - 14 Jan",
-       caption = "Each boxplot contains daily MCP sizes from Dec 18-Jan 14 (inclusive) for each year.\nEach dot is the MCP size for one individual for one day.",
+       caption = "Each boxplot contains daily MCP sizes from Dec 18-Jan 14 (inclusive) for each year.\nEach dot is the MCP size for one individual for one day.\nIn red: daily MCPs of two elk, 20-1001 and 20-1002, that did not experience severe winter conditions.",
        x = "Year",
        y = "Area", 
        color = "Year") +
