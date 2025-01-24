@@ -350,8 +350,11 @@ weekly_mcps |>
 
 weekly_mcps |>
   dplyr::mutate(year = isoyear,
-                beginning = lubridate::ymd(paste(year, "-01-01")),
-                date = beginning + lubridate::weeks(week - 1)) |>
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
   ggplot(aes(x = date,
              y = area,
              color = year)) +
@@ -375,8 +378,11 @@ weekly_mcps |>
 weekly_mcps |>
   sf::st_drop_geometry() |>
   dplyr::mutate(year = isoyear,
-                beginning = lubridate::ymd(paste(year, "-01-01")),
-                date = beginning + lubridate::weeks(week - 1)) |>
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
   dplyr::group_by(date) |>
   dplyr::summarise(mean_area = mean(area),
                    n = dplyr::n(),
@@ -416,6 +422,60 @@ weekly_mcps |>
                   ylim=c(0, 3700)) +
   labs(title = "Mean weekly MCP area over time",
        caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022.\nIn red, the 2021 PNW Heat Dome.") +
+  theme_minimal()
+
+# With 4 week rolling average on top
+weekly_mcps |>
+  sf::st_drop_geometry() |>
+  dplyr::mutate(year = isoyear,
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
+  dplyr::group_by(date) |>
+  dplyr::summarise(mean_area = mean(area),
+                   n = dplyr::n(),
+                   sd_area = sd(area),
+                   se = sd_area/sqrt(n),
+                   t_score = qt(p = 0.05/2, 
+                                df = n - 1,
+                                lower.tail=F),
+                   margin_error = units::set_units(t_score * se, "ha"),
+                   lower_bound = mean_area - margin_error,
+                   upper_bound = mean_area + margin_error) |>
+  units::drop_units() |>
+  ggplot() +
+  annotate("rect",
+           xmin = lubridate::date("2021-12-18"), 
+           xmax = lubridate::date("2022-01-14"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#9ac4fa",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  annotate("rect",
+           xmin = lubridate::date("2021-06-25"), 
+           xmax = lubridate::date("2021-07-07"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#faa44e",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  geom_ribbon(aes(x = date, 
+                  ymin = lower_bound,
+                  ymax = upper_bound),
+              fill = "#DADADA") +
+  geom_line(aes(x = date,
+                y = mean_area),
+            alpha = 0.3) +
+  geom_line(aes(x = date,
+                y = zoo::rollmean(mean_area, 4, na.pad = TRUE)),
+            color = "red") +
+  coord_cartesian(expand = FALSE,
+                  ylim=c(0, 3700)) +
+  labs(title = "Mean weekly MCP area over time",
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022. In orange, the 2021 PNW Heat Dome.\nRed line = 4 week rolling mean area.") +
   theme_minimal()
 
 
@@ -515,8 +575,11 @@ weekly_dbbmms |>
 
 weekly_dbbmms |>
   dplyr::mutate(year = isoyear,
-                beginning = lubridate::ymd(paste(year, "-01-01")),
-                date = beginning + lubridate::weeks(week - 1)) |>
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
   ggplot(aes(x = date,
              y = area,
              color = year)) +
@@ -527,8 +590,11 @@ weekly_dbbmms |>
 
 weekly_dbbmms |>
   dplyr::mutate(year = isoyear,
-                beginning = lubridate::ymd(paste(year, "-01-01")),
-                date = beginning + lubridate::weeks(week - 1)) |>
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
   ggplot(aes(x = date,
              y = area)) +
   #geom_point() +
@@ -578,11 +644,65 @@ weekly_dbbmms |>
   geom_line(aes(x = date,
                 y = mean_area)) +
   coord_cartesian(expand = FALSE,
-                  ylim=c(0, 1200)) +
+                  ylim=c(0, 500)) +
   labs(title = "Mean weekly dBBMM area over time",
-       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022.\nIn red, the 2021 PNW Heat Dome.") +
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022. In orange, the 2021 PNW Heat Dome.") +
   theme_minimal()
 
+
+# With 4 week rolling average on top
+weekly_dbbmms |>
+  sf::st_drop_geometry() |>
+  dplyr::mutate(year = isoyear,
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
+  dplyr::group_by(date) |>
+  dplyr::summarise(mean_area = mean(area),
+                   n = dplyr::n(),
+                   sd_area = sd(area),
+                   se = sd_area/sqrt(n),
+                   t_score = qt(p = 0.05/2, 
+                                df = n - 1,
+                                lower.tail=F),
+                   margin_error = units::set_units(t_score * se, "ha"),
+                   lower_bound = mean_area - margin_error,
+                   upper_bound = mean_area + margin_error) |>
+  units::drop_units() |>
+  ggplot() +
+  annotate("rect",
+           xmin = lubridate::date("2021-12-18"), 
+           xmax = lubridate::date("2022-01-14"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#9ac4fa",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  annotate("rect",
+           xmin = lubridate::date("2021-06-25"), 
+           xmax = lubridate::date("2021-07-07"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#faa44e",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  geom_ribbon(aes(x = date, 
+                  ymin = lower_bound,
+                  ymax = upper_bound),
+              fill = "#DADADA") +
+  geom_line(aes(x = date,
+                y = mean_area),
+            alpha = 0.3) +
+  geom_line(aes(x = date,
+                y = zoo::rollmean(mean_area, 4, na.pad = TRUE)),
+            color = "red") +
+  coord_cartesian(expand = FALSE,
+                  ylim=c(0, 500)) +
+  labs(title = "Mean weekly dBBMM area over time",
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022. In orange, the 2021 PNW Heat Dome.\nRed line = 4 week rolling mean area.") +
+  theme_minimal()
 
 weekly_dbbmms |>
   dplyr::filter(area < outlier_cutoff) |>
@@ -618,6 +738,7 @@ non_swp_elk <- c("20-1001", "20-1002")
 #lubridate::isoweek("2021-12-18")
 #lubridate::isoweek("2022-01-14")
 swp <- c(50, 51, 52, 53, 1, 2) # weeks 51 thru 1
+swp_extra <- c(swp, 3:lubridate::isoweek("2021-02-05")) # what if we include those extra crusty weeks with moderate snow after?
 
 # MCP
 weekly_mcps |>
@@ -657,6 +778,108 @@ weekly_mcps |>
        color = "Year") +
   theme_minimal()
 
+
+weekly_mcps |>
+  dplyr::filter(week %in% swp_extra) |>
+  dplyr::mutate(year = isoyear) |>
+  dplyr::mutate(year = dplyr::if_else(week < 10, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  ggplot(aes(x = as.factor(year), 
+             y = area,
+             color = as.factor(year))) +
+  geom_boxplot(fill = NA) +
+  geom_jitter() +
+  scale_color_manual(values = okabe) +
+  geom_jitter(data = ~subset(., animal_id %in% non_swp_elk),
+              aes(x = as.factor(year), 
+                  y = area),
+              color = "red") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              color = "black",
+              tip_length = 0.2) +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              y_position = 5000,
+              color = "black",
+              tip_length = 0.3) +
+  coord_trans(y = "log10") +
+  labs(title = "Weekly MCP area during the severe winter \n + moderate period weeks, across years",
+       subtitle = "18 Dec - 05 Feb",
+       caption = "Each boxplot contains weekly MCP sizes during week 50 through week 5 (inclusive). The time period was \nextended to include the moderate period as well. Each dot is the MCP size for one individual for one week.\nIn red: weekly MCPs of two elk, 20-1001 and 20-1002, that did not experience severe winter conditions.",
+       x = "Year",
+       y = "Area", 
+       color = "Year") +
+  theme_minimal()
+
+# Zoom in line plot
+weekly_mcps |>
+  sf::st_drop_geometry() |>
+  dplyr::filter(week %in% swp_extra) |>
+  dplyr::mutate(year = isoyear,
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
+  dplyr::group_by(date) |>
+  dplyr::summarise(week = min(week),
+                   mean_area = mean(area),
+                   n = dplyr::n(),
+                   sd_area = sd(area),
+                   se = sd_area/sqrt(n),
+                   t_score = qt(p = 0.05/2, 
+                                df = n - 1,
+                                lower.tail=F),
+                   margin_error = units::set_units(t_score * se, "ha"),
+                   lower_bound = mean_area - margin_error,
+                   upper_bound = mean_area + margin_error) |>
+  dplyr::mutate(year = lubridate::isoyear(date)) |>
+  dplyr::mutate(year = dplyr::if_else(week < 10, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::group_by(year) |>
+  dplyr::mutate(plot_week = dplyr::case_when(max(week) == 53 ~ ifelse(week > 10, week - 53, week),
+                                             max(week) == 52 ~ ifelse(week > 10, week - 52, week))) |>
+  dplyr::arrange(date) |>
+  units::drop_units() |>
+  ggplot(aes(x = plot_week,
+             color = year,
+             group = year)) +
+  annotate("rect",
+           xmin = -3, 
+           xmax = 2, 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#9ac4fa",
+           #fill = "#F0F0F0",
+           alpha = 0.2) +
+  geom_ribbon(aes(ymin = lower_bound,
+                  ymax = upper_bound),
+              fill = "#DADADA",
+              color = NA,
+              alpha = 0.3) +
+  geom_line(aes(y = mean_area)) +
+  # geom_smooth(aes(y = mean_area),
+  #             alpha = 0.1) +
+  geom_point(aes(y = mean_area)) +
+  scale_color_manual(values = okabe) +
+  coord_cartesian(expand = FALSE,
+                  ylim = c(0, 1000),
+                  xlim = c(-2, 5)) +
+  labs(title = "Mean weekly MCP area for each year",
+       subtitle = "Severe + moderate winter period weeks (18 Dec - 05 Feb)",
+       caption = "In blue, the severe winter period. Week 0 = January 1. Negative weeks indicate end of December.") +
+  theme_minimal()
+
+
+
+
+
+
 # dBBMM
 weekly_dbbmms |>
   dplyr::filter(week %in% swp) |>
@@ -668,6 +891,10 @@ weekly_dbbmms |>
              color = as.factor(year))) +
   geom_boxplot(fill = NA) +
   geom_jitter() +
+  geom_jitter(data = ~subset(., animal_id %in% non_swp_elk),
+              aes(x = as.factor(year), 
+                  y = area),
+              color = "red") +
   scale_color_manual(values = okabe) +
   geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
                                  c("2021-2022", "2020-2021"),
@@ -691,6 +918,103 @@ weekly_dbbmms |>
        color = "Year") +
   theme_minimal()
 
+
+weekly_dbbmms |>
+  dplyr::filter(week %in% swp_extra) |>
+  dplyr::mutate(year = isoyear) |>
+  dplyr::mutate(year = dplyr::if_else(week < 10, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  ggplot(aes(x = as.factor(year), 
+             y = area,
+             color = as.factor(year))) +
+  geom_boxplot(fill = NA) +
+  geom_jitter() +
+  geom_jitter(data = ~subset(., animal_id %in% non_swp_elk),
+              aes(x = as.factor(year), 
+                  y = area),
+              color = "red") +
+  scale_color_manual(values = okabe) +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              color = "black",
+              tip_length = 0.2) +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              y_position = 5000,
+              color = "black",
+              tip_length = 0.3) +
+  coord_trans(y = "log10") +
+  labs(title = "Weekly dBBMM area during the severe winter \n + moderate period weeks, across years",
+       subtitle = "18 Dec - 05 Feb",
+       caption = "Each boxplot contains weekly MCP sizes during week 50 through week 5 (inclusive). The time period was \nextended to include the moderate period as well. Each dot is the MCP size for one individual for one week.\nIn red: weekly MCPs of two elk, 20-1001 and 20-1002, that did not experience severe winter conditions.",
+       x = "Year",
+       y = "Area", 
+       color = "Year") +
+  theme_minimal()
+
+
+# Zoom in line plot
+weekly_dbbmms |>
+  sf::st_drop_geometry() |>
+  dplyr::filter(week %in% swp_extra) |>
+  dplyr::mutate(year = isoyear,
+                isoyear_week = ifelse(nchar(isoyear_week) == 6, 
+                                      stringr::str_replace(isoyear_week, "\\.", "\\.0"),
+                                      isoyear_week),
+                week_date = paste0(stringr::str_replace(isoyear_week, "\\.", "-W"), "-1"),
+                date = ISOweek::ISOweek2date(week_date)) |>
+  dplyr::group_by(date) |>
+  dplyr::summarise(week = min(week),
+                   mean_area = mean(area),
+                   n = dplyr::n(),
+                   sd_area = sd(area),
+                   se = sd_area/sqrt(n),
+                   t_score = qt(p = 0.05/2, 
+                                df = n - 1,
+                                lower.tail=F),
+                   margin_error = units::set_units(t_score * se, "ha"),
+                   lower_bound = mean_area - margin_error,
+                   upper_bound = mean_area + margin_error) |>
+  dplyr::mutate(year = lubridate::isoyear(date)) |>
+  dplyr::mutate(year = dplyr::if_else(week < 10, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::group_by(year) |>
+  dplyr::mutate(plot_week = dplyr::case_when(max(week) == 53 ~ ifelse(week > 10, week - 53, week),
+                                             max(week) == 52 ~ ifelse(week > 10, week - 52, week))) |>
+  dplyr::arrange(date) |>
+  units::drop_units() |>
+  ggplot(aes(x = plot_week,
+             color = year,
+             group = year)) +
+  annotate("rect",
+           xmin = -3, 
+           xmax = 2, 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#9ac4fa",
+           #fill = "#F0F0F0",
+           alpha = 0.2) +
+  geom_ribbon(aes(ymin = lower_bound,
+                  ymax = upper_bound),
+              fill = "#DADADA",
+              color = NA,
+              alpha = 0.3) +
+  geom_line(aes(y = mean_area)) +
+  # geom_smooth(aes(y = mean_area),
+  #             alpha = 0.1) +
+  geom_point(aes(y = mean_area)) +
+  scale_color_manual(values = okabe) +
+  coord_cartesian(expand = FALSE,
+                  ylim = c(0, 200),
+                  xlim = c(-2, 5)) +
+  labs(title = "Mean weekly dBBMM area for each year",
+       subtitle = "Severe + moderate winter period weeks (18 Dec - 05 Feb)",
+       caption = "In blue, the severe winter period. Week 0 = January 1. Negative weeks indicate end of December.") +
+  theme_minimal()
 
 #### HEAT DOME PERIOD PLOTS ####
 
