@@ -1176,6 +1176,55 @@ daily_mcps |>
   theme_minimal()
 
 
+
+daily_mcps |>
+  sf::st_drop_geometry() |>
+  dplyr::group_by(date) |>
+  dplyr::summarise(mean_area = mean(area),
+                   n = dplyr::n(),
+                   sd_area = sd(area),
+                   se = sd_area/sqrt(n),
+                   t_score = qt(p = 0.05/2, 
+                                df = n - 1,
+                                lower.tail=F),
+                   margin_error = units::set_units(t_score * se, "ha"),
+                   lower_bound = mean_area - margin_error,
+                   upper_bound = mean_area + margin_error) |>
+  units::drop_units() |>
+  ggplot() +
+  annotate("rect",
+           xmin = lubridate::date("2021-12-18"), 
+           xmax = lubridate::date("2022-01-14"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#c1dcfe",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  annotate("rect",
+           xmin = lubridate::date("2021-06-25"), 
+           xmax = lubridate::date("2021-07-07"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#f9c56b",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  geom_ribbon(aes(x = date, 
+                  ymin = lower_bound,
+                  ymax = upper_bound),
+              fill = "#DADADA") +
+  geom_line(aes(x = date,
+                y = mean_area),
+            alpha = 0.3) +
+  geom_line(aes(x = date,
+                y = zoo::rollmean(mean_area, 14, na.pad = TRUE)),
+            color = "red") +
+  coord_cartesian(expand = FALSE,
+                  ylim=c(0, 300)) +
+  labs(title = "Mean daily MCP area over time",
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022. In orange, the 2021 PNW Heat Dome.\nIn red, 14 day rolling mean.") +
+  theme_minimal()
+
+
 #### DAILY SEVERE WINTER PERIOD PLOTS ####
 
 
