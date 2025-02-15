@@ -208,5 +208,11 @@ list(
   tar_target(dbbmm_spring_yearly_overlap, yearly_prct_overlap(shp = spring_dbbmm)),
   tar_target(dbbmm_summer_yearly_overlap, yearly_prct_overlap(shp = summer_dbbmm)),
   #### STEP LENGTHS ####
-  tar_target(step_lengths, steplength(elk))
+  tar_target(step_lengths, steplength(elk)),
+  #### DEM ATTRIBUTES ####
+  # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
+  # extract elevation, slope grade (%), slope aspect (degrees), and
+  # roughness.
+  tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
+  tar_target(elk_dem, extract_dem(elk, cded_path = cded))
 )

@@ -56,3 +56,8 @@ data/Collar\ Keys
 data/raw_detections.csv
 data/~$*
 data/DATABASE_Elk Capture_Updtd_20240513.xlsx
+
+# Large GIS files, except regions
+GIS/*
+!GIS/regions_wkt.csv
+*.zip
