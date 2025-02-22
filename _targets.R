@@ -76,7 +76,7 @@ list(
              output_file = "elk_dets_per_day.pdf",
              params = list(elk_data = elk)),
   #### SEASONAL HOME RANGE ESTIMATES ####
-  ## MINIMUM CONVEX POLYGONS
+  ##### Minimum Convex Polygons (MCPs) #####
   tar_target(winter_mcp, seasonal_mcp(elk = elk,
                                        season = winter,
                                        min_days = 0.9, # we want a sample size of a minimum of 90% days in the dataset covered
@@ -95,7 +95,7 @@ list(
   tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp)),
   tar_target(mcp_seasonal_summary, summarize_area(all_seasons_mcp, group_by = "season")),
   # TODO: summary plots of MCP areas (currently stored in `dBBMM_MCP_summary_plots.R`)
-  ## DYNAMIC BROWNIAN BRIDGES
+  ##### Dynamic Brownian Bridge Movement Models #####
   tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = winter,
                                           min_days = 0.9,
@@ -124,7 +124,7 @@ list(
   tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm, group_by = "season")),
   # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   #### WEEKLY HOME RANGE ESTIMATES ####
-  ## MINIMUM CONVEX POLYGONS
+  ##### MCP #####
   tar_target(weekly_mcps, weekly_mcp(elk = elk, 
                                      min_days = 1, # percentage of days - we want 100% of days
                                      min_dets_per_day = 7, # we also want at minimum 7 detections per day, otherwise that week of data is thrown out 
@@ -137,7 +137,7 @@ list(
                                                                                "summer" = summer) # defined toward the top of this document
                                                                 ) |> 
                summarize_area(group_by = c("season"))),
-  # Severe Winter Period MCPs
+  ###### Severe Winter Period MCPs ######
   tar_target(weekly_mcp_swp_summary, weekly_mcps |>
                dplyr::filter(!animal_id %in% non_swp_elk) |>
                dplyr::filter(week %in% swp_weeks) |>
@@ -145,7 +145,7 @@ list(
                dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
                dplyr::mutate(year = paste0(year, "-", year+1)) |>
                summarize_area(group_by = "year")),
-  ## dBBMM
+  ##### dBBMM #####
   tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
                                          min_days = 1,
                                          min_dets_per_day = 7,
@@ -157,7 +157,7 @@ list(
                                                                                  "summer" = summer) # defined toward the top of this document
                                                                   ) |> 
                summarize_area(group_by = c("season"))),
-  # Severe Winter Period dBBMMs
+  ###### Severe Winter Period dBBMMs ######
   tar_target(weekly_dbbmm_swp_summary, weekly_dbbmms |>
                dplyr::filter(!animal_id %in% non_swp_elk) |>
                dplyr::filter(week %in% swp_weeks) |>
@@ -166,7 +166,7 @@ list(
                dplyr::mutate(year = paste0(year, "-", year+1)) |>
                summarize_area(group_by = "year")),
   #### DAILY HOME RANGE ESTIMATES ####
-  ## MINIMUM CONVEX POLYGONS
+  ##### MCP #####
   # Only doing MCPs for weekly estimates. dBBMM window/margin params are too
   # sensitive to lower sample sizes for daily home range estimates. 
   tar_target(daily_mcps, daily_mcp(elk = elk, 
@@ -179,7 +179,7 @@ list(
                                                                              "summer" = summer) # defined toward the top of this document
                                                               ) |> 
                summarize_area(group_by = c("season"))),
-  # Severe Winter Period daily MCPs
+  ###### Severe Winter Period daily MCPs ######
   tar_target(daily_mcp_swp_summary, daily_mcps |>
                dplyr::mutate(doy = lubridate::yday(date)) |>
                dplyr::filter(!animal_id %in% non_swp_elk) |>
@@ -188,7 +188,7 @@ list(
                dplyr::mutate(year = paste0(year, "-", year+1)) |>
                summarize_area(group_by = "year")),
   #### SEASONAL HOME RANGE OVERLAP ####
-  # Winter to Spring
+  ##### Winter to Spring #####
   tar_target(mcp_winter_spring_overlap, prct_overlap(shp_1 = winter_mcp,
                                                      shp_2 = spring_mcp,
                                                      shp_1_name = "winter",
@@ -198,21 +198,50 @@ list(
                                                        shp_1_name = "winter",
                                                        shp_2_name = "spring")),
   #### YEARLY SEASONAL SITE FIDELITY ####
-  # Year-to-year overlap within a season
-  # MCP
+  ##### Year-to-year overlap within a season #####
+  ###### MCP ######
   tar_target(mcp_winter_yearly_overlap, yearly_prct_overlap(shp = winter_mcp)),
   tar_target(mcp_spring_yearly_overlap, yearly_prct_overlap(shp = spring_mcp)),
   tar_target(mcp_summer_yearly_overlap, yearly_prct_overlap(shp = summer_mcp)),
-  # dBBMM
+  ###### dBBMM ######
   tar_target(dbbmm_winter_yearly_overlap, yearly_prct_overlap(shp = winter_dbbmm)),
   tar_target(dbbmm_spring_yearly_overlap, yearly_prct_overlap(shp = spring_dbbmm)),
   tar_target(dbbmm_summer_yearly_overlap, yearly_prct_overlap(shp = summer_dbbmm)),
   #### STEP LENGTHS ####
   tar_target(step_lengths, steplength(elk)),
   #### DEM ATTRIBUTES ####
+  ##### Download and extract DEM attributes #####
   # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
   # extract elevation, slope grade (%), slope aspect (degrees), and
   # roughness.
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
-  tar_target(elk_dem, extract_dem(elk, cded_path = cded))
+  tar_target(elk_dem, extract_dem(elk, cded_path = cded)),
+  #### LiDAR ATTRIBUTES ####
+  ##### Download and extract LiDAR attributes #####
+  # Pull the LiDAR-derived data products off the W:/ drive onto local 
+  # machine + keep track of it if it changes on the server, then extract 
+  # the data from it (elevation, slope grade (%), canopy height, edge
+  # category, edge distance).
+  # Keep track of the W:/ drive LiDAR file
+  tar_target(uwr_lidar_gdb_path, 
+             "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
+             format = "file"),
+  # Make a local copy of the W:/ drive LiDAR file (this will get re-downloaded
+  # if the W:/ drive copy is ever updated/modified)
+  tar_target(uwr_lidar_gdb, 
+             download_from_server(server_path = uwr_lidar_gdb_path,
+                                  local_path = "GIS/LiDAR products",
+                                  download = FALSE), # set to FALSE bc I just manually moved it over in the end
+             format = "file"),
+  tar_target(elk_lidar, extract_uwr(elk = elk, 
+                                    gdb = uwr_lidar_gdb,
+                                    layers = c("canopy_height",
+                                               "Edge_Category",
+                                               "Edge_Distance_LiDAR",
+                                               "elevation",
+                                               "slope_percent")
+                                    ))
+  #### VRI ATTRIBUTES ####
+  ##### Download and extract VRI attributes #####
+  # Note we are using the improved VRI layer that was provided by Madrone.
 )

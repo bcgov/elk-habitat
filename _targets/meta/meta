@@ -25,11 +25,13 @@ dbbmm_winter_spring_overlap|stem|318b4b87bf98de18|b930075dc00053b3|fd66b94ca786d
 dbbmm_winter_yearly_overlap|stem|f7404fffc5be7e12|3a8acfeaffe76901|25e0ecd5a82641f1|2111524819||t20110.6461997314s|c3af5cd0b7cca478|2721|rds|local|vector|||2.72||
 detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|71e452fdf147d3fc|947972721||t20069.0385290536s|c24c5d185b903301|2587|rds|local|vector|||0.35||
 dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6c6a5b45b4a3ce9a|-360331643||t20069.0515342632s|31cf8697cc750540|180|rds|local|vector|||0.05||
+download_from_server|function|59f25d37f0fbd513|||||||||||||||
 elk|stem|e713751ba60ae25b|c437453ecb03737d|07a89ad0cceb919e|-188372202||t20069.0385247589s|7544662e75434240|32142164|rds|local|vector|||29|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
 elk_dem|stem|e0e11117aa700bac|a0ef153da88ced48|9636c39099e34de5|1885558796||t20133.9973378467s|177cb9a75220d2ee|3791713|rds|local|vector|||28.81||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|00ffaedd0d938539|94d5abc6f5fa7398|68c8b8f04f30fdbd|-2021513789||t20069.0425689523s|388123363a295799|160869173|rds|local|vector|||0.01||
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
+elk_lidar|stem|aeac4a3e7cd13c81|aa7b666448798592|a45a13f30fd7eeda|1826535428||t20141.0212143874s|dbfa33c4279072c1|1343135|rds|local|vector|||48.53||
 elk_per_month|stem|647915009c9c1fbd|34b671afed2e2692|7f11860901f6c025|-293717621||t20069.038843269s|1cff0a9d178e5f86|526|rds|local|vector|||0.04||
 elk_per_month_plot|function|3c1315b5423fb8cf|||||||||||||||
 extract_aspect|function|51978e47b39bbbbd|||||||||||||||
@@ -37,6 +39,8 @@ extract_dem|function|df1b1a3940b3219b|||||||||||||||
 extract_elevation|function|de3da352b88d1c56|||||||||||||||
 extract_roughness|function|c3a4b2bca9c07efd|||||||||||||||
 extract_slope|function|439790adca07790e|||||||||||||||
+extract_uwr|function|280e4944e64df5c9|||||||||||||||
+extract_uwr_lyr|function|637f5737df35e4c1|||||||||||||||
 find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
 fix_rate|function|3693752ffe99c315|||||||||||||||
@@ -75,6 +79,8 @@ summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t
 swp_days|object|a66a035b5e000a9e|||||||||||||||
 swp_weeks|object|b40b8812ed5a52af|||||||||||||||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
+uwr_lidar_gdb|stem|d75c6248a3d67767|3644cd386a706fe8|4acc4e29b29af86d|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20116.7344940264s|506d5f3142e58754|132341376|file|local|vector|||0||
+uwr_lidar_gdb_path|stem|d75c6248a3d67767|794406ab5299b854|2c530c1562a7fbd1|2052183110|W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb|t20140.9821046438s|cf246076235b991e|98304|file|local|vector|||3.06|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
 weekly_dbbmm_seasonal_summary|stem|1e56e021866a7911|f17c3ed425db58d1|6f9cae2d2ad5793c|35394069||t20110.8199238556s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.06||
