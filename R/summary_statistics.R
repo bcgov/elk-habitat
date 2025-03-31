@@ -206,9 +206,12 @@ assign_weekly_seasons <- function(weekly_shp, seasons) {
 # E.g., c(winter = c("01-01", "03-31"),
 #         spring = c("04-01", "05-15"),
 #         summer = c("07-01", "08-31"))
-assign_daily_seasons <- function(daily_shp, seasons) {
+assign_daily_seasons <- function(daily_shp, seasons, date_col) {
   # Assign seasons to daily data
   shp <- daily_shp
+  
+  # Assign date col to process
+  shp$date_col <- shp[[date_col]]
   
   # Create an empty 'season' column in the data, to later
   # assign season to
@@ -255,9 +258,12 @@ assign_daily_seasons <- function(daily_shp, seasons) {
   invisible(
     lapply(names(seasons_dates), function(szn) {
       dates_szn <- seasons_dates[[szn]]
-      shp[["season"]][shp$date %in% dates_szn] <<- stringr::str_to_title(szn)
+      shp[["season"]][shp$date_col %in% dates_szn] <<- stringr::str_to_title(szn)
     })
   )
+  
+  # Drop date_col
+  shp <- dplyr::select(shp, -date_col)
   
   return(shp)
 }

@@ -2,7 +2,7 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 add_mvt_metrics|function|d5e2123084ca7319|||||||||||||||
 all_seasons_dbbmm|stem|4eb058644e34322a|04c92914fe89f26c|669b712cb3f7bc40|-436251714||t20110.6463219638s|43db21a265ae0f32|10563057|rds|local|vector|||0.01||
 all_seasons_mcp|stem|59b2f36d40e50747|49512c53edbb9f8e|1b3a859245a5491a|37521217||t20071.0195756537s|db785c39c5e7cebb|94522|rds|local|vector|||0.02||
-assign_daily_seasons|function|f8faa823c34e05e9|||||||||||||||
+assign_daily_seasons|function|b96475914ce71fa5|||||||||||||||
 assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
 capture_data|stem|98de33f683ee988c|e14ef5cd5be2470c|11f03e1aead2b0cd|1127347996||t20062.9547968275s|0420319ceef1893e|10494|rds|local|vector|||1.25|NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion|
@@ -26,7 +26,7 @@ dbbmm_winter_yearly_overlap|stem|f7404fffc5be7e12|3a8acfeaffe76901|25e0ecd5a8264
 detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|71e452fdf147d3fc|947972721||t20069.0385290536s|c24c5d185b903301|2587|rds|local|vector|||0.35||
 dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6c6a5b45b4a3ce9a|-360331643||t20069.0515342632s|31cf8697cc750540|180|rds|local|vector|||0.05||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
-elk|stem|e713751ba60ae25b|c437453ecb03737d|07a89ad0cceb919e|-188372202||t20069.0385247589s|7544662e75434240|32142164|rds|local|vector|||29|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
+elk|stem|e713751ba60ae25b|4a0d072613946187|1227c170c4658418|-188372202||t20069.0385247589s||32142164|rds|local|vector|||17.54|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 1 tempPipeline outputselk_positions.shp is not a directory.|Creation failed.
 elk_dem|stem|e0e11117aa700bac|a0ef153da88ced48|9636c39099e34de5|1885558796||t20133.9973378467s|177cb9a75220d2ee|3791713|rds|local|vector|||28.81||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|00ffaedd0d938539|94d5abc6f5fa7398|68c8b8f04f30fdbd|-2021513789||t20069.0425689523s|388123363a295799|160869173|rds|local|vector|||0.01||
@@ -105,3 +105,54 @@ winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|77f85a78fdcf5827|93ab5c460629c9d4|425441c969437297|-99852116||t20110.0957124035s|75f3b8712bb493d7|3464743|rds|local|vector|||1468.39||
 winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|905284f9fe9e35b8|844460800||t20096.7084179695s|bb32bb867029de36|29249|rds|local|vector|||9.75||
 yearly_prct_overlap|function|a191d863aa6bf109|||||||||||||||
+n_elk_per_month|function|74c304c23b6873ff
+load_collar_data|function|ea7e9fd9b6f54805
+read_vri|function|16df774cb8cb8e9c
+remove_imprecise_locations|function|27a83e4a2b6f6e0f
+spring|object|6398ef5e90b44e6d
+extract_aspect|function|51978e47b39bbbbd
+summarize_area|function|e27ed1cdb10c2f9f
+fix_rate|function|3693752ffe99c315
+extract_elevation|function|de3da352b88d1c56
+extract_roughness|function|c3a4b2bca9c07efd
+extract_slope|function|439790adca07790e
+winter|object|326711d79cc870d3
+prct_overlap|function|1b450fa46dbba418
+extract_vri_edges|function|fbcfbd935db67d7d
+elk_dets_hist|function|a496a21bbf49b8dc
+find_centre|function|738ee6d69ce867bc
+add_mvt_metrics|function|d5e2123084ca7319
+individual_dbbmm|function|3495f8b948f0a5cb
+extract_uwr_lyr|function|637f5737df35e4c1
+query_cded|function|eb1dc5b4a2dc71c9
+attribute_animal_id|function|cd16c423041e48a2
+find_center|function|738ee6d69ce867bc
+swp_days|object|a66a035b5e000a9e
+elk_fix_hist|function|b6a5bc4295baa22d
+load_capture_data|function|72cfbb33fdca6f8d
+assign_daily_seasons|function|b96475914ce71fa5
+weekly_binning|function|957cca10ca8bb5f0
+logger_dotplot|function|5b0e74c36ed11f20
+steplength|function|97a0717a017cb942
+n_dets_per_elk|function|08bd3cc58671e6df
+st_edge_dist|function|67233d498ccee62c
+assign_weekly_seasons|function|663c05c5ec7782cf
+non_swp_elk|object|2c07bcfc1260c6a8
+elk_per_month_plot|function|3c1315b5423fb8cf
+cutoff_date|object|9ae2787af414062a
+summer|object|292209e1f8fbf494
+extract_vri|function|880ac76e89778e9c
+download_from_server|function|59f25d37f0fbd513
+swp_weeks|object|b40b8812ed5a52af
+extract_dem|function|df1b1a3940b3219b
+yearly_prct_overlap|function|a191d863aa6bf109
+clean_collar_data_moorter_moe|function|612ee821004e0f29
+seasonal_dbbmm|function|6c03db33d638a2b1
+extract_uwr|function|280e4944e64df5c9
+individual_mcp|function|a5b63584ab3a100b
+weekly_dbbmm|function|6c7de243de43fbbe
+clean_collar_data|function|3f8c5e8c1d9c185a
+seasonal_mcp|function|31f048fa99a50e51
+daily_mcp|function|8378b0fe5e408c6b
+weekly_mcp|function|f3ffc9f2781e03b7
+elk|stem|5dc32a499a735580|4a0d072613946187|1227c170c4658418|-188372202||t20178.9625454157s|19d42bd2dffb5b21|32149848|rds|local|vector|||30.94|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Message 6 Field dttm create as date field, though DateTime requested.|

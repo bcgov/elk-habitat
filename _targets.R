@@ -58,6 +58,10 @@ list(
   tar_target(elk, clean_collar_data(collar_data, 
                                     rarefy_pts = TRUE) |> 
                dplyr::filter(dttm < cutoff_date) |>
+               assign_daily_seasons(seasons = list("winter" = winter, # defined toward the top of this document
+                                                   "spring" = spring, # defined toward the top of this document
+                                                   "summer" = summer), # defined toward the top of this document
+                                    date_col = "dttm") |>
                sf::st_write("temp/Pipeline outputs/elk_positions.shp", append = FALSE)),
   #### SUMMARY STATS + PLOTS ####
   # Logger dotplot
@@ -176,8 +180,8 @@ list(
   tar_target(daily_mcp_seasonal_summary, assign_daily_seasons(daily_shp = daily_mcps,
                                                               seasons = list("winter" = winter, # defined toward the top of this document
                                                                              "spring" = spring, # defined toward the top of this document
-                                                                             "summer" = summer) # defined toward the top of this document
-                                                              ) |> 
+                                                                             "summer" = summer), # defined toward the top of this document
+                                                              date_col = "date") |> 
                summarize_area(group_by = c("season"))),
   ###### Severe Winter Period daily MCPs ######
   tar_target(daily_mcp_swp_summary, daily_mcps |>
