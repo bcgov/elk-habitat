@@ -223,11 +223,12 @@ list(
   # the data from it (elevation, slope grade (%), canopy height, edge
   # category, edge distance).
   # Keep track of the W:/ drive LiDAR file
-  tar_target(uwr_lidar_gdb_path, 
-             "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
-             format = "file"),
+  # tar_target(uwr_lidar_gdb_path, 
+  #            "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
+  #            format = "file"),
   # Make a local copy of the W:/ drive LiDAR file (this will get re-downloaded
   # if the W:/ drive copy is ever updated/modified)
+  tar_target(uwr_lidar_gdb_path, "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb"),
   tar_target(uwr_lidar_gdb, 
              download_from_server(server_path = uwr_lidar_gdb_path,
                                   local_path = "GIS/LiDAR products",
@@ -240,8 +241,41 @@ list(
                                                "Edge_Distance_LiDAR",
                                                "elevation",
                                                "slope_percent")
-                                    ))
+                                    )),
   #### VRI ATTRIBUTES ####
   ##### Download and extract VRI attributes #####
   # Note we are using the improved VRI layer that was provided by Madrone.
+  # tar_target(madrone_vri_gdb_path, 
+  #            "W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb",
+  #            format = "file"),
+  tar_target(madrone_vri_gdb_path, "W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb"),
+  tar_target(madrone_vri_gdb, download_from_server(server_path = madrone_vri_gdb_path,
+                                                   local_path = "GIS/VRI",
+                                                   download = FALSE)), # set to FALSE bc I just manually moved it over in the end
+  tar_target(vri, read_vri(gdb = madrone_vri_gdb)),
+  #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
+  tar_target(elk_vri, extract_vri(feature = elk,
+                                  vri = vri, 
+                                  cols = c("Shape_Area",
+                                           "INTERPRETATION_DATE", 
+                                           "REFERENCE_YEAR", 
+                                           "ATTRIBUTION_BASE_DATE", 
+                                           "PROJECTED_DATE", 
+                                           "HARVEST_DATE", 
+                                           "Disturbance_Start_Date", 
+                                           "Disturbance_End_Date", 
+                                           "Harvest_Year", 
+                                           "PROJ_AGE_1", 
+                                           "NEW_VRI_CC_RES_AGE", 
+                                           "BEST_AGE_CL_STS", 
+                                           "Creation_Date",
+                                           "PROJ_HEIGHT_1",
+                                           "SHRUB_HEIGHT",
+                                           "SHRUB_CROWN_CLOSURE")))#,
+  # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
+  #                                        edges = vri_edges))
 )
+
+
+
+

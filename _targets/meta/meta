@@ -7,7 +7,7 @@ assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
 capture_data|stem|98de33f683ee988c|e14ef5cd5be2470c|11f03e1aead2b0cd|1127347996||t20062.9547968275s|0420319ceef1893e|10494|rds|local|vector|||1.25|NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion|
 capture_data_path|stem|a4f2d2dc8481b6d5|65ec0aaf8e8ca777|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20241127.xlsx|t20054.9131591889s|3c37f8b350e57321|67427|file|local|vector|||2.34|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
-cded|stem|bdb71700c4f6abf2|785e6cdb0578efdb|d968199013f8c79d|-438085499|GIS/DEM/CDED_VRT.vrt|t20133.9960543707s|732eb82d9440cb83|25350|file|local|vector|||7.64||
+cded|stem|bdb71700c4f6abf2|785e6cdb0578efdb|d968199013f8c79d|-438085499|GIS/DEM/CDED_VRT.vrt|t20146.0134491556s|732eb82d9440cb83|25350|file|local|vector|||13.11||
 clean_collar_data|function|3f8c5e8c1d9c185a|||||||||||||||
 clean_collar_data_moorter_moe|function|612ee821004e0f29|||||||||||||||
 collar_data|stem|dde861b2fd605c3c|712f93e9cbbedd9c|a006c290a8a43a89|245132817||t20054.7777424633s|1204ffab3546cd76|11587232|rds|local|vector|||0.15||
@@ -30,10 +30,12 @@ elk|stem|e713751ba60ae25b|c437453ecb03737d|07a89ad0cceb919e|-188372202||t20069.0
 elk_dem|stem|e0e11117aa700bac|a0ef153da88ced48|9636c39099e34de5|1885558796||t20133.9973378467s|177cb9a75220d2ee|3791713|rds|local|vector|||28.81||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|00ffaedd0d938539|94d5abc6f5fa7398|68c8b8f04f30fdbd|-2021513789||t20069.0425689523s|388123363a295799|160869173|rds|local|vector|||0.01||
+elk_edge_dist|stem||750c57fbe59b46ff|59dcc1c7814e9a94|1453884132||t20145.8299426399s||0|rds|local|vector|||0.53||edges must be a sf class geometry.
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
 elk_lidar|stem|aeac4a3e7cd13c81|aa7b666448798592|a45a13f30fd7eeda|1826535428||t20141.0212143874s|dbfa33c4279072c1|1343135|rds|local|vector|||48.53||
 elk_per_month|stem|647915009c9c1fbd|34b671afed2e2692|7f11860901f6c025|-293717621||t20069.038843269s|1cff0a9d178e5f86|526|rds|local|vector|||0.04||
 elk_per_month_plot|function|3c1315b5423fb8cf|||||||||||||||
+elk_vri|stem|38828862f7470859|19f58201c4a5e418|16923e4b409dcae3|30184935||t20178.837389244s|5aa72b50a38d292b|1644638|rds|local|vector|||19.61|attribute variables are assumed to be spatially constant throughout all geometries|
 extract_aspect|function|51978e47b39bbbbd|||||||||||||||
 extract_dem|function|df1b1a3940b3219b|||||||||||||||
 extract_elevation|function|de3da352b88d1c56|||||||||||||||
@@ -41,6 +43,8 @@ extract_roughness|function|c3a4b2bca9c07efd|||||||||||||||
 extract_slope|function|439790adca07790e|||||||||||||||
 extract_uwr|function|280e4944e64df5c9|||||||||||||||
 extract_uwr_lyr|function|637f5737df35e4c1|||||||||||||||
+extract_vri|function|880ac76e89778e9c|||||||||||||||
+extract_vri_edges|function|fbcfbd935db67d7d|||||||||||||||
 find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
 fix_rate|function|3693752ffe99c315|||||||||||||||
@@ -50,6 +54,8 @@ individual_mcp|function|a5b63584ab3a100b|||||||||||||||
 load_capture_data|function|72cfbb33fdca6f8d|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
+madrone_vri_gdb|stem|7168272542bd9a59|c1612ce260a6716b|e6647d15d87cd713|126529910||t20145.0955484706s|2b07dbd8c37abf3d|86|rds|local|vector|||0||
+madrone_vri_gdb_path|stem|4194bf2bdb104c83|1985f825afc26878|2c530c1562a7fbd1|367518910||t20145.095548109s|62801cc8727d3ecd|162|rds|local|vector|||0.28|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
 mcp_seasonal_summary|stem|42559019e10b8e6a|41c36d11592ebd28|d44b43eda29870ee|-939293508||t20109.6899855224s|3ce37e60061c012b|477|rds|local|vector|||0.04||
 mcp_spring_yearly_overlap|stem|bc320e2144ad7c22|36e1a77fe1c04832|1d0b86a7f267d922|410806255||t20096.7085900487s|50c307229575faba|3969|rds|local|vector|||5.12||
 mcp_summer_yearly_overlap|stem|0166051ead72c028|ceb332a84eacf958|cb7d3a3cad768f98|-1442130744||t20095.6517714411s|aba510ceca05becd|3755|rds|local|vector|||6.7||
@@ -64,12 +70,14 @@ p_elk_per_month|stem|ed5635bbc2b69a35|fb1b1ddd4d188b87|ae4616bccd90fecd|21391222
 prct_overlap|function|1b450fa46dbba418|||||||||||||||
 query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
+read_vri|function|16df774cb8cb8e9c|||||||||||||||
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 seasonal_dbbmm|function|6c03db33d638a2b1|||||||||||||||
 seasonal_mcp|function|31f048fa99a50e51|||||||||||||||
 spring|object|6398ef5e90b44e6d|||||||||||||||
 spring_dbbmm|stem|3e608989db640d89|f205dfdb4c0311a3|f13ed8bf7031a485|1234634189||t20110.1718719905s|33d2cc2ad026b521|3545375|rds|local|vector|||1242.81||
 spring_mcp|stem|ceed227076a6cb8c|834f0c31cd9ce1ad|82761fdd7caf2310|2029814444||t20096.7083048972s|32b82eb965d4f678|34014|rds|local|vector|||8.73||
+st_edge_dist|function|67233d498ccee62c|||||||||||||||
 step_lengths|stem|e734e97cb350f83c|74a70bf1f4791d0c|ec3638c901d430c8|-712256869||t20096.8639439047s|a8e9b9ccfe730bc7|13772588|rds|local|vector|||18.79||
 steplength|function|97a0717a017cb942|||||||||||||||
 summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
@@ -79,8 +87,11 @@ summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t
 swp_days|object|a66a035b5e000a9e|||||||||||||||
 swp_weeks|object|b40b8812ed5a52af|||||||||||||||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
-uwr_lidar_gdb|stem|d75c6248a3d67767|3644cd386a706fe8|4acc4e29b29af86d|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20116.7344940264s|506d5f3142e58754|132341376|file|local|vector|||0||
-uwr_lidar_gdb_path|stem|d75c6248a3d67767|794406ab5299b854|2c530c1562a7fbd1|2052183110|W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb|t20140.9821046438s|cf246076235b991e|98304|file|local|vector|||3.06|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
+uwr_lidar_gdb|stem|d75c6248a3d67767|3644cd386a706fe8|7d669640b0020d1c|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20134.1192011005s|d3256ba881f5d4b7|65536|file|local|vector|||0||
+uwr_lidar_gdb_path|stem|728db9e64927e3d0|794406ab5299b854|2c530c1562a7fbd1|2052183110||t20145.0955482898s|af94fcb8e6165bbe|176|rds|local|vector|||0||
+vri|stem|e33a0daac99c4a73|44ec05d8757c0cb7|f7f352d9d267200b|-1341468610||t20146.0132776079s|966d39975026ea8c|526153274|rds|local|vector|||1151.77|GDAL Message 1 organizePolygons received a polygon with more than 100 parts. The processing may be really slow.  You can skip the processing by setting METHODSKIP, or only make it analyze counterclock wise parts by setting METHODONLY_CCW if you can assume that the outline of holes is counterclock wise defined|
+vri_edges|stem|22ef5ac100ec6831|810927e88ee48172|e4a73d2ccdefc1a2|1417597818||t20145.8299253383s||387841112|rds|local|vector|||124.64||stdbad_alloc
+W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb|t20144.7137477554s||0|file||vector|||||_paths_ missing files              WwlapnanWorkareaEcosystems_shareWHR_Models2023SEPT2023_v4SEPT2023_v4_Elk Models and SpatialSpatialOperational_Data_6636.gdb||||||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
 weekly_dbbmm_seasonal_summary|stem|1e56e021866a7911|f17c3ed425db58d1|6f9cae2d2ad5793c|35394069||t20110.8199238556s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.06||
