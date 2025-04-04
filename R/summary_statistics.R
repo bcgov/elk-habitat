@@ -203,7 +203,7 @@ assign_weekly_seasons <- function(weekly_shp, seasons) {
 # `seasons` param must be passed as a named list, where
 # the names are the names of the seasons, while 
 # the values are month-day pairs. 
-# E.g., c(winter = c("01-01", "03-31"),
+# E.g., list(winter = c("01-01", "03-31"),
 #         spring = c("04-01", "05-15"),
 #         summer = c("07-01", "08-31"))
 assign_daily_seasons <- function(daily_shp, seasons, date_col) {
@@ -212,6 +212,7 @@ assign_daily_seasons <- function(daily_shp, seasons, date_col) {
   
   # Assign date col to process
   shp$date_col <- shp[[date_col]]
+  shp$date_col <- lubridate::date(shp$date_col)
   
   # Create an empty 'season' column in the data, to later
   # assign season to

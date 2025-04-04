@@ -2,7 +2,7 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 add_mvt_metrics|function|d5e2123084ca7319|||||||||||||||
 all_seasons_dbbmm|stem|4eb058644e34322a|04c92914fe89f26c|669b712cb3f7bc40|-436251714||t20110.6463219638s|43db21a265ae0f32|10563057|rds|local|vector|||0.01||
 all_seasons_mcp|stem|59b2f36d40e50747|49512c53edbb9f8e|1b3a859245a5491a|37521217||t20071.0195756537s|db785c39c5e7cebb|94522|rds|local|vector|||0.02||
-assign_daily_seasons|function|b96475914ce71fa5|||||||||||||||
+assign_daily_seasons|function|d6bcd5e939dfa531|||||||||||||||
 assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
 capture_data|stem|98de33f683ee988c|e14ef5cd5be2470c|11f03e1aead2b0cd|1127347996||t20062.9547968275s|0420319ceef1893e|10494|rds|local|vector|||1.25|NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion|
@@ -13,7 +13,7 @@ clean_collar_data_moorter_moe|function|612ee821004e0f29|||||||||||||||
 collar_data|stem|dde861b2fd605c3c|712f93e9cbbedd9c|a006c290a8a43a89|245132817||t20054.7777424633s|1204ffab3546cd76|11587232|rds|local|vector|||0.15||
 collar_keys|stem|e065fe1973201e6b|532970a144734d7b|2c530c1562a7fbd1|34646257|C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar31995_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34746_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34747_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34748_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34749_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34750_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34751_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34752_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39609_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39610_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39611_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39612_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39613_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41134_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41135_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41136_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41137_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41138_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41139_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41140_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41141_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41142_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41143_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41144_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41145_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41146_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41147_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41148_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42633_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42634_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42635_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42636_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42637_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42638_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42639_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42640_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42641_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42642_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45541_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45542_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45543_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45544_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45793_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45794_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45795_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45796_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45797_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45798_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45799_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45800_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45801_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45802_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45803_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45804_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45805_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45806_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45807_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45808_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80000_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80001_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80002_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80003_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80004_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80005_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80006_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80007_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80008_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80009_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80506_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar85132_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar85133_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94432_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94433_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94434_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94435_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94436_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94437_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94438_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94439_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94440_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94441_Registration.keyx|t20017.7375874065s|45a156ae2ea5044b|60390|file|local|vector|||0.06||
 cutoff_date|object|9ae2787af414062a|||||||||||||||
-daily_dets_plots|stem|0f5e9be222a39af6|471b22bf3dd17154|127153ed16d1ea85|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20069.0476594968s|97880e85d9d4499c|2702655|file|local|vector|||41.92||
+daily_dets_plots|stem|bdbc355936304109|471b22bf3dd17154|a36ebbe1062f3b46|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20182.8839893104s|d66ca1079d9aa48a|2702829|file|local|vector|||37.18||
 daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
 daily_mcp_seasonal_summary|stem|04dcda9903f47a56|27a431966e8c0005|965a293fa0179b3b|-282887321||t20111.0117722877s|ffeb2fb5fa1a1d60|518|rds|local|vector|||0.47||
 daily_mcp_swp_summary|stem|a3b533c737de3a11|b1b723ecf468bcbb|11bd9d4ce28c0d2e|-2092308185||t20111.0619912241s|d9b313b107b3c446|554|rds|local|vector|||0.1||
@@ -23,19 +23,19 @@ dbbmm_spring_yearly_overlap|stem|626d66220cea13fa|39a9b295d50aa699|975458486144c
 dbbmm_summer_yearly_overlap|stem|867cdc869d0404c8|22432e9590bfe93c|1139e5d8b1416e8c|408432813||t20110.6463632892s|3bffdc5c1d64df30|3764|rds|local|vector|||3.55||
 dbbmm_winter_spring_overlap|stem|318b4b87bf98de18|b930075dc00053b3|fd66b94ca786de0a|-1789060891||t20110.6463148925s|a99ab78527fee2f6|4968|rds|local|vector|||6.13||
 dbbmm_winter_yearly_overlap|stem|f7404fffc5be7e12|3a8acfeaffe76901|25e0ecd5a82641f1|2111524819||t20110.6461997314s|c3af5cd0b7cca478|2721|rds|local|vector|||2.72||
-detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|71e452fdf147d3fc|947972721||t20069.0385290536s|c24c5d185b903301|2587|rds|local|vector|||0.35||
-dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6c6a5b45b4a3ce9a|-360331643||t20069.0515342632s|31cf8697cc750540|180|rds|local|vector|||0.05||
+detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|def3b0c632e7308c|947972721||t20182.8842000574s|c24c5d185b903301|2587|rds|local|vector|||0.32||
+dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6b65075e30f4d64c|-360331643||t20182.8842004972s|31cf8697cc750540|180|rds|local|vector|||0.02||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
-elk|stem|e713751ba60ae25b|4a0d072613946187|1227c170c4658418|-188372202||t20069.0385247589s||32142164|rds|local|vector|||17.54|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 1 tempPipeline outputselk_positions.shp is not a directory.|Creation failed.
+elk|stem|e5bff9e5b945c71f|4a0d072613946187|c0f2f5987900109f|-188372202||t20178.9696555651s|a160a3f826c983de|32160001|rds|local|vector|||30.81|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
 elk_dem|stem|e0e11117aa700bac|a0ef153da88ced48|9636c39099e34de5|1885558796||t20133.9973378467s|177cb9a75220d2ee|3791713|rds|local|vector|||28.81||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
-elk_dotplot|stem|00ffaedd0d938539|94d5abc6f5fa7398|68c8b8f04f30fdbd|-2021513789||t20069.0425689523s|388123363a295799|160869173|rds|local|vector|||0.01||
+elk_dotplot|stem|db20b6b90f3fcff7|94d5abc6f5fa7398|3e2e2e12eb41d66e|-2021513789||t20182.8841955795s|82358ea5b340a7b4|160954138|rds|local|vector|||0.04||
 elk_edge_dist|stem||750c57fbe59b46ff|59dcc1c7814e9a94|1453884132||t20145.8299426399s||0|rds|local|vector|||0.53||edges must be a sf class geometry.
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
 elk_lidar|stem|aeac4a3e7cd13c81|aa7b666448798592|a45a13f30fd7eeda|1826535428||t20141.0212143874s|dbfa33c4279072c1|1343135|rds|local|vector|||48.53||
-elk_per_month|stem|647915009c9c1fbd|34b671afed2e2692|7f11860901f6c025|-293717621||t20069.038843269s|1cff0a9d178e5f86|526|rds|local|vector|||0.04||
+elk_per_month|stem|647915009c9c1fbd|34b671afed2e2692|87d2e57f43ec98c9|-293717621||t20182.8839904215s|1cff0a9d178e5f86|526|rds|local|vector|||0.05||
 elk_per_month_plot|function|3c1315b5423fb8cf|||||||||||||||
-elk_vri|stem|38828862f7470859|19f58201c4a5e418|16923e4b409dcae3|30184935||t20178.837389244s|5aa72b50a38d292b|1644638|rds|local|vector|||19.61|attribute variables are assumed to be spatially constant throughout all geometries|
+elk_vri|stem|87a33790036d1693|bc321d8056ce30d9|8d5362170187501d|30184935||t20182.8847996959s|26f64b3bdc8211cb|1716691|rds|local|vector|||17|attribute variables are assumed to be spatially constant throughout all geometries|
 extract_aspect|function|51978e47b39bbbbd|||||||||||||||
 extract_dem|function|df1b1a3940b3219b|||||||||||||||
 extract_elevation|function|de3da352b88d1c56|||||||||||||||
@@ -64,9 +64,9 @@ mcp_winter_yearly_overlap|stem|837343aca2161fea|7582a03bec5b992d|a24c3bbf98761aa
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|74c304c23b6873ff|||||||||||||||
 non_swp_elk|object|2c07bcfc1260c6a8|||||||||||||||
-p_dets_per_elk|stem|c2b7a0d9981414ec|ef744c8c91fd6ab6|2f89263cf258d1dd|784997253||t20069.0471743298s|98bb26d1d1c7fbcc|32256322|rds|local|vector|||0.03||
+p_dets_per_elk|stem|47f87ddcb8dcef1d|ef744c8c91fd6ab6|67bd339646166492|784997253||t20182.8848394966s|edd16ff57025a8bc|32273091|rds|local|vector|||0.04||
 p_efficiency|stem|e90cf5b2efeee425|dc663c41ca62b40a|dc32d3bcff81c713|-1905756578||t20069.0515349809s|dc6edb64f692b7ad|111065|rds|local|vector|||0||
-p_elk_per_month|stem|ed5635bbc2b69a35|fb1b1ddd4d188b87|ae4616bccd90fecd|2139122293||t20069.0388838487s|0bc2645bba0dfe4b|32310422|rds|local|vector|||0.11||
+p_elk_per_month|stem|71e6b8fdf305534e|fb1b1ddd4d188b87|ef920b7ad6bff7e0|2139122293||t20182.8842404633s|37f01f5f596650a9|32327511|rds|local|vector|||0.06||
 prct_overlap|function|1b450fa46dbba418|||||||||||||||
 query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
@@ -105,54 +105,3 @@ winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|77f85a78fdcf5827|93ab5c460629c9d4|425441c969437297|-99852116||t20110.0957124035s|75f3b8712bb493d7|3464743|rds|local|vector|||1468.39||
 winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|905284f9fe9e35b8|844460800||t20096.7084179695s|bb32bb867029de36|29249|rds|local|vector|||9.75||
 yearly_prct_overlap|function|a191d863aa6bf109|||||||||||||||
-n_elk_per_month|function|74c304c23b6873ff
-load_collar_data|function|ea7e9fd9b6f54805
-read_vri|function|16df774cb8cb8e9c
-remove_imprecise_locations|function|27a83e4a2b6f6e0f
-spring|object|6398ef5e90b44e6d
-extract_aspect|function|51978e47b39bbbbd
-summarize_area|function|e27ed1cdb10c2f9f
-fix_rate|function|3693752ffe99c315
-extract_elevation|function|de3da352b88d1c56
-extract_roughness|function|c3a4b2bca9c07efd
-extract_slope|function|439790adca07790e
-winter|object|326711d79cc870d3
-prct_overlap|function|1b450fa46dbba418
-extract_vri_edges|function|fbcfbd935db67d7d
-elk_dets_hist|function|a496a21bbf49b8dc
-find_centre|function|738ee6d69ce867bc
-add_mvt_metrics|function|d5e2123084ca7319
-individual_dbbmm|function|3495f8b948f0a5cb
-extract_uwr_lyr|function|637f5737df35e4c1
-query_cded|function|eb1dc5b4a2dc71c9
-attribute_animal_id|function|cd16c423041e48a2
-find_center|function|738ee6d69ce867bc
-swp_days|object|a66a035b5e000a9e
-elk_fix_hist|function|b6a5bc4295baa22d
-load_capture_data|function|72cfbb33fdca6f8d
-assign_daily_seasons|function|b96475914ce71fa5
-weekly_binning|function|957cca10ca8bb5f0
-logger_dotplot|function|5b0e74c36ed11f20
-steplength|function|97a0717a017cb942
-n_dets_per_elk|function|08bd3cc58671e6df
-st_edge_dist|function|67233d498ccee62c
-assign_weekly_seasons|function|663c05c5ec7782cf
-non_swp_elk|object|2c07bcfc1260c6a8
-elk_per_month_plot|function|3c1315b5423fb8cf
-cutoff_date|object|9ae2787af414062a
-summer|object|292209e1f8fbf494
-extract_vri|function|880ac76e89778e9c
-download_from_server|function|59f25d37f0fbd513
-swp_weeks|object|b40b8812ed5a52af
-extract_dem|function|df1b1a3940b3219b
-yearly_prct_overlap|function|a191d863aa6bf109
-clean_collar_data_moorter_moe|function|612ee821004e0f29
-seasonal_dbbmm|function|6c03db33d638a2b1
-extract_uwr|function|280e4944e64df5c9
-individual_mcp|function|a5b63584ab3a100b
-weekly_dbbmm|function|6c7de243de43fbbe
-clean_collar_data|function|3f8c5e8c1d9c185a
-seasonal_mcp|function|31f048fa99a50e51
-daily_mcp|function|8378b0fe5e408c6b
-weekly_mcp|function|f3ffc9f2781e03b7
-elk|stem|5dc32a499a735580|4a0d072613946187|1227c170c4658418|-188372202||t20178.9625454157s|19d42bd2dffb5b21|32149848|rds|local|vector|||30.94|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Message 6 Field dttm create as date field, though DateTime requested.|

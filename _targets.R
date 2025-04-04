@@ -272,10 +272,12 @@ list(
                                            "PROJ_AGE_1", 
                                            "NEW_VRI_CC_RES_AGE", 
                                            "BEST_AGE_CL_STS", 
-                                           "Creation_Date",
                                            "PROJ_HEIGHT_1",
+                                           "VRI_LIVE_STEMS_PER_HA",
+                                           "CROWN_CLOSURE",
                                            "SHRUB_HEIGHT",
-                                           "SHRUB_CROWN_CLOSURE")))#,
+                                           "SHRUB_CROWN_CLOSURE",
+                                           "Creation_Date")))#,
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))
 )
