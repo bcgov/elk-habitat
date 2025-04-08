@@ -7,7 +7,8 @@ assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|cd16c423041e48a2|||||||||||||||
 capture_data|stem|98de33f683ee988c|e14ef5cd5be2470c|11f03e1aead2b0cd|1127347996||t20062.9547968275s|0420319ceef1893e|10494|rds|local|vector|||1.25|NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion. Only date_num  1 are valid in Excel, creating an earlier date than Excel supports.. NAs introduced by coercion|
 capture_data_path|stem|a4f2d2dc8481b6d5|65ec0aaf8e8ca777|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20241127.xlsx|t20054.9131591889s|3c37f8b350e57321|67427|file|local|vector|||2.34|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
-cded|stem|bdb71700c4f6abf2|785e6cdb0578efdb|d968199013f8c79d|-438085499|GIS/DEM/CDED_VRT.vrt|t20146.0134491556s|732eb82d9440cb83|25350|file|local|vector|||13.11||
+cded|stem|bdb71700c4f6abf2|785e6cdb0578efdb|fa33624b62cf09f0|-438085499|GIS/DEM/CDED_VRT.vrt|t20185.6512468704s|732eb82d9440cb83|25350|file|local|vector|||9.56||
+chm_path|stem|29e226684ac9a3ef|7678dac5a50beb30|2c530c1562a7fbd1|131809279|GIS/LiDAR products/crown_height.tif|t20183.0142095376s|f77f63eb8093eecb|67587177|file|local|vector|||0.47|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
 clean_collar_data|function|3f8c5e8c1d9c185a|||||||||||||||
 clean_collar_data_moorter_moe|function|612ee821004e0f29|||||||||||||||
 collar_data|stem|dde861b2fd605c3c|712f93e9cbbedd9c|a006c290a8a43a89|245132817||t20054.7777424633s|1204ffab3546cd76|11587232|rds|local|vector|||0.15||
@@ -15,9 +16,9 @@ collar_keys|stem|e065fe1973201e6b|532970a144734d7b|2c530c1562a7fbd1|34646257|C:/
 cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|bdbc355936304109|471b22bf3dd17154|a36ebbe1062f3b46|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20182.8839893104s|d66ca1079d9aa48a|2702829|file|local|vector|||37.18||
 daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
-daily_mcp_seasonal_summary|stem|04dcda9903f47a56|27a431966e8c0005|965a293fa0179b3b|-282887321||t20111.0117722877s|ffeb2fb5fa1a1d60|518|rds|local|vector|||0.47||
+daily_mcp_seasonal_summary|stem|04dcda9903f47a56|4ca3fe6cc2b55b70|786b45d5923f3ee4|-282887321||t20185.9339415992s|ffeb2fb5fa1a1d60|518|rds|local|vector|||0.86||
 daily_mcp_swp_summary|stem|a3b533c737de3a11|b1b723ecf468bcbb|11bd9d4ce28c0d2e|-2092308185||t20111.0619912241s|d9b313b107b3c446|554|rds|local|vector|||0.1||
-daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|277db6c58ad9a1b2|958011176||t20096.6948848394s|a682bbc1098cb845|4501904|rds|local|vector|||1559.69||
+daily_mcps|stem|791237356e6b1136|2650c2e94d7120b1|7b34579f21672fb7|958011176||t20185.9339303409s|a682bbc1098cb845|4501904|rds|local|vector|||2320.33||
 dbbmm_seasonal_summary|stem|de130b4306d74872|953aea498725d956|2cd9a45f4490c1e3|1789842921||t20110.6463635903s|ba8390797232be64|474|rds|local|vector|||0.02||
 dbbmm_spring_yearly_overlap|stem|626d66220cea13fa|39a9b295d50aa699|975458486144cc73|-2038073459||t20110.6462439783s|09812e1229965cdd|3918|rds|local|vector|||3.81||
 dbbmm_summer_yearly_overlap|stem|867cdc869d0404c8|22432e9590bfe93c|1139e5d8b1416e8c|408432813||t20110.6463632892s|3bffdc5c1d64df30|3764|rds|local|vector|||3.55||
@@ -27,16 +28,19 @@ detection_efficiency|stem|e24f8c884c06888d|8d8488432aca6501|def3b0c632e7308c|947
 dets_per_elk|stem|cae1bf9da460cb61|cffc3ee6ced78c00|6b65075e30f4d64c|-360331643||t20182.8842004972s|31cf8697cc750540|180|rds|local|vector|||0.02||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
 elk|stem|e5bff9e5b945c71f|4a0d072613946187|c0f2f5987900109f|-188372202||t20178.9696555651s|a160a3f826c983de|32160001|rds|local|vector|||30.81|x is already of type POINT.. Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.|
-elk_dem|stem|e0e11117aa700bac|a0ef153da88ced48|9636c39099e34de5|1885558796||t20133.9973378467s|177cb9a75220d2ee|3791713|rds|local|vector|||28.81||
+elk_chm|stem|b9e14faa4e402565|71266482f5ce580b|db8f57afe457dc33|-323457739||t20185.6675965859s|fdece0677f1de9e1|2287782|rds|local|vector|||7.24||
+elk_dem|stem|e0e11117aa700bac|a0ef153da88ced48|555d15dd1f7c3eb8|1885558796||t20185.6517172991s|177cb9a75220d2ee|3791713|rds|local|vector|||39.07||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|db20b6b90f3fcff7|94d5abc6f5fa7398|3e2e2e12eb41d66e|-2021513789||t20182.8841955795s|82358ea5b340a7b4|160954138|rds|local|vector|||0.04||
 elk_edge_dist|stem||750c57fbe59b46ff|59dcc1c7814e9a94|1453884132||t20145.8299426399s||0|rds|local|vector|||0.53||edges must be a sf class geometry.
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
-elk_lidar|stem|aeac4a3e7cd13c81|aa7b666448798592|a45a13f30fd7eeda|1826535428||t20141.0212143874s|dbfa33c4279072c1|1343135|rds|local|vector|||48.53||
+elk_lidar|stem|aeac4a3e7cd13c81|aa7b666448798592|2ac97a3e285f6218|1826535428||t20185.6511342263s|dbfa33c4279072c1|1343135|rds|local|vector|||62.39||
 elk_per_month|stem|647915009c9c1fbd|34b671afed2e2692|87d2e57f43ec98c9|-293717621||t20182.8839904215s|1cff0a9d178e5f86|526|rds|local|vector|||0.05||
 elk_per_month_plot|function|3c1315b5423fb8cf|||||||||||||||
+elk_uwr|stem|aeac4a3e7cd13c81|aa7b666448798592|2ac97a3e285f6218|-1088510592||t20185.6681151804s|dbfa33c4279072c1|1343135|rds|local|vector|||44.64||
 elk_vri|stem|87a33790036d1693|bc321d8056ce30d9|8d5362170187501d|30184935||t20182.8847996959s|26f64b3bdc8211cb|1716691|rds|local|vector|||17|attribute variables are assumed to be spatially constant throughout all geometries|
 extract_aspect|function|51978e47b39bbbbd|||||||||||||||
+extract_chm|function|aa787ca0cac449b3|||||||||||||||
 extract_dem|function|df1b1a3940b3219b|||||||||||||||
 extract_elevation|function|de3da352b88d1c56|||||||||||||||
 extract_roughness|function|c3a4b2bca9c07efd|||||||||||||||
@@ -75,15 +79,15 @@ remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 seasonal_dbbmm|function|6c03db33d638a2b1|||||||||||||||
 seasonal_mcp|function|31f048fa99a50e51|||||||||||||||
 spring|object|6398ef5e90b44e6d|||||||||||||||
-spring_dbbmm|stem|3e608989db640d89|f205dfdb4c0311a3|f13ed8bf7031a485|1234634189||t20110.1718719905s|33d2cc2ad026b521|3545375|rds|local|vector|||1242.81||
-spring_mcp|stem|ceed227076a6cb8c|834f0c31cd9ce1ad|82761fdd7caf2310|2029814444||t20096.7083048972s|32b82eb965d4f678|34014|rds|local|vector|||8.73||
+spring_dbbmm|stem|3e608989db640d89|f205dfdb4c0311a3|e5bcb8f42ae79048|1234634189||t20183.0326793274s|33d2cc2ad026b521|3545375|rds|local|vector|||1465.05||
+spring_mcp|stem|ceed227076a6cb8c|834f0c31cd9ce1ad|9dbd8fe9a2f2829c|2029814444||t20184.9804945067s|32b82eb965d4f678|34014|rds|local|vector|||14410.34||
 st_edge_dist|function|67233d498ccee62c|||||||||||||||
-step_lengths|stem|e734e97cb350f83c|74a70bf1f4791d0c|ec3638c901d430c8|-712256869||t20096.8639439047s|a8e9b9ccfe730bc7|13772588|rds|local|vector|||18.79||
+step_lengths|stem|e734e97cb350f83c|74a70bf1f4791d0c|23a7e699dded5787|-712256869||t20185.6444873349s|a8e9b9ccfe730bc7|13772588|rds|local|vector|||34.55||
 steplength|function|97a0717a017cb942|||||||||||||||
 summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
-summer_dbbmm|stem|4ea0dfa3c8e6260b|96d68f6b232f6858|40ceed9a422a5253|320407742||t20110.6461679053s|c922e72751bbec8a|3556806|rds|local|vector|||40978.93||
-summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|18f1c7a35a89870d|1803065787||t20096.7085302842s|71cd02de9b892eb7|35005|rds|local|vector|||9.67||
+summer_dbbmm|stem|4ea0dfa3c8e6260b|96d68f6b232f6858|263bc8dcd2ec28b7|320407742||t20184.8137074697s|c922e72751bbec8a|3556806|rds|local|vector|||145571.55||
+summer_mcp|stem|e5171e59ce4e6bb7|183378ebd5d115f0|49c2af4d9b78682e|1803065787||t20183.0538472762s|71cd02de9b892eb7|35005|rds|local|vector|||12.23||
 swp_days|object|a66a035b5e000a9e|||||||||||||||
 swp_weeks|object|b40b8812ed5a52af|||||||||||||||
 unassigned_detections|stem|e20b3496611ceebc|6286e9ca467fe184|a006c290a8a43a89|-1280430989||t20054.7777454606s|950a8c8b63476c9e|457290|rds|local|vector|||0.02||
@@ -96,12 +100,12 @@ weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
 weekly_dbbmm_seasonal_summary|stem|1e56e021866a7911|f17c3ed425db58d1|6f9cae2d2ad5793c|35394069||t20110.8199238556s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.06||
 weekly_dbbmm_swp_summary|stem|7ee761a57c481764|4114bd9eda70e5ea|dbc3f73d40c836b0|-1052199150||t20111.0619970404s|baf9ff9f6b5aaee8|551|rds|local|vector|||0.16||
-weekly_dbbmms|stem|00fd1482ed80d40a|5cebf5580f0a8be6|84bba84ab5e9f4f6|-2101101675||t20110.8199223616s|92f787c56ef4e048|33981739|rds|local|vector|||6112.38|Field names abbreviated for ESRI Shapefile driver|
+weekly_dbbmms|stem|00fd1482ed80d40a|5cebf5580f0a8be6|2dff2e62eca1e5c5|-2101101675||t20183.1288449939s|92f787c56ef4e048|33981739|rds|local|vector|||6465.47|Field names abbreviated for ESRI Shapefile driver|
 weekly_mcp|function|f3ffc9f2781e03b7|||||||||||||||
 weekly_mcp_seasonal_summary|stem|45ba099715c2c832|76f418a931433e0b|385df2081b6babd0|-1911070737||t20109.6899846877s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.02||
 weekly_mcp_swp_summary|stem|93167d465093f8da|21c78168eb8e0959|43215aa2d9aeedb8|-1290166597||t20111.0619978299s|c4562ec57f43f223|552|rds|local|vector|||0.02||
-weekly_mcps|stem|666ce6e264178d6f|a6fffbef013b773d|33d5c18ea1c4d015|-1315591038||t20096.7348008209s|eeffcb9158f046b0|1146202|rds|local|vector|||216.47|Field names abbreviated for ESRI Shapefile driver|
+weekly_mcps|stem|666ce6e264178d6f|a6fffbef013b773d|67795b5a5a8d3aa0|-1315591038||t20185.6440612386s|eeffcb9158f046b0|1146202|rds|local|vector|||57332.04|Field names abbreviated for ESRI Shapefile driver|
 winter|object|326711d79cc870d3|||||||||||||||
-winter_dbbmm|stem|77f85a78fdcf5827|93ab5c460629c9d4|425441c969437297|-99852116||t20110.0957124035s|75f3b8712bb493d7|3464743|rds|local|vector|||1468.39||
-winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|905284f9fe9e35b8|844460800||t20096.7084179695s|bb32bb867029de36|29249|rds|local|vector|||9.75||
+winter_dbbmm|stem|77f85a78fdcf5827|93ab5c460629c9d4|f0aaa3ca0e63d313|-99852116||t20183.0537054652s|75f3b8712bb493d7|3464743|rds|local|vector|||1816.36||
+winter_mcp|stem|f25f1fdeab52b550|a11e04c7e851edf2|bc4e55a480ac3e6d|844460800||t20183.0539871792s|bb32bb867029de36|29249|rds|local|vector|||12.08||
 yearly_prct_overlap|function|a191d863aa6bf109|||||||||||||||

@@ -172,8 +172,8 @@ list(
   #### DAILY HOME RANGE ESTIMATES ####
   ##### MCP #####
   # Only doing MCPs for weekly estimates. dBBMM window/margin params are too
-  # sensitive to lower sample sizes for daily home range estimates. 
-  tar_target(daily_mcps, daily_mcp(elk = elk, 
+  # sensitive to lower sample sizes for daily home range estimates.
+  tar_target(daily_mcps, daily_mcp(elk = elk,
                                     min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
                                     percent = 0.95) |> # 95% MCP - convex hull that encompasses 95% of points. Defaults to Delaunay triangulation to find the center of the points.
                sf::st_write("temp/Pipeline outputs/Daily_MCP.shp", append = FALSE)),
@@ -181,7 +181,7 @@ list(
                                                               seasons = list("winter" = winter, # defined toward the top of this document
                                                                              "spring" = spring, # defined toward the top of this document
                                                                              "summer" = summer), # defined toward the top of this document
-                                                              date_col = "date") |> 
+                                                              date_col = "date") |>
                summarize_area(group_by = c("season"))),
   ###### Severe Winter Period daily MCPs ######
   tar_target(daily_mcp_swp_summary, daily_mcps |>
@@ -238,7 +238,7 @@ list(
                                   local_path = "GIS/LiDAR products",
                                   download = FALSE), # set to FALSE bc I just manually moved it over in the end
              format = "file"),
-  tar_target(elk_lidar, extract_uwr(elk = elk, 
+  tar_target(elk_uwr, extract_uwr(elk = elk, 
                                     gdb = uwr_lidar_gdb,
                                     layers = c("canopy_height",
                                                "Edge_Category",
@@ -246,6 +246,12 @@ list(
                                                "elevation",
                                                "slope_percent")
                                     )),
+  # Since the UWR layers might not be suitable for this analysis, let's
+  # also extract data from a crown height model that was provided to us
+  # by BCTS. 
+  tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
+  tar_target(elk_chm, extract_chm(elk = elk,
+                                  path = chm_path)),
   #### VRI ATTRIBUTES ####
   ##### Download and extract VRI attributes #####
   # Note we are using the improved VRI layer that was provided by Madrone.

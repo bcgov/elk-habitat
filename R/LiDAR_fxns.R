@@ -72,4 +72,25 @@ extract_uwr <- function(elk, gdb, layers) {
 }
 
 
+# Extract from Crown Height Model raster directly, rather than the UWR GDB
+extract_chm <- function(elk, path) {
+  message("Extracting crown height model data...")
+  # Load up the raster
+  chm <- terra::rast(path)
+  # Extract CRS
+  dat_crs <- terra::crs(chm)
+  dat_epsg <- stringr::str_extract(dat_crs, "EPSG.*$") |> 
+    stringr::str_extract(pattern = "\\d+") |>
+    as.numeric()
+  # Transform elk data to match DEM CRS
+  elk <- sf::st_transform(elk, dat_epsg)
+  # Extract raster value
+  out <- terra::extract(chm, elk, ID = FALSE)
+  # Return out
+  out <- cbind(elk$idposition, out)
+  names(out)[1] <- "idposition"
+  # Pare down to only cols with data
+  out <- na.omit(out)
+  return(out)
+}
 
