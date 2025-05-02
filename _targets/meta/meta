@@ -35,8 +35,10 @@ elk_dotplot|stem|db20b6b90f3fcff7|94d5abc6f5fa7398|3e2e2e12eb41d66e|-2021513789|
 elk_edge_dist|stem||750c57fbe59b46ff|59dcc1c7814e9a94|1453884132||t20145.8299426399s||0|rds|local|vector|||0.53||edges must be a sf class geometry.
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
 elk_lidar|stem|aeac4a3e7cd13c81|aa7b666448798592|2ac97a3e285f6218|1826535428||t20185.6511342263s|dbfa33c4279072c1|1343135|rds|local|vector|||62.39||
-elk_per_month|stem|647915009c9c1fbd|34b671afed2e2692|87d2e57f43ec98c9|-293717621||t20182.8839904215s|1cff0a9d178e5f86|526|rds|local|vector|||0.05||
-elk_per_month_plot|function|3c1315b5423fb8cf|||||||||||||||
+elk_per_month|stem|8fbf5bc3ce8204d1|34b671afed2e2692|b0d4ea305b91e228|-293717621||t20210.7469337941s|4c867c58f3b5107a|196|rds|local|vector|||0.03||
+elk_per_month_plot|function|20740411dc9e6e24|||||||||||||||
+elk_per_year_month|stem|647915009c9c1fbd|7f857d14421b1f2e|956ea7f7de91283e|692555464||t20210.746933238s|1cff0a9d178e5f86|526|rds|local|vector|||0.1||
+elk_per_year_month_plot|function|bcfd85732921d5e0|||||||||||||||
 elk_uwr|stem|aeac4a3e7cd13c81|aa7b666448798592|2ac97a3e285f6218|-1088510592||t20185.6681151804s|dbfa33c4279072c1|1343135|rds|local|vector|||44.64||
 elk_vri|stem|87a33790036d1693|bc321d8056ce30d9|8d5362170187501d|30184935||t20182.8847996959s|26f64b3bdc8211cb|1716691|rds|local|vector|||17|attribute variables are assumed to be spatially constant throughout all geometries|
 extract_aspect|function|51978e47b39bbbbd|||||||||||||||
@@ -66,11 +68,13 @@ mcp_summer_yearly_overlap|stem|0166051ead72c028|ceb332a84eacf958|cb7d3a3cad768f9
 mcp_winter_spring_overlap|stem|7cdcf68d37677206|22eb826872ff85ea|d5e6c52926b52753|-1809842540||t20096.7086921996s|f6c4cf74567fc89a|5013|rds|local|vector|||8.81||
 mcp_winter_yearly_overlap|stem|837343aca2161fea|7582a03bec5b992d|a24c3bbf98761aac|-1053605382||t20095.6516932097s|ea4411d9df097ea2|2741|rds|local|vector|||5||
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
-n_elk_per_month|function|74c304c23b6873ff|||||||||||||||
+n_elk_per_month|function|740bde44b553e278|||||||||||||||
+n_elk_per_year_month|function|74c304c23b6873ff|||||||||||||||
 non_swp_elk|object|2c07bcfc1260c6a8|||||||||||||||
 p_dets_per_elk|stem|47f87ddcb8dcef1d|ef744c8c91fd6ab6|67bd339646166492|784997253||t20182.8848394966s|edd16ff57025a8bc|32273091|rds|local|vector|||0.04||
 p_efficiency|stem|e90cf5b2efeee425|dc663c41ca62b40a|dc32d3bcff81c713|-1905756578||t20069.0515349809s|dc6edb64f692b7ad|111065|rds|local|vector|||0||
-p_elk_per_month|stem|71e6b8fdf305534e|fb1b1ddd4d188b87|ef920b7ad6bff7e0|2139122293||t20182.8842404633s|37f01f5f596650a9|32327511|rds|local|vector|||0.06||
+p_elk_per_month|stem|099e4298bc4d7026|fb1b1ddd4d188b87|ebfeb3dedad1b22e|2139122293||t20210.7469757983s|f5bea4c0f6231b79|32338551|rds|local|vector|||0.07||
+p_elk_per_year_month|stem|b55479b1d86b96cc|e7c8f3f0705a43fa|5160708923d531be|-669630683||t20210.7470188237s|2c34a99537c65f23|32333397|rds|local|vector|||0.21||
 prct_overlap|function|1b450fa46dbba418|||||||||||||||
 query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||

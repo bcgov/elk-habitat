@@ -24,8 +24,8 @@ logger_dotplot <- function(elk) {
 }
 
 
-# N elk tracked through time
-elk_per_month_plot <- function(elk) {
+# N elk tracked through time (year-month)
+elk_per_year_month_plot <- function(elk) {
   p <- elk |> 
     sf::st_drop_geometry() |>
     dplyr::group_by(year, month) |>
@@ -41,8 +41,32 @@ elk_per_month_plot <- function(elk) {
                           limits = c(lubridate::ym("2019-01"), NA),
                           expand = c(0, 20)) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank(),
-                   axis.ticks.x = element_line(color = "black"),
-                   axis.text.x = element_text(size = 7, angle = 90))
+                   axis.ticks.x = ggplot2::element_line(color = "black"),
+                   axis.text.x = ggplot2::element_text(size = 7, angle = 90))
+  return(p)
+}
+
+
+# N elk tracked through time (month)
+elk_per_month_plot <- function(elk) {
+  p <- 
+    elk |> 
+    sf::st_drop_geometry() |>
+    dplyr::group_by(month) |>
+    dplyr::summarise(N = dplyr::n_distinct(animal_id)) |>
+    ggplot2::ggplot(ggplot2::aes(x = month, y = N)) +
+    ggplot2::geom_col() +
+    ggplot2::geom_label(ggplot2::aes(label = N)) +
+    ggplot2::labs(y = "N elk tracked",
+                  caption = "Within each month, across all years") +
+    ggplot2::theme_minimal() +
+    ggplot2::scale_x_continuous(breaks = 1:12,
+                                labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
+                                expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(limits = c(0, 85),
+                                expand = c(0, 0)) +
+    ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+                   axis.ticks.x = ggplot2::element_line(color = "black"))
   return(p)
 }
 

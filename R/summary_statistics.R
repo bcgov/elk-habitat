@@ -17,11 +17,20 @@
 #     PER DEPLOYMENT - be aware to not artificially reduce detection efficiency
 #     for elk that have a gap mid-deployment from being re-collared)
 
-# 1. N elk online per month
-n_elk_per_month <- function(elk) {
+# 1a. N elk online per month per year
+n_elk_per_year_month <- function(elk) {
   n_elk_per_month <- elk |> 
     sf::st_drop_geometry() |>  # takes forever to run if you keep geoms
     dplyr::group_by(year, month) |>
+    dplyr::summarise(N = dplyr::n_distinct(animal_id)) #|> dplyr::pull(N) |> summary()
+  return(n_elk_per_month)
+}
+
+# 1b. N elk online per month (collapsing year)
+n_elk_per_month <- function(elk) {
+  n_elk_per_month <- elk |> 
+    sf::st_drop_geometry() |>  # takes forever to run if you keep geoms
+    dplyr::group_by(month) |>
     dplyr::summarise(N = dplyr::n_distinct(animal_id)) #|> dplyr::pull(N) |> summary()
   return(n_elk_per_month)
 }

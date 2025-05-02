@@ -66,6 +66,9 @@ list(
   #### SUMMARY STATS + PLOTS ####
   # Logger dotplot
   tar_target(elk_dotplot, logger_dotplot(elk)),
+  # N elk online per year-month
+  tar_target(elk_per_year_month, n_elk_per_year_month(elk)),
+  tar_target(p_elk_per_year_month, elk_per_year_month_plot(elk)),
   # N elk online per month
   tar_target(elk_per_month, n_elk_per_month(elk)),
   tar_target(p_elk_per_month, elk_per_month_plot(elk)),
