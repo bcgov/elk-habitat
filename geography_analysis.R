@@ -13,11 +13,6 @@ library(units)
 okabe <- c("#CC79A7", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00")
 
 # Set static variables
-# Two elk did not experience severe winter conditions, per Mario's
-# work looking at snow depth data on cameras deployed across the
-# study region. Remove these two elk from the severe winter
-# comparison.
-non_swp_elk <- c("20-1001", "20-1002")
 
 # Severe winter period was 18 Dec 2021 - 14 Jan 2022
 #lubridate::isoweek("2021-12-18")
@@ -26,10 +21,23 @@ swp_weeks <- c(50, 51, 52, 53, 1, 2) # weeks 51 thru 1
 
 #lubridate::yday("2021-12-18")
 #lubridate::yday("2022-01-14")
+swp_dates <- seq(lubridate::ymd("2021-12-18"), lubridate::ymd("2022-01-14"), by = "1 day")
 swp_days <- c(lubridate::yday("2021-12-18"):366, 1:14)
+
+# Two elk did not experience severe winter conditions, per Mario's
+# work looking at snow depth data on cameras deployed across the
+# study region. Remove these two elk from the severe winter
+# comparison.
+non_swp_elk <- c("20-1001", "20-1002")
+
+# These are the elk IDs that specifically experienced the 2021
+# severe winter (i.e. cuts out any that also weren't collared
+# yet)
+swp_elk <- unique(elk[["animal_id"]][lubridate::date(elk$dttm) %in% swp_dates])
 
 # Load up targets
 tar_load(elk)
+tar_load(all_seasons_mcp) # Seasonal MCP ranges
 tar_load(elk_dem) # TRIM DEM-derived attributes
 tar_load(elk_lidar) # UWR LiDAR-derived attributes
 tar_load(elk_chm) # BCTS Crown Height Model
@@ -87,25 +95,118 @@ names(elk)[grep("li_dar", names(elk))] <- "edge_dist"
 plot_histogram(elk)
 
 
+
 ## Study Area + Random pts ####
 
-# Create a bounding box polygon that contains all our elk
+# First let's get a polygon of Vancouver Island
+# Pull BC shapefile from rnaturalearth
+bc <- rnaturalearth::ne_states(country = "canada")
+bc <- bc[bc$name == "British Columbia", ]
+bc <- st_transform(bc, 3005) # BC Albers projection
+bc  <- st_cast(bc, "POLYGON") # Multipart to Singlepart
+bc$area_sqkm <- sf::st_area(bc) # Recalculate area of each indiv polygon now
+bc$area_sqkm <- units::set_units(bc$area_sqkm, "km2") # Convert unit to sqkm
+# We know Vancouver island is approx 32,000 km2, so subset data to polygons approx that size!
+vi <- bc[bc$area_sqkm > units::set_units(30000, "km2") & bc$area_sqkm < units::set_units(33000, "km2"), ]
+vi <- sf::st_geometry(vi) # drop attributes - keep just the geometry
+
+# Create a minimum convex polygon that contains all our elk
 # data points
 study_area <- st_convex_hull(st_union(elk))
 study_area <- sf::st_buffer(study_area, dist = 10) # buffer by 10km
+study_area <- sf::st_intersection(study_area, vi) # Intersect w VI to cut out water areas
 
 # Now subsample random points within the study area
 random_pts <- sf::st_sample(study_area, size = nrow(elk))
 random_pts <- sf::st_as_sf(random_pts)
 
 plot(study_area)
-plot(random_pts, pch = 3, add = TRUE) # p dense
+plot(random_pts, pch = "+", cex = 0.5, add = TRUE) # p dense
+plot(elk, pch = "+", cex = 0.5, col = "red", add = TRUE)
+
+ggplot() +
+  geom_sf(data = vi) +
+  geom_sf(data = study_area) +
+  geom_sf(data = random_pts,
+          shape = 3) +
+  geom_sf(data = elk,
+          shape = 3,
+          color = "red") +
+  theme_minimal()
+
 
 # New system: for the plots comparing specific time periods,
 # just use the dates + seasons assigned to the random data.
 random_pts$dttm <- elk$dttm
 random_pts$season <- elk$season
 
+
+## Seasonal random pts ####
+
+# Merge seasonal MCPs of all individuals into
+# single large polygon for each season. These will
+# be our polygons for choosing random points from
+# for seasonal use vs. availability.
+szn_mcp <- all_seasons_mcp |>
+  dplyr::group_by(season) |>
+  dplyr::summarise()
+
+szn_mcp <- sf::st_buffer(szn_mcp, dist = 10) # buffer by 10km
+szn_mcp <- sf::st_intersection(szn_mcp, vi) # Intersect w VI to cut out water areas
+
+random_pts_szn <- lapply(unique(szn_mcp$season),
+                         function(x) {
+                           poly <- szn_mcp[szn_mcp$season == x, ]
+                           out <- sf::st_sample(poly, size = nrow(elk[which(elk$season == x), ]))
+                           out <- sf::st_as_sf(out)
+                           out$season <- x
+                           return(out)
+                         })
+random_pts_szn <- dplyr::bind_rows(random_pts_szn)
+
+ggplot() +
+  geom_sf(data = vi) +
+  geom_sf(data = szn_mcp) +
+  geom_sf(data = random_pts_szn,
+          aes(color = season),
+          shape = 3) +
+  scale_color_manual(values = okabe[1:3]) +
+  geom_sf(data = elk,
+          shape = 3,
+          color = "red") +
+  coord_sf(xlim = c(954700, 1045000),
+           ylim = c(509250, 600700)) +
+  theme_minimal()
+
+
+
+## SWP random pts ####
+
+# Use the MCPs only of the elk that experienced SWP
+swp_mcp <- all_seasons_mcp |>
+  dplyr::filter(animal_id %in% swp_elk,
+                season == "Winter") |>
+  dplyr::summarise()
+
+swp_mcp <- sf::st_buffer(swp_mcp, dist = 10) # buffer by 10km
+swp_mcp <- sf::st_intersection(swp_mcp, vi) # Intersect w VI to cut out water areas
+
+# Now subsample random points within SWP area
+random_pts_swp <- sf::st_sample(swp_mcp, size = nrow(elk[which(elk$animal_id %in% swp_elk & lubridate::date(elk$dttm) %in% swp_dates), ]))
+random_pts_swp <- sf::st_as_sf(random_pts_swp)
+random_pts_swp$season <- "Winter"
+
+
+## Merge random pts together ####
+
+# Col to say which type of random pts it is
+random_pts$pool <- "full study area"
+random_pts_szn$pool <- "seasonal MCPs"
+random_pts_swp$pool <- "SWP MCPs"
+
+random_pts <- dplyr::bind_rows(random_pts, random_pts_szn, random_pts_swp)
+
+rm(random_pts_szn, random_pts_swp)
 
 
 # SOURCE COMPARISON -------------------------------------------------------
@@ -278,13 +379,15 @@ random_pts <- cbind(random_pts,
 # Create a df of data to plot - our elk data
 # merged with the random sampling data
 p <- rbind(data.frame("m" = random_pts$CDED_VRT,
-                          "type" = "Random elevations",
-                          "dttm" = random_pts$dttm,
-                          "season" = random_pts$season),
+                      "type" = "Random elevations",
+                      "dttm" = random_pts$dttm,
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
                data.frame("m" = elk$elevation_m,
                           "type" = "Elk elevations",
                           "dttm" = elk$dttm,
-                          "season" = elk$season))
+                          "season" = elk$season,
+                          "pool" = "real data"))
 
 ggplot(p,
        aes(x = m)) +
