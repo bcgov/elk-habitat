@@ -24,6 +24,15 @@ swp_weeks <- c(50, 51, 52, 53, 1, 2) # weeks 51 thru 1
 swp_dates <- seq(lubridate::ymd("2021-12-18"), lubridate::ymd("2022-01-14"), by = "1 day")
 swp_days <- c(lubridate::yday("2021-12-18"):366, 1:14)
 
+
+# Load up targets
+tar_load(elk)
+tar_load(all_seasons_mcp) # Seasonal MCP ranges
+tar_load(elk_dem) # TRIM DEM-derived attributes
+tar_load(elk_lidar) # UWR LiDAR-derived attributes
+tar_load(elk_chm) # BCTS Crown Height Model
+tar_load(elk_vri) # Madrone VRI-derived attributes
+
 # Two elk did not experience severe winter conditions, per Mario's
 # work looking at snow depth data on cameras deployed across the
 # study region. Remove these two elk from the severe winter
@@ -35,13 +44,6 @@ non_swp_elk <- c("20-1001", "20-1002")
 # yet)
 swp_elk <- unique(elk[["animal_id"]][lubridate::date(elk$dttm) %in% swp_dates])
 
-# Load up targets
-tar_load(elk)
-tar_load(all_seasons_mcp) # Seasonal MCP ranges
-tar_load(elk_dem) # TRIM DEM-derived attributes
-tar_load(elk_lidar) # UWR LiDAR-derived attributes
-tar_load(elk_chm) # BCTS Crown Height Model
-tar_load(elk_vri) # Madrone VRI-derived attributes
 
 #tar_load(vri) # vri polyons
 
@@ -92,7 +94,7 @@ names(elk)[grep("li_dar", names(elk))] <- "edge_dist"
 
 
 # Histogram of all continuous vars
-plot_histogram(elk)
+#plot_histogram(elk)
 
 
 
@@ -194,6 +196,7 @@ swp_mcp <- sf::st_intersection(swp_mcp, vi) # Intersect w VI to cut out water ar
 # Now subsample random points within SWP area
 random_pts_swp <- sf::st_sample(swp_mcp, size = nrow(elk[which(elk$animal_id %in% swp_elk & lubridate::date(elk$dttm) %in% swp_dates), ]))
 random_pts_swp <- sf::st_as_sf(random_pts_swp)
+random_pts_swp[["dttm"]] <- elk[["dttm"]][which(elk$animal_id %in% swp_elk & lubridate::date(elk$dttm) %in% swp_dates)]
 random_pts_swp$season <- "Winter"
 
 
@@ -389,8 +392,9 @@ p <- rbind(data.frame("m" = random_pts$CDED_VRT,
                           "season" = elk$season,
                           "pool" = "real data"))
 
-ggplot(p,
-       aes(x = m)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = m)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -410,17 +414,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(m ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::group_by(season, type) |>
   dplyr::mutate(N = dplyr::n()) |> # calculate N points per group
   dplyr::mutate(N = paste0("N = ", as.character(N))) |> # turn it into a plot label
@@ -447,9 +448,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
-  dplyr::mutate(season = dplyr::if_else(type == "Elk elevations",
-                                        season,
-                                        "Random points")) |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data")) |>
   dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
   ggplot(aes(x = m,
            color = season,
@@ -463,14 +463,34 @@ p |>
        y = "Density") +
   theme_minimal()
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = m,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Elevations (m)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
 
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
-
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk elevations") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -478,9 +498,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = m,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = m)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -495,12 +515,62 @@ p |>
                                  c("2022-2023", "2023-2024")),
               map_signif_level = TRUE,
               test = "wilcox.test",
+              y_position = 1250,
               color = "black") +
   geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
                                  c("2021-2022", "2023-2024")),
               map_signif_level = TRUE,
               test = "wilcox.test",
-              y_position = 1400,
+              y_position = 1350,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 1500,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 1600,
+              color = "black") +
+  theme_minimal()
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = m)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Elevation - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Elevation (m)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 1250,
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 1350,
               color = "black") +
   geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
               map_signif_level = TRUE,
@@ -542,6 +612,47 @@ p |>
   theme_minimal()
 
 
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(m, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = m,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Elevation - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Elevation (m)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
 
 ## Slope % -----------------------------------------------------------------
 
@@ -560,17 +671,20 @@ random_pts$slope <- round(random_pts$slope * 100, 1)
 p <- rbind(data.frame("val" = random_pts$slope,
                           "type" = "Random slopes",
                           "dttm" = random_pts$dttm,
-                          "season" = random_pts$season),
+                          "season" = random_pts$season,
+                      "pool" = random_pts$pool),
                data.frame("val" = elk$slope_prct,
                           "type" = "Elk slopes",
                           "dttm" = elk$dttm,
-                          "season" = elk$season))
+                          "season" = elk$season,
+                          "pool" = "real data"))
 
 p <- p[p$val > 0, ] # cut out water (perfectly flat)
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -590,17 +704,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::group_by(season, type) |>
   dplyr::mutate(N = dplyr::n()) |> # calculate N points per group
   dplyr::mutate(N = paste0("N = ", as.character(N))) |> # turn it into a plot label
@@ -628,6 +739,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk slopes",
                                         season,
                                         "Random points")) |>
@@ -644,6 +757,27 @@ p |>
        y = "Density") +
   theme_minimal()
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Slope (%)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
 
 
 # SWP plots
@@ -651,7 +785,7 @@ p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk slopes") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -659,9 +793,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -695,6 +829,55 @@ p |>
               color = "black") +
   theme_minimal()
 
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Slope - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Slope (%)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 230,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 260,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 290,
+              color = "black") +
+  theme_minimal()
+
+
+
 ## DENSITY PLOT
 p |>
   dplyr::filter(type == "Elk slopes") |>
@@ -723,6 +906,48 @@ p |>
   theme_minimal()
 
 
+
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Slope - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Slope (%)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
 ## Slope Aspect ------------------------------------------------------------
 
 
@@ -741,20 +966,23 @@ p <- rbind(data.frame("val" = random_pts$aspect,
                           "type" = "Random aspects",
                           "dttm" = random_pts$dttm,
                           "season" = random_pts$season,
-                          "slope" = random_pts$slope),
+                          "slope" = random_pts$slope,
+                      "pool" = random_pts$pool),
                data.frame("val" = elk$slope_aspect,
                           "type" = "Elk aspects",
                           "dttm" = elk$dttm,
                           "season" = elk$season,
-                          "slope" = elk$slope_prct))
+                          "slope" = elk$slope_prct,
+                          "pool" = "real data"))
 
 # Just like with slope %, cut out any points where slope == 0, i.e. flat areas.
 # These greatly skewed the aspect plots with many outlier values at 90 deg aspect.
 p <- p[p$slope > 0, ] # cut out water (perfectly flat)
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -773,18 +1001,38 @@ ggplot(p,
        caption = paste0("N data points per group = ", nrow(p)/2)) +
   theme_minimal()
 
+# POLAR histogram
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
+  geom_density(aes(color = type,
+                   fill = type),
+               alpha = 0.1,
+               trim = TRUE) +
+  # geom_histogram(binwidth = 10,
+  #                center = 0) +
+  scale_fill_manual(values = c("#E69F00", "#009E73", "#CC79A7"),
+                    name = "Type") +
+  scale_color_manual(values = c("#E69F00", "#009E73", "#CC79A7"),
+                     name = "Type") +
+  scale_x_continuous(breaks = seq(0, 360, 45)) +
+  coord_polar() +
+  labs(title = "Slope aspect - available vs elk",
+       subtitle = "All dates",
+       x = "Slope aspect (degrees)",
+       y = "Density",
+       caption = paste0("N data points per group = ", nrow(p)/2)) +
+  theme_minimal()
+
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::group_by(season, type) |>
   dplyr::mutate(N = dplyr::n()) |> # calculate N points per group
   dplyr::mutate(N = paste0("N = ", as.character(N))) |> # turn it into a plot label
@@ -812,6 +1060,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk aspects",
                                         season,
                                         "Random points")) |>
@@ -828,6 +1078,71 @@ p |>
        y = "Density") +
   theme_minimal()
 
+# POLAR density
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data")) |>
+  dplyr::mutate(season = dplyr::if_else(type == "Elk aspects",
+                                        season,
+                                        "Random points")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season)) +
+  geom_density(alpha = 0.2) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  scale_x_continuous(breaks = seq(0, 360, 45)) +
+  coord_polar() +
+  labs(x = "Slope aspect (degrees)",
+       y = "Density") +
+  theme_minimal()
+
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Slope aspect (degrees)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
+
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  scale_x_continuous(breaks = seq(0, 360, 45)) +
+  coord_polar() +
+  facet_wrap(~ season) +
+  labs(x = "Slope aspect (degrees)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
 
 
 # SWP plots
@@ -835,7 +1150,7 @@ p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk aspects") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -843,9 +1158,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -870,12 +1185,61 @@ p |>
   geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
               map_signif_level = TRUE,
               test = "wilcox.test",
-              y_position = 400,
+              y_position = 420,
               color = "black") +
   geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
               map_signif_level = TRUE,
               test = "wilcox.test",
-              y_position = 410,
+              y_position = 440,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Slope aspects - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Slope aspect (degrees)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 380,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 420,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 440,
               color = "black") +
   theme_minimal()
 
@@ -907,6 +1271,105 @@ p |>
   theme_minimal()
 
 
+p |>
+  dplyr::filter(type == "Elk aspects") |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = val,
+             color = as.factor(year))) +
+  geom_density(aes(color = year,
+                   fill = year),
+               alpha = 0.1) +
+  scale_fill_manual(values = okabe[1:5],
+                    name = "Year") +
+  scale_color_manual(values = okabe[1:5],
+                     name = "Year") +
+  scale_x_continuous(breaks = seq(0, 360, 45)) +
+  coord_polar() +
+  labs(title = "Slope aspect - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Slope aspect (degrees)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.") +
+  theme_minimal()
+
+
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year") +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year") +
+  facet_wrap(~ year) +
+  labs(title = "Slope aspect - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Slope aspect (degrees)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
+
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year") +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year") +
+  scale_x_continuous(breaks = seq(0, 360, 45)) +
+  coord_polar() +
+  facet_wrap(~ year) +
+  labs(title = "Slope aspect - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Slope aspect (degrees)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
 ## Roughness ---------------------------------------------------------------
 
 # Abandoned as these are effectively identical to slope grade.
@@ -925,12 +1388,14 @@ p <- rbind(data.frame("val" = random_pts$roughness,
                           "type" = "Random roughness",
                           "dttm" = random_pts$dttm,
                           "season" = random_pts$season,
-                          "slope" = random_pts$slope),
+                          "slope" = random_pts$slope,
+                      "pool" = random_pts$pool),
                data.frame("val" = elk$roughness,
                           "type" = "Elk roughness",
                           "dttm" = elk$dttm,
                           "season" = elk$season,
-                          "slope" = elk$slope_prct))
+                          "slope" = elk$slope_prct,
+                          "pool" = "real data"))
 
 # Just like with slope %, cut out any points where slope == 0, i.e. flat areas.
 # These greatly skewed the aspect plots with many outlier values at 90 deg aspect.
@@ -1427,17 +1892,20 @@ random_pts <- cbind(random_pts,
 p <- rbind(data.frame("val" = random_pts$crown_height,
                       "type" = "Random crown height",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$crown_height,
                       "type" = "Elk crown height",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 p <- p[!is.na(p$val), ] # cut out NA areas - we don't have full LiDAR coverage
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p|>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -1457,17 +1925,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::group_by(season, type) |>
   dplyr::mutate(N = dplyr::n()) |> # calculate N points per group
   dplyr::mutate(N = paste0("N = ", as.character(N))) |> # turn it into a plot label
@@ -1495,6 +1960,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk crown height",
                                         season,
                                         "Random points")) |>
@@ -1513,6 +1980,7 @@ p |>
 
 
 p |>
+  dplyr::filter(!is.na(season)) |>
   dplyr::filter(type == "Elk crown height") |>
   ggplot(aes(x = val,
              color = season,
@@ -1527,13 +1995,34 @@ p |>
   theme_minimal()
 
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Crown Height (m)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk crown height") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -1563,17 +2052,67 @@ p |>
                                  c("2021-2022", "2023-2024")),
               map_signif_level = TRUE,
               test = "wilcox.test",
-              y_position = 60,
+              y_position = 68,
               color = "black") +
   geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
               map_signif_level = TRUE,
               test = "wilcox.test",
-              y_position = 70,
+              y_position = 75,
               color = "black") +
   geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
               map_signif_level = TRUE,
               test = "wilcox.test",
               y_position = 80,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Crown Height - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Crown Height (m)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 68,
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 75,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 80,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 85,
               color = "black") +
   theme_minimal()
 
@@ -1604,6 +2143,46 @@ p |>
        caption = "2021-2022 was the 'Severe' year.") +
   theme_minimal()
 
+
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Crown Height - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Crown Height (m)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
 
 
 # VRI ---------------------------------------------------------------------
@@ -1670,15 +2249,18 @@ gc()
 p <- rbind(data.frame("val" = random_pts$Shape_Area,
                       "type" = "Random patch sizes",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$shape_area,
                       "type" = "Elk patch sizes",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -1698,11 +2280,6 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
@@ -1711,6 +2288,8 @@ p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 # Better way of doing this than before...
 # TODO: fix the DEM boxplots with multiple labels issues
 n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |>
   dplyr::group_by(season, type) |>
@@ -1721,6 +2300,8 @@ n_label <- p |>
   dplyr::distinct()
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |> 
   dplyr::bind_rows(n_label) |>
@@ -1733,7 +2314,7 @@ p |>
   geom_signif(comparisons = list(c("Elk patch sizes", "Random patch sizes")),
               test = "wilcox.test",
               map_signif_level = TRUE,
-              y_position = 980) +
+              y_position = 400) +
   geom_text(aes(label = N),
             nudge_y = 10) +
   facet_wrap(~ season) +
@@ -1746,6 +2327,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk patch sizes",
                                         season,
                                         "Random points")) |>
@@ -1764,6 +2347,8 @@ p |>
 
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::filter(type == "Elk patch sizes") |>
   units::drop_units() |>
   ggplot(aes(x = val,
@@ -1780,13 +2365,35 @@ p |>
   theme_minimal()
 
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Patch Size (ha)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
+
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   units::drop_units() |>
   dplyr::filter(type == "Elk patch sizes") |>
@@ -1795,9 +2402,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)), 
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -1812,6 +2419,57 @@ p |>
                                  c("2022-2023", "2023-2024")),
               map_signif_level = TRUE,
               test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 230,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 260,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 290,
+              color = "black") +
+  theme_minimal()
+
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Patch Size - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Patch Size (ha)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 200,
               color = "black") +
   geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
                                  c("2021-2022", "2023-2024")),
@@ -1861,6 +2519,49 @@ p |>
   theme_minimal()
 
 
+
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Patch Size - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Patch Size (ha)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
+
 ## Stand Age ####
 
 
@@ -1869,15 +2570,18 @@ p |>
 p <- rbind(data.frame("val" = random_pts$NEW_VRI_CC_RES_AGE,
                       "type" = "Random stand age",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$new_vri_cc_res_age,
                       "type" = "Elk stand age",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -1897,17 +2601,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |>
   dplyr::group_by(season, type) |>
@@ -1918,6 +2619,8 @@ n_label <- p |>
   dplyr::distinct()
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |> 
   dplyr::bind_rows(n_label) |>
@@ -1943,6 +2646,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk stand age",
                                         season,
                                         "Random points")) |>
@@ -1961,6 +2666,8 @@ p |>
 
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::filter(type == "Elk stand age") |>
   units::drop_units() |>
   ggplot(aes(x = val,
@@ -1976,13 +2683,35 @@ p |>
   theme_minimal()
 
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Stand Age",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
+
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   units::drop_units() |>
   dplyr::filter(type == "Elk stand age") |>
@@ -1991,9 +2720,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -2002,6 +2731,55 @@ p |>
        x = "Year",
        y = "Stand Age",
        caption = "2021-2022 was the 'Severe' year.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 700,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 750,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 790,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Stand Age - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Stand Age",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
   geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
                                  c("2021-2022", "2020-2021"),
                                  c("2021-2022", "2022-2023"),
@@ -2058,6 +2836,49 @@ p |>
 
 
 
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Stand Age - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Stand Age",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
+
+
 ## Stand Height ####
 
 
@@ -2066,15 +2887,18 @@ p |>
 p <- rbind(data.frame("val" = random_pts$PROJ_HEIGHT_1,
                       "type" = "Random stand height",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$proj_height_1,
                       "type" = "Elk stand height",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -2094,17 +2918,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |>
   dplyr::group_by(season, type) |>
@@ -2115,6 +2936,8 @@ n_label <- p |>
   dplyr::distinct()
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |> 
   dplyr::bind_rows(n_label) |>
@@ -2140,6 +2963,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk stand height",
                                         season,
                                         "Random points")) |>
@@ -2158,6 +2983,8 @@ p |>
 
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data")) |>
   dplyr::filter(type == "Elk stand height") |>
   units::drop_units() |>
   ggplot(aes(x = val,
@@ -2173,13 +3000,35 @@ p |>
   theme_minimal()
 
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Stand Height (m)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
+
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk stand height") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -2187,9 +3036,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -2204,6 +3053,56 @@ p |>
                                  c("2022-2023", "2023-2024")),
               map_signif_level = TRUE,
               test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 85,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 95,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 105,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Stand Height - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Stand Height (m)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 75,
               color = "black") +
   geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
                                  c("2021-2022", "2023-2024")),
@@ -2253,6 +3152,48 @@ p |>
   theme_minimal()
 
 
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Stand Height - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Stand Height (m)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
+
 
 ## Stem Density ####
 
@@ -2261,15 +3202,18 @@ p |>
 p <- rbind(data.frame("val" = random_pts$VRI_LIVE_STEMS_PER_HA,
                       "type" = "Random stem density",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$vri_live_stems_per_ha,
                       "type" = "Elk stem density",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -2289,17 +3233,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |>
   dplyr::group_by(season, type) |>
@@ -2310,6 +3251,8 @@ n_label <- p |>
   dplyr::distinct()
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |> 
   dplyr::bind_rows(n_label) |>
@@ -2322,7 +3265,7 @@ p |>
   geom_signif(comparisons = list(c("Elk stem density", "Random stem density")),
               test = "wilcox.test",
               map_signif_level = TRUE,
-              y_position = 30000) +
+              y_position = 12000) +
   geom_text(aes(label = N),
             nudge_y = 10) +
   facet_wrap(~ season) +
@@ -2335,6 +3278,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk stem density",
                                         season,
                                         "Random points")) |>
@@ -2353,11 +3298,13 @@ p |>
 
 
 p |>
-  dplyr::filter(type == "Elk stem density") |>
-  # dplyr::mutate(season = dplyr::if_else(type == "Elk stem density",
-  #                                       season,
-  #                                       "Random points")) |>
-  # dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  #dplyr::filter(type == "Elk stem density") |>
+  dplyr::mutate(season = dplyr::if_else(type == "Elk stem density",
+                                        season,
+                                        "Random points")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
   units::drop_units() |>
   ggplot(aes(x = val,
              color = season,
@@ -2373,13 +3320,34 @@ p |>
   theme_minimal()
 
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Live Stem Density (stems/ha)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk stem density") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -2387,9 +3355,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)), 
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -2398,6 +3366,55 @@ p |>
        x = "Year",
        y = "Live Stem Density (stems/ha)",
        caption = "2021-2022 was the 'Severe' year.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 11500,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 13000,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 14000,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Live Stem Density - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Live Stem Density (stems/ha)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
   geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
                                  c("2021-2022", "2020-2021"),
                                  c("2021-2022", "2022-2023"),
@@ -2453,6 +3470,48 @@ p |>
   theme_minimal()
 
 
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Live Stem Density - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Live Stem Density (stems/ha)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
+
 ## Crown Closure ####
 
 
@@ -2461,15 +3520,18 @@ p |>
 p <- rbind(data.frame("val" = random_pts$CROWN_CLOSURE,
                       "type" = "Random cc",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$crown_closure,
                       "type" = "Elk cc",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -2489,17 +3551,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |>
   dplyr::group_by(season, type) |>
@@ -2510,6 +3569,8 @@ n_label <- p |>
   dplyr::distinct()
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |> 
   dplyr::bind_rows(n_label) |>
@@ -2535,6 +3596,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk cc",
                                         season,
                                         "Random points")) |>
@@ -2553,6 +3616,7 @@ p |>
 
 
 p |>
+  dplyr::filter(!is.na(season)) |>
   dplyr::filter(type == "Elk cc") |>
   units::drop_units() |>
   ggplot(aes(x = val,
@@ -2568,13 +3632,35 @@ p |>
   theme_minimal()
 
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Crown Closure (%)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
+
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk cc") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -2582,9 +3668,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)), 
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -2619,6 +3705,54 @@ p |>
   theme_minimal()
 
 
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Crown Closure - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Crown Closure (%)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 105,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 120,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 130,
+              color = "black") +
+  theme_minimal()
+
 ## DENSITY PLOT
 p |>
   units::drop_units() |>
@@ -2648,6 +3782,48 @@ p |>
   theme_minimal()
 
 
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Crown Closure - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Crown Closure (%)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
+
 ## Shrub Height ####
 
 # Create a df of data to plot - our elk data
@@ -2655,15 +3831,18 @@ p |>
 p <- rbind(data.frame("val" = random_pts$SHRUB_HEIGHT,
                       "type" = "Random shrub height",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$shrub_height,
                       "type" = "Elk shrub height",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -2683,17 +3862,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |>
   dplyr::group_by(season, type) |>
@@ -2704,6 +3880,8 @@ n_label <- p |>
   dplyr::distinct()
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |> 
   dplyr::bind_rows(n_label) |>
@@ -2729,6 +3907,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk shrub height",
                                         season,
                                         "Random points")) |>
@@ -2747,6 +3927,8 @@ p |>
 
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::filter(type == "Elk shrub height") |>
   units::drop_units() |>
   ggplot(aes(x = val,
@@ -2763,13 +3945,36 @@ p |>
   theme_minimal()
 
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Shrub Height (m)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
+
+
 
 # SWP plots
 p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk shrub height") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -2777,9 +3982,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -2788,6 +3993,55 @@ p |>
        x = "Year",
        y = "Shrub Height (m)",
        caption = "2021-2022 was the 'Severe' year.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 6,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 7,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 8,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Shrub Height - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Shrub Height (m)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
   geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
                                  c("2021-2022", "2020-2021"),
                                  c("2021-2022", "2022-2023"),
@@ -2835,12 +4089,56 @@ p |>
                      name = "Year",
                      #labels = c()
   ) +
+  scale_x_continuous(limits = c(0,4)) +
   labs(title = "Shrub Height - SWP across years",
        subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
        x = "Shrub Height (m)",
        y = "Density",
        caption = "2021-2022 was the 'Severe' year.") +
   theme_minimal()
+
+
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  scale_x_continuous(limits = c(0,4)) +
+  facet_wrap(~ year) +
+  labs(title = "Shrub Height - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Shrub Height (m)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
 
 
 
@@ -2851,15 +4149,18 @@ p |>
 p <- rbind(data.frame("val" = random_pts$SHRUB_CROWN_CLOSURE,
                       "type" = "Random shrub cc",
                       "dttm" = random_pts$dttm,
-                      "season" = random_pts$season),
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
            data.frame("val" = elk$shrub_crown_closure,
                       "type" = "Elk shrub cc",
                       "dttm" = elk$dttm,
-                      "season" = elk$season))
+                      "season" = elk$season,
+                      "pool" = "real data"))
 
 # DENSITY PLOT - Random vs Selected
-ggplot(p,
-       aes(x = val)) +
+p |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
+  ggplot(aes(x = val)) +
   geom_density(aes(color = type,
                    fill = type),
                alpha = 0.1) +
@@ -2879,17 +4180,14 @@ ggplot(p,
   theme_minimal()
 
 # Seasonal differences
-# Subset p now so that random_pts is much smaller - 
-# we'll subset the random points so that the sample size
-# is closer to the number of seasonal days in the actual data
-p <- p[!is.na(p$season), ] # remove NA season data
-aggregate(val ~ season + type, p, FUN = length) # double check
 
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
 ## BOXPLOT
 n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |>
   dplyr::group_by(season, type) |>
@@ -2900,6 +4198,8 @@ n_label <- p |>
   dplyr::distinct()
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
   dplyr::filter(!is.na(val)) |>
   units::drop_units() |> 
   dplyr::bind_rows(n_label) |>
@@ -2925,6 +4225,8 @@ p |>
 
 ## DENSITY PLOT
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::mutate(season = dplyr::if_else(type == "Elk shrub cc",
                                         season,
                                         "Random points")) |>
@@ -2943,6 +4245,8 @@ p |>
 
 
 p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "full study area")) |>
   dplyr::filter(type == "Elk shrub cc") |>
   units::drop_units() |>
   ggplot(aes(x = val,
@@ -2957,6 +4261,26 @@ p |>
        y = "Density") +
   theme_minimal()
 
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = pool)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Shrub Crown Closure (%)",
+       y = "Density",
+       caption = "Random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
 
 
 # SWP plots
@@ -2964,7 +4288,7 @@ p$yday <- lubridate::yday(p$dttm)
 p$year <- lubridate::year(p$dttm)
 
 
-## BOXPLOT - Yearly variation
+## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(type == "Elk shrub cc") |>
   dplyr::filter(yday %in% swp_days) |>
@@ -2972,9 +4296,9 @@ p |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
-             y = val,
-             color = as.factor(year))) +
-  geom_jitter(alpha = 0.1) +
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)), 
+              alpha = 0.1) +
   geom_boxplot(fill = NA) +
   scale_color_manual(values = okabe[1:5],
                      name = "Type") +
@@ -2983,6 +4307,55 @@ p |>
        x = "Year",
        y = "Shrub Crown Closure (%)",
        caption = "2021-2022 was the 'Severe' year.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 120,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 130,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 140,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  #dplyr::filter(type == "Elk elevations") |>
+  dplyr::filter(pool %in% c("real data", "SWP MCPs")) |>
+  dplyr::filter((yday %in% swp_days) | (pool == "SWP MCPs")) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "SWP MCPs", "Random", year)) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Shrub Crown Closure - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Shrub Crown Closure (%)",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
   geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
                                  c("2021-2022", "2020-2021"),
                                  c("2021-2022", "2022-2023"),
@@ -3036,6 +4409,48 @@ p |>
        y = "Density",
        caption = "2021-2022 was the 'Severe' year.") +
   theme_minimal()
+
+
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(pool == "SWP MCPs") |>
+  dplyr::select(val, yday, type, pool) |>
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  dplyr::bind_rows(p[which(p$pool == "real data"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = pool),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Shrub Crown Closure - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Shrub Crown Closure (%)",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
 
 
 
