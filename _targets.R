@@ -93,7 +93,6 @@ list(
                                     date_col = "dttm") |>
                sf::st_write("temp/Pipeline outputs/elk_positions.shp", append = FALSE)),
   #### SUMMARY STATS + PLOTS ####
-  # TODO: net squared displacement plots
   # Logger dotplot
   tar_target(elk_dotplot, logger_dotplot(elk)),
   # N elk online per year-month
@@ -111,6 +110,11 @@ list(
   tar_render(daily_dets_plots,
              "reports/elk_dets_per_day.Rmd",
              output_file = "elk_dets_per_day.pdf",
+             params = list(elk_data = elk)),
+  # Net squared displacement
+  tar_render(nsd_plots,
+             "reports/elk_nsd.Rmd",
+             output_file = "elk_nsd.pdf",
              params = list(elk_data = elk)),
   #### SEASONAL HOME RANGE ESTIMATES ####
   ##### Minimum Convex Polygons (MCPs) #####

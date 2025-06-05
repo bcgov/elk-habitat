@@ -1,0 +1,54 @@
+---
+title: "Net Squared Displacement per day per elk"
+output: pdf_document
+date: "`r Sys.Date()`"
+params: 
+  elk_data: "elk"
+editor_options: 
+  chunk_output_type: console
+---
+
+Note that net squared displacement is measured from the initial collaring location.
+
+```{r setup, include=FALSE}
+library(ggplot2)
+
+knitr::opts_chunk$set(echo = FALSE)
+
+elk <- sf::st_drop_geometry(params$elk_data)
+
+daily_dets_plot <- function(elk, id) {
+  p <- 
+    elk |>
+    dplyr::filter(animal_id == id) |>
+    dplyr::mutate(date = lubridate::date(dttm),
+                  NSD = NSD / 1000 / 1000) |> # Convert NSD in meters to NSD in km
+    ggplot(aes(x = date,
+               y = NSD,
+               color = as.factor(collar_id))) +
+    geom_path(aes(group = as.factor(collar_id)),
+                  alpha = 0.3, 
+                  color = "black") +
+    geom_point() +
+    scale_color_brewer(palette = "Dark2") +
+    ggplot2::scale_x_date(labels = scales::date_format("%b %y"),
+                              date_breaks = "3 months") +
+    labs(title = paste(id),
+         y = "Net Squared Dislacement (km)",
+         color = "Collar ID") +
+    theme_minimal() +
+    ggplot2::theme(axis.title.x = element_blank(),
+                   axis.ticks.x = element_line(color = "black"),
+                   axis.text.x = element_text(size = 7, angle = 90))
+  return(p)
+}
+
+ids <- unique(elk$animal_id)
+```
+
+```{r plots, fig.align='center', fig.height=3.5}
+for (i in ids) {
+  p <- suppressMessages(daily_dets_plot(elk, i))
+  print(p)
+}
+```
