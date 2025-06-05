@@ -228,7 +228,7 @@ assign_daily_seasons <- function(daily_shp, seasons, date_col) {
   shp$season <- NA
   
   # Extract unique years from the data
-  years <- unique(shp$year)
+  years <- unique(lubridate::year(shp$date_col))
   
   # This code snippet will produce
   # a little matrix for each season 

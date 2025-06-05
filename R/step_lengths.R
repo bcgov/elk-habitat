@@ -2,6 +2,8 @@
 
 # We will just use the implementation from the `bayesmove` package for this.
 
+# TODO: delete step lengths btwn differing collar deployments (but same animal ID)
+
 steplength <- function(elk) {
   dat <- data.frame(elk$animal_id, elk$dttm, sf::st_coordinates(elk))
   names(dat) <- c("animal_id", "date", "X", "Y")
