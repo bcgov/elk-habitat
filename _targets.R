@@ -59,11 +59,22 @@ MCP_pctl <- 0.95
 # don't need to recalc the time consuming process of dBBMMs...
 # do this if there's going to be lots of exploration of various UD levels.
 # This comes at the cost of storage space - lots of rasters = lots of space.
-dBBMM_ud <- 0.99
-szn_window <- 57
-szn_margin <- 9 
-weekly_window <- 7
-weekly_margin <- 3
+
+# Previously used settings...
+# szn_window <- 57
+# szn_margin <- 9 
+# weekly_window <- 7
+# weekly_margin <- 3
+
+# Now using default margin & window settings
+# but keeping them stored as vars so the filename 
+# can be built correctly
+dBBMM_seasonal_ud <- 0.99 # To capture corridors of use btwn hotspots
+dBBMM_weekly_ud <- 0.95 # To exclude transitory behavior
+szn_window <- 31
+szn_margin <- 11 
+weekly_window <- 31
+weekly_margin <- 11
 
 #### PIPELINE ####
 list(
@@ -80,18 +91,19 @@ list(
   tar_target(unassigned_detections, full_collar_data[is.na(full_collar_data$animal_id), ]),
   tar_target(collar_data, full_collar_data[!is.na(full_collar_data$animal_id), ]),
   # Clean collar data AND filter to cutoff date
-  # TODO: rarefy points using SSM, or at this step? TBD.
-  tar_target(cleaned_collar_data, clean_collar_data(collar_data)), # full dataset, cleaned of any spikes, but NOT rarified and NOT filtered to study time period
+  tar_target(cleaned_collar_data, clean_collar_data(collar_data, rarify_pts = FALSE)), # full dataset, cleaned of any spikes, but NOT rarified and NOT filtered to study time period
   tar_target(flagged_pts, collar_data[!(collar_data$idposition %in% cleaned_collar_data$idposition), ]),
   # Make our main `elk` df for further analysis
-  tar_target(elk, cleaned_collar_data |>
-               rarify_pts() |> # rarify the points down to 8 fixes per day for all elk (some elk transmit more)
+  tar_target(elk, collar_data |> # USE JUST `collar_data`!! We're rarifying this one
+               clean_collar_data(rarify_pts = TRUE) |> # then it's going to recalc the velocity/angles etc. -> so that'll be different btwn `elk` and `cleaned_collar_data` dfs
                dplyr::filter(dttm < cutoff_date) |>
                assign_daily_seasons(seasons = list("winter" = winter, # defined toward the top of this document
                                                    "spring" = spring, # defined toward the top of this document
                                                    "summer" = summer), # defined toward the top of this document
                                     date_col = "dttm") |>
                sf::st_write("temp/Pipeline outputs/elk_positions.shp", append = FALSE)),
+  # TODO: only re-run time consuming GIS stuff if the elk *geometry* changes?
+  tar_target(elk_geom, sf::st_geometry(elk)),
   #### SUMMARY STATS + PLOTS ####
   # Logger dotplot
   tar_target(elk_dotplot, logger_dotplot(elk)),
@@ -146,8 +158,8 @@ list(
                                           margin = szn_margin, # 9 points ~= about ~1 day margin
                                           window.size = szn_window, # 57 points / 8 points per day = window size of ~7 days long
                                           location.error = 11.5, # GPS error in meters. Vectronic documentation indicates GPS error is on average 8-15m.
-                                          ud_percent = dBBMM_ud) |>
-               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Winter_window", szn_window, "_margin", szn_margin, "_", (dBBMM_ud * 100), "ud.shp"),
+                                          ud_percent = dBBMM_seasonal_ud) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Winter_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
                             append = FALSE)),
   tar_target(spring_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = spring,
@@ -155,8 +167,8 @@ list(
                                           margin = szn_margin,
                                           window.size = szn_window,
                                           location.error = 11.5,
-                                          ud_percent = dBBMM_ud) |>
-               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Spring_window", szn_window, "_margin", szn_margin, "_", (dBBMM_ud * 100), "ud.shp"),
+                                          ud_percent = dBBMM_seasonal_ud) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Spring_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
                             append = FALSE)),
   tar_target(summer_dbbmm, seasonal_dbbmm(elk = elk,
                                           season = summer,
@@ -164,8 +176,8 @@ list(
                                           margin = szn_margin,
                                           window.size = szn_window,
                                           location.error = 11.5,
-                                          ud_percent = dBBMM_ud) |>
-               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Summer_window", szn_window, "_margin", szn_margin, "_", (dBBMM_ud * 100), "ud.shp"),
+                                          ud_percent = dBBMM_seasonal_ud) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Summer_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
                             append = FALSE)),
   tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
   tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm, group_by = "season")),
@@ -176,14 +188,14 @@ list(
                                      min_days = 1, # percentage of days - we want 100% of days
                                      min_dets_per_day = 7, # we also want at minimum 7 detections per day, otherwise that week of data is thrown out
                                      percent = MCP_pctl) |> # 95% MCP - convex hull that encompasses 95th distance-from-centre percentile points. Defaults to Delaunay triangulation to find the center of the points.
+               assign_weekly_seasons(seasons = list("winter" = winter, # defined toward the top of this document
+                                                    "spring" = spring, # defined toward the top of this document
+                                                    "summer" = summer) # defined toward the top of this document
+               ) |>
                sf::st_write(paste0("temp/Pipeline outputs/MCP_Weekly_", (MCP_pctl * 100), "pctl.shp"),
                             append = FALSE)
              ),
-  tar_target(weekly_mcp_seasonal_summary, assign_weekly_seasons(weekly_shp = weekly_mcps,
-                                                                seasons = list("winter" = winter, # defined toward the top of this document
-                                                                               "spring" = spring, # defined toward the top of this document
-                                                                               "summer" = summer) # defined toward the top of this document
-                                                                ) |>
+  tar_target(weekly_mcp_seasonal_summary, weekly_mcps |>
                summarize_area(group_by = c("season"))),
   ###### Severe Winter Period MCPs ######
   tar_target(weekly_mcp_swp_summary, weekly_mcps |>
@@ -200,14 +212,14 @@ list(
                                          window.size = weekly_window, # 21 hours
                                          margin = weekly_margin, # 9 hours
                                          location.error = 11.5,
-                                         ud_percent = dBBMM_ud) |>
-               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Weekly_window", weekly_window, "_margin", weekly_margin, "_", (dBBMM_ud * 100), "ud.shp"),
+                                         ud_percent = dBBMM_weekly_ud) |>
+               assign_weekly_seasons(seasons = list("winter" = winter, # defined toward the top of this document
+                                                    "spring" = spring, # defined toward the top of this document
+                                                    "summer" = summer) # defined toward the top of this document
+               ) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Weekly_window", weekly_window, "_margin", weekly_margin, "_", (dBBMM_weekly_ud * 100), "ud.shp"),
                             append = FALSE)),
-  tar_target(weekly_dbbmm_seasonal_summary, assign_weekly_seasons(weekly_shp = weekly_dbbmms,
-                                                                  seasons = list("winter" = winter, # defined toward the top of this document
-                                                                                 "spring" = spring, # defined toward the top of this document
-                                                                                 "summer" = summer) # defined toward the top of this document
-                                                                  ) |>
+  tar_target(weekly_dbbmm_seasonal_summary, weekly_dbbmms |>
                summarize_area(group_by = c("season"))),
   ###### Severe Winter Period dBBMMs ######
   tar_target(weekly_dbbmm_swp_summary, weekly_dbbmms |>
@@ -224,13 +236,13 @@ list(
   tar_target(daily_mcps, daily_mcp(elk = elk,
                                     min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
                                     percent = MCP_pctl) |> # 95% MCP - convex hull that encompasses 95th distance-from-centre percentile points. Defaults to Delaunay triangulation to find the center of the points.
+               assign_daily_seasons(seasons = list("winter" = winter, # defined toward the top of this document
+                                                   "spring" = spring, # defined toward the top of this document
+                                                   "summer" = summer), # defined toward the top of this document
+                                    date_col = "date") |>
                sf::st_write(paste0("temp/Pipeline outputs/MCP_Daily_", (MCP_pctl * 100), "pctl.shp"),
                             append = FALSE)),
-  tar_target(daily_mcp_seasonal_summary, assign_daily_seasons(daily_shp = daily_mcps,
-                                                              seasons = list("winter" = winter, # defined toward the top of this document
-                                                                             "spring" = spring, # defined toward the top of this document
-                                                                             "summer" = summer), # defined toward the top of this document
-                                                              date_col = "date") |>
+  tar_target(daily_mcp_seasonal_summary, daily_mcps |>
                summarize_area(group_by = c("season"))),
   ###### Severe Winter Period daily MCPs ######
   tar_target(daily_mcp_swp_summary, daily_mcps |>
@@ -346,7 +358,3 @@ list(
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))
 )
-
-
-
-

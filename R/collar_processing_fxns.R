@@ -227,7 +227,7 @@ rarify_pts <- function(collar_data) {
   return(cd)
 }
 
-clean_collar_data <- function(collar_data) {
+clean_collar_data <- function(collar_data, rarify_pts = FALSE) {
   # Health check
   stopifnot("You have some detections that are not assigned to an animal_id." = all(!is.na(collar_data$animal_id)))
   
@@ -373,6 +373,13 @@ clean_collar_data <- function(collar_data) {
   
   # REMOVE OUTLIERS!
   collar_data <- collar_data[which(!(collar_data$kph_spike == T & collar_data$sudden_angle == T)), ]
+  
+  
+  # Now, rarify the points, if that was set to TRUE
+  # the fxn `rarify_pts` is defined separately above
+  if (rarify_pts) {
+    collar_data <- rarify_pts(collar_data)
+  }
   
   # Finally, recalculate movement metrics one more time.
   # Arrange by animal_id and dttm
