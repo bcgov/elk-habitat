@@ -95,8 +95,10 @@ spring|object|6398ef5e90b44e6d|||||||||||||||
 spring_dbbmm|stem|85b4aa8c6e75abea|097b0d7b735f88b6|96df23ec97b5f118|1234634189||t20265.833825556s|0099085a287c27a1|3891414|rds|local|vector|||977.7||
 spring_mcp|stem|e97e260b045f114e|b8b92ce6deeb7d5b|c76d0d701e021489|2029814444||t20248.7179572042s|778aba7565a4782a|34408|rds|local|vector|||15.21||
 st_edge_dist|function|67233d498ccee62c|||||||||||||||
-step_length_seasonal_summary|stem|272dd8e8d85a6d5c|6b24934d594539f5|64c1f9cd7cf38ddc|-1064318883||t20248.894191467s|94f07439b2544850|436|rds|local|vector|||0.1||
+step_length_seasonal_summary|stem|84f9cd1453ca39e6|179992cd659af689|1e1cad4baf0073e6|-1064318883||t20266.7279821753s|378c305854a4daa0|440|rds|local|vector|||0.07||
+step_length_swp_summary|stem|e7a96de39cef310e|fe5abe52ea4151c2|1e1cad4baf0073e6|-448053997||t20266.7318718934s|c5d2549088e4e73e|505|rds|local|vector|||0.06||
 step_lengths|stem|2a4b920963f2bc8e|74a70bf1f4791d0c|e1eb5a00aa18c1f2|-712256869||t20225.1974750347s|a8e9b9ccfe730bc7|13772588|rds|local|vector|||25.31||
+step_lengths_3hr|stem|bee70f5180aa6cf2|f2e0bf5e73fcb64c|b226fc20fcd1fd8c|-1194693083||t20266.7279803181s|aef6e5937c3c2393|16764815|rds|local|vector|||0.28||
 steplength|function|97a0717a017cb942|||||||||||||||
 summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||

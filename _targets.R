@@ -273,9 +273,37 @@ list(
   tar_target(dbbmm_spring_yearly_overlap, yearly_prct_overlap(shp = spring_dbbmm)),
   tar_target(dbbmm_summer_yearly_overlap, yearly_prct_overlap(shp = summer_dbbmm)),
   #### STEP LENGTHS ####
-  # Step length data is calculated during the GPS cleanup
-  tar_target(step_length_seasonal_summary, elk |>
+  # Step lengths filtered to only include 3 hour timegaps
+  # (Otherwise you might get large step lengths that are legit,
+  # but 6+ hours apart if fixes were dropped or filtered)
+  tar_target(step_lengths_3hr, elk |>
                sf::st_drop_geometry() |>
+               dplyr::filter(dt > 10700 & dt < 10900) |> # filter to only include gaps of 3 hours
+               dplyr::mutate(severe_winter_yn = lubridate::yday(dttm) %in% swp_days) |>
+               dplyr::select(idposition, animal_id, collar_id, dttm,
+                             lat, long, doy, step, angle, NSD, mps, kph, 
+                             season, severe_winter_yn)),
+  # Step length data is calculated during the GPS cleanup
+  # Use the dataset that's filtered down to 3 hours for
+  # the seasonal summaries
+  tar_target(step_length_seasonal_summary, step_lengths_3hr |>
+               dplyr::group_by(season) |>
+               dplyr::summarise(mean_step = mean(step, na.rm = TRUE),
+                                sd_step = sd(step, na.rm = TRUE),
+                                median_step = median(step, na.rm = TRUE),
+                                mean_nsd = mean(NSD, na.rm = TRUE),
+                                sd_nsd = sd(NSD, na.rm = TRUE),
+                                median_nsd = median(NSD, na.rm = TRUE),
+                                N = dplyr::n())),
+  # Step lengths for the SWP days only
+  # 2021-2022 is the severe year
+  tar_target(step_length_swp_summary, step_lengths_3hr |>
+               dplyr::filter(severe_winter_yn == TRUE) |>
+               dplyr::mutate(year = lubridate::year(dttm)) |>
+               dplyr::mutate(year = dplyr::if_else(lubridate::month(dttm) == 12,
+                                                   year + 1, 
+                                                   year)) |>
+               dplyr::mutate(season = paste0(year - 1, "-", year)) |>
                dplyr::group_by(season) |>
                dplyr::summarise(mean_step = mean(step, na.rm = TRUE),
                                 sd_step = sd(step, na.rm = TRUE),
