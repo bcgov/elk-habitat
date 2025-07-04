@@ -106,6 +106,22 @@ prct_overlap <- function(shp_1, shp_2,
       })
     }
     
+    # Now calc bidirectional overlap - the overlap
+    # area of the total combined areas. 
+    area_1_col <- paste0(shp_1_name, "_area")
+    area_2_col <- paste0(shp_2_name, "_area")
+    out <- out |>
+      dplyr::mutate(area_tot = get(area_1_col) + get(area_2_col),
+                    area_tot_minus_overlap = area_tot - overlap_area, # so you don't double-count the overlapped part
+                    prct_bidirectional = units::set_units(overlap_area / area_tot_minus_overlap, "percent")) |>
+      dplyr::select(-area_tot, -area_tot_minus_overlap)
+    
+    # Finally round the values, we don't need super long decimals
+    out <- out |>
+      dplyr::mutate(dplyr::across(dplyr::ends_with("_area"), \(x) round(x, 1))) |>
+      dplyr::mutate(dplyr::across(dplyr::starts_with("prct_"), \(x) round(x, 1)))
+    
+    # Return out
     return(out)
     
   })
@@ -163,7 +179,8 @@ yearly_prct_overlap <- function(shp,
   
   overlaps <- dplyr::select(overlaps, animal_id, year_1, year_2, year_to_year,
                             year_1_area, year_2_area, overlap_area,
-                            prct_year_1_within_year_2, prct_year_2_within_year_1)
+                            prct_year_1_within_year_2, prct_year_2_within_year_1,
+                            prct_bidirectional)
   
   return(overlaps)
 }

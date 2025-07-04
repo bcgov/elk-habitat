@@ -262,16 +262,48 @@ list(
                                                        shp_2 = spring_dbbmm,
                                                        shp_1_name = "winter",
                                                        shp_2_name = "spring")),
+  # Winter to Spring summary stats
+  tar_target(mcp_wso_summary, summarize_overlap(mcp_winter_spring_overlap,
+                                                group_by = "year",
+                                                prct_1_col = "prct_winter_within_spring",
+                                                prct_2_col = "prct_spring_within_winter")),
+  tar_target(dbbmm_wso_summary, summarize_overlap(dbbmm_winter_spring_overlap,
+                                                group_by = "year",
+                                                prct_1_col = "prct_winter_within_spring",
+                                                prct_2_col = "prct_spring_within_winter")),
   #### YEARLY SEASONAL SITE FIDELITY ####
   ##### Year-to-year overlap within a season #####
   ###### MCP ######
   tar_target(mcp_winter_yearly_overlap, yearly_prct_overlap(shp = winter_mcp)),
   tar_target(mcp_spring_yearly_overlap, yearly_prct_overlap(shp = spring_mcp)),
   tar_target(mcp_summer_yearly_overlap, yearly_prct_overlap(shp = summer_mcp)),
+  tar_target(mcp_all_szn_yearly_overlap, merge_dfs(df_list = list("Winter" = mcp_winter_yearly_overlap,
+                                                                  "Spring" = mcp_spring_yearly_overlap,
+                                                                  "Summer" = mcp_summer_yearly_overlap)) |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::select(season, method, dplyr::everything())),
   ###### dBBMM ######
   tar_target(dbbmm_winter_yearly_overlap, yearly_prct_overlap(shp = winter_dbbmm)),
   tar_target(dbbmm_spring_yearly_overlap, yearly_prct_overlap(shp = spring_dbbmm)),
   tar_target(dbbmm_summer_yearly_overlap, yearly_prct_overlap(shp = summer_dbbmm)),
+  tar_target(dbbmm_all_szn_yearly_overlap, merge_dfs(df_list = list("Winter" = dbbmm_winter_yearly_overlap,
+                                                                    "Spring" = dbbmm_spring_yearly_overlap,
+                                                                    "Summer" = dbbmm_summer_yearly_overlap)) |>
+               dplyr::mutate(method = "dBBMM") |>
+               dplyr::select(season, method, dplyr::everything())),
+  ###### Year-to-year overlap summary stats ######
+  # Merge all seasonal yearly overlap dfs into a single df
+  tar_target(all_szn_yearly_overlap, dplyr::bind_rows(mcp_all_szn_yearly_overlap, dbbmm_all_szn_yearly_overlap)),
+  # Summarize by season & year
+  tar_target(yearly_seasonal_overlap_summary, summarize_overlap(all_szn_yearly_overlap,
+                                                                group_by = c("season", "method", "year_to_year"),
+                                                                prct_1_col = "prct_year_1_within_year_2",
+                                                                prct_2_col = "prct_year_2_within_year_1")),
+  # Summarize by just season (i.e. average across all years)
+  tar_target(seasonal_overlap_summary, summarize_overlap(all_szn_yearly_overlap,
+                                                         group_by = c("season", "method"),
+                                                         prct_1_col = "prct_year_1_within_year_2",
+                                                         prct_2_col = "prct_year_2_within_year_1")),
   #### STEP LENGTHS ####
   # Step lengths filtered to only include 3 hour timegaps
   # (Otherwise you might get large step lengths that are legit,
@@ -326,14 +358,16 @@ list(
   # the data from it (elevation, slope grade (%), canopy height, edge
   # category, edge distance).
   # Keep track of the W:/ drive LiDAR file
+  # This makes the pipeline a lot slower bc the server is slow. 
+  # So commenting out. 
   # tar_target(uwr_lidar_gdb_path,
   #            "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
   #            format = "file"),
   # Make a local copy of the W:/ drive LiDAR file (this will get re-downloaded
   # if the W:/ drive copy is ever updated/modified)
-  tar_target(uwr_lidar_gdb_path, "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb"),
   tar_target(uwr_lidar_gdb,
-             download_from_server(server_path = uwr_lidar_gdb_path,
+             download_from_server(#server_path = uwr_lidar_gdb_path,
+                                  server_path = "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
                                   local_path = "GIS/LiDAR products",
                                   download = FALSE), # set to FALSE bc I just manually moved it over in the end
              format = "file"),

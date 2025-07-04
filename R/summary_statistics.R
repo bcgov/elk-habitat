@@ -277,3 +277,40 @@ assign_daily_seasons <- function(daily_shp, seasons, date_col) {
   
   return(shp)
 }
+
+
+merge_dfs <- function(df_list, id_name = "season") {
+  stopifnot("`df_list` must be a named list of dataframes." = inherits(df_list, "list"))
+  out <- dplyr::bind_rows(df_list, .id = id_name)
+  return(out)
+}
+
+
+summarize_overlap <- function(overlap_df, group_by = "any_overlap", prct_1_col, prct_2_col) {
+  group_by <- c(group_by, "any_overlap")
+  out <- overlap_df |>
+    units::drop_units() |>
+    dplyr::mutate(any_overlap = overlap_area > 0) |>
+    dplyr::group_by_at(group_by) |>
+    dplyr::summarise(N = dplyr::n(),
+                     mean_overlap = mean(overlap_area),
+                     "mean_{prct_1_col}" := mean(get(prct_1_col)), # TODO: better output cols
+                     "mean_{prct_2_col}" := mean(get(prct_2_col)),
+                     mean_prct_bidirectional = mean(prct_bidirectional)) |>
+    tidyr::pivot_wider(names_from = any_overlap,
+                       values_from = N:mean_prct_bidirectional) |>
+    dplyr::rename(N_no_overlap = N_FALSE,
+                  N_yes_overlap = N_TRUE) |>
+    dplyr::select(!dplyr::ends_with("_FALSE")) |>
+    dplyr::filter(!is.na(mean_overlap_TRUE)) |>
+    dplyr::rename(mean_overlap_ha = mean_overlap_TRUE,
+                  "mean_{prct_1_col}" := paste0("mean_", {prct_1_col}, "_TRUE"),
+                  "mean_{prct_2_col}" := paste0("mean_", {prct_2_col}, "_TRUE"),
+                  mean_prct_bidirectional = mean_prct_bidirectional_TRUE) |>
+    dplyr::mutate(N_no_overlap = dplyr::if_else(is.na(N_no_overlap), 0, N_no_overlap)) |>
+    dplyr::mutate(N_total = N_no_overlap + N_yes_overlap,
+                  N_overlap = paste0(N_yes_overlap, " (", N_no_overlap, ")")) |>
+    dplyr::select(N_total, N_overlap, mean_overlap_ha:mean_prct_bidirectional)
+  return(out)
+}
+
