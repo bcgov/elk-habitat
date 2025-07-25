@@ -27,8 +27,8 @@ dbbmm_summer_yearly_overlap|stem|d6ccee37d4446c6b|22432e9590bfe93c|e7a46d72279bb
 dBBMM_weekly_ud|object|f43fe2c999030d30|||||||||||||||
 dbbmm_winter_spring_overlap|stem|ddfb61cb6e04abd3|b930075dc00053b3|639c10ba09cda7a6|-1789060891||t20266.7570621911s|59ef16d9cba44fb1|2661|rds|local|vector|||9.61||
 dbbmm_winter_yearly_overlap|stem|39df5fcf5f71e42c|3a8acfeaffe76901|b2cf405caf696a7f|2111524819||t20273.6454741499s|86b7064cf66fe42e|1565|rds|local|vector|||3.52||
-dbbmm_wso_summary|stem|9bfd28339074fdff|ae36d9ecb25d1dc8|fa8c050166e10e35|-516662678||t20273.6637852247s|950dfd882046f9ea|524|rds|local|vector|||0.14||
-detection_efficiency|stem|a2de1a8df027cfbe|8d8488432aca6501|ad08af01f201cad3|947972721||t20248.8950985104s|45f94098775a5d69|2327|rds|local|vector|||0.33||
+dbbmm_wso_summary|stem|9bfd28339074fdff|ae36d9ecb25d1dc8|080964adb4ff96af|-516662678||t20294.9648957272s|950dfd882046f9ea|524|rds|local|vector|||0.17||
+detection_efficiency|stem|9b30fbc43eb62da9|8d8488432aca6501|0135757affed2e7e|947972721||t20294.9648921863s|fc2446d516419728|2410|rds|local|vector|||0.52||
 dets_per_elk|stem|9ea9de4cf64cc701|cffc3ee6ced78c00|0e32a3ce99815265|-360331643||t20248.8696885664s|73e589b388d3f2b1|172|rds|local|vector|||0.11||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
 elk|stem|4a421396a5893093|828064bfaffe2696|959f5a658c71a7c1|-188372202||t20248.707131434s|fc327d8efd2fcd21|29184672|rds|local|vector|||360.62|Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Message 6 Field dttm create as date field, though DateTime requested.. GDAL Message 1 Value 103994407.081 of field NSD of feature 320 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104914962.474999994 of field NSD of feature 321 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104705113.225999996 of field NSD of feature 322 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105109748.726999998 of field NSD of feature 323 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105713927.145999998 of field NSD of feature 324 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 107216481.253000006 of field NSD of feature 325 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 100120932.984999999 of field NSD of feature 326 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 102755309.833000004 of field NSD of feature 327 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104171478.883000001 of field NSD of feature 328 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104128103.865999997 of field NSD of feature 329 not successfully written. Possibly due to too larger number w|
@@ -56,7 +56,7 @@ extract_vri|function|880ac76e89778e9c|||||||||||||||
 extract_vri_edges|function|fbcfbd935db67d7d|||||||||||||||
 find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
-fix_rate|function|3693752ffe99c315|||||||||||||||
+fix_rate|function|2197936bd65279fe|||||||||||||||
 flagged_pts|stem|cf8db2bff0ccaa1c|06dab63f5aa25ddc|23e56ec4a18989e0|1665965602||t20244.0038792456s|583e226966d43fcc|62879|rds|local|vector|||0.05||
 full_collar_data|stem|c7b188dfe3b39be2|fcaac25f0f6c862d|74e190121af2c202|1289326002||t20242.919711579s|fb06c3f30cb074fd|12073699|rds|local|vector|||4.14|package RSQLite was built under R version 4.4.3|
 individual_dbbmm|function|3495f8b948f0a5cb|||||||||||||||
@@ -73,7 +73,7 @@ mcp_spring_yearly_overlap|stem|bb4cc0686547c217|36e1a77fe1c04832|b2d77d6bc76b6d4
 mcp_summer_yearly_overlap|stem|aa2674d309ce1588|ceb332a84eacf958|3881aea57f1d08fe|-1442130744||t20273.645599756s|5fc0631e8c4cfb5b|2102|rds|local|vector|||5.41||
 mcp_winter_spring_overlap|stem|0d6e38e92b37e3a4|22eb826872ff85ea|31e2c89de43f0acf|-1809842540||t20266.7568974675s|dabe972fb3cc84b0|2717|rds|local|vector|||9.14||
 mcp_winter_yearly_overlap|stem|e77596b5b00fde60|7582a03bec5b992d|9af6bb9807e40e6d|-1053605382||t20273.645432994s|aa75fd07d97251e6|1583|rds|local|vector|||3.34||
-mcp_wso_summary|stem|c8102ac2832fb5ac|b9903ea67aedd227|9c182421058346fe|532120343||t20273.6631439123s|0051a85449b1d783|513|rds|local|vector|||0.15||
+mcp_wso_summary|stem|c8102ac2832fb5ac|b9903ea67aedd227|155a333e13a2d595|532120343||t20294.9648968844s|0051a85449b1d783|513|rds|local|vector|||0.07||
 merge_dfs|function|51e7110d062d93ef|||||||||||||||
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|740bde44b553e278|||||||||||||||
@@ -81,7 +81,7 @@ n_elk_per_year_month|function|74c304c23b6873ff|||||||||||||||
 non_swp_elk|object|2c07bcfc1260c6a8|||||||||||||||
 nsd_plots|stem|f1ad9b5ce84ef390|64378a330b9398ad|64c1f9cd7cf38ddc|-869005253|reports/elk_nsd.pdf*reports/elk_nsd.Rmd|t20248.869544574s|c07f3518d35607ad|21204735|file|local|vector|||70.97||
 p_dets_per_elk|stem|145627a287803d62|ef744c8c91fd6ab6|97d2cc4e3b3774d9|784997253||t20248.8942603629s|9b6f6ed351b48c44|29298056|rds|local|vector|||0.16||
-p_efficiency|stem|87e912bb82cd2f5d|dc663c41ca62b40a|34d9d22cf3488016|-1905756578||t20244.1602039262s|777e939b49a321ac|113682|rds|local|vector|||0.03||
+p_efficiency|stem|c29a4f697ebb524e|dc663c41ca62b40a|86f7ce97e9551be0|-1905756578||t20294.9648932861s|85f7cefb8f5b6e37|113832|rds|local|vector|||0.02||
 p_elk_per_month|stem|0a86b207df062fa2|fb1b1ddd4d188b87|08235c06486dc25c|2139122293||t20248.8950941843s|cdb69769232f891a|29364392|rds|local|vector|||0.08||
 p_elk_per_year_month|stem|22ed87656221ed68|e7c8f3f0705a43fa|b05c731a3acf9e76|-669630683||t20248.8706298468s|28c0a048a414a409|29359240|rds|local|vector|||0.1||
 prct_overlap|function|5b70fe85cb4cce78|||||||||||||||
@@ -92,7 +92,7 @@ read_vri|function|16df774cb8cb8e9c|||||||||||||||
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 seasonal_dbbmm|function|6c03db33d638a2b1|||||||||||||||
 seasonal_mcp|function|31f048fa99a50e51|||||||||||||||
-seasonal_overlap_summary|stem|9e8e26bf1d88d1e8|1fcfbc0c1dbcaf3a|6d4211b763714578|627036650||t20273.7468703812s|a8b96b6a30ddcd22|626|rds|local|vector|||0.06||
+seasonal_overlap_summary|stem|9e8e26bf1d88d1e8|1fcfbc0c1dbcaf3a|be5f9007a0abdc1c|627036650||t20294.9648985838s|a8b96b6a30ddcd22|626|rds|local|vector|||0.04||
 spring|object|6398ef5e90b44e6d|||||||||||||||
 spring_dbbmm|stem|85b4aa8c6e75abea|097b0d7b735f88b6|96df23ec97b5f118|1234634189||t20265.833825556s|0099085a287c27a1|3891414|rds|local|vector|||977.7||
 spring_mcp|stem|e97e260b045f114e|b8b92ce6deeb7d5b|c76d0d701e021489|2029814444||t20248.7179572042s|778aba7565a4782a|34408|rds|local|vector|||15.21||
@@ -102,7 +102,7 @@ step_length_swp_summary|stem|e7a96de39cef310e|fe5abe52ea4151c2|1e1cad4baf0073e6|
 step_lengths_3hr|stem|bee70f5180aa6cf2|f2e0bf5e73fcb64c|b226fc20fcd1fd8c|-1194693083||t20266.7279803181s|aef6e5937c3c2393|16764815|rds|local|vector|||0.28||
 steplength|function|97a0717a017cb942|||||||||||||||
 summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
-summarize_overlap|function|2cfd9cac6e58add8|||||||||||||||
+summarize_overlap|function|9836c2414ab06df1|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
 summer_dbbmm|stem|692766b9a2291ea1|8b5a0c6a15234658|a78b3ba1e5600b4a|320407742||t20265.843444803s|809c94470cc0fd8a|3704433|rds|local|vector|||830.83||
 summer_mcp|stem|fd086ca66c1a37ed|239ca60e88e96776|09feb9a9d2bc0c7c|1803065787||t20248.8681088547s|1b54a48507052fef|34949|rds|local|vector|||12.03||
@@ -129,4 +129,4 @@ winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|22215bf92d6ef7ce|c81b66de12f68329|6596a0fe8ad5bc0b|-99852116||t20265.8527978678s|bf1b8fba976ce90d|3714462|rds|local|vector|||807.75||
 winter_mcp|stem|9fdd3a18904bffa0|7bcad1dd10552d50|2ae5a6fed2e20be5|844460800||t20248.7181638112s|bdeb02f462cbd3b7|29565|rds|local|vector|||17.81||
 yearly_prct_overlap|function|6d8800d84d72e357|||||||||||||||
-yearly_seasonal_overlap_summary|stem|94cb70cfdc348379|0c48be53267369b6|6d4211b763714578|-1519448991||t20273.7468694584s|c515e452fa4424f7|1241|rds|local|vector|||0.27||
+yearly_seasonal_overlap_summary|stem|94cb70cfdc348379|0c48be53267369b6|be5f9007a0abdc1c|-1519448991||t20294.964897823s|c515e452fa4424f7|1241|rds|local|vector|||0.06||

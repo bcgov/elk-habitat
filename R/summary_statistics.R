@@ -65,13 +65,15 @@ fix_rate <- function(elk) {
   efficiency <- 
     elk |>
     sf::st_drop_geometry() |>
-    dplyr::group_by(animal_id, collar_id, lubridate::date(dttm)) |>
+    dplyr::mutate(date = lubridate::date(dttm)) |>
+    dplyr::group_by(animal_id, collar_id, date) |>
     dplyr::summarise(n_dets = dplyr::n()) |>
     dplyr::group_by(animal_id, collar_id) |>
     dplyr::summarise(actual_dets = sum(n_dets),
                      med_daily_dets = median(n_dets),
-                     n_days = dplyr::n()) |>
-    dplyr::mutate(n_pts_100_prct_efficiency = med_daily_dets * n_days,
+                     #n_days = dplyr::n(), # this FAILS in cases where no detections whatsoever in a day! 
+                     n_days = (max(date) + lubridate::days(1)) - min(date)) |> # add +1 day to ensure it's counting the first day, inclusive
+    dplyr::mutate(n_pts_100_prct_efficiency = med_daily_dets * as.numeric(n_days),
                   efficiency = actual_dets / n_pts_100_prct_efficiency) #|>
     #dplyr::select(animal_id, collar_id, actual_dets, n_days, efficiency) |>
     #dplyr::rename(n_dets = actual_dets)
