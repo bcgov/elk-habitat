@@ -28,6 +28,7 @@ MCP <- tar_read(all_seasons_mcp)
 dBBMM <- tar_read(all_seasons_dbbmm)
 tar_load(mcp_seasonal_summary)
 tar_load(dbbmm_seasonal_summary)
+SL <- tar_read(step_lengths_3hr)
 
 # Make a column of area normalized by N days
 MCP <- MCP |>
@@ -1348,3 +1349,50 @@ daily_mcps |>
 
 
 
+#### STEP LENGTH PLOTS ####
+
+SL |>
+  dplyr::mutate(date = lubridate::date(dttm)) |>
+  dplyr::group_by(date) |>
+  dplyr::summarise(mean_step = mean(step),
+                   n = dplyr::n(),
+                   sd_area = sd(step),
+                   se = sd_area/sqrt(n),
+                   t_score = qt(p = 0.05/2, 
+                                df = n - 1,
+                                lower.tail=F),
+                   margin_error = t_score * se,
+                   lower_bound = mean_step - margin_error,
+                   upper_bound = mean_step + margin_error) |>
+  ggplot() +
+  annotate("rect",
+           xmin = lubridate::date("2021-12-18"), 
+           xmax = lubridate::date("2022-01-14"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#c1dcfe",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  annotate("rect",
+           xmin = lubridate::date("2021-06-25"), 
+           xmax = lubridate::date("2021-07-07"), 
+           ymin = 0, 
+           ymax = Inf,
+           fill = "#f9c56b",
+           #fill = "#F0F0F0",
+           alpha = 0.6) +
+  geom_ribbon(aes(x = date, 
+                  ymin = lower_bound,
+                  ymax = upper_bound),
+              fill = "#DADADA") +
+  geom_line(aes(x = date,
+                y = mean_step),
+            alpha = 0.3) +
+  geom_line(aes(x = date,
+                y = zoo::rollmean(mean_step, 14, na.pad = TRUE)),
+            color = "red") +
+  coord_cartesian(expand = FALSE,
+                  ylim=c(0, 750)) +
+  labs(title = "Mean daily step length over time",
+       caption = "Confidence intervals narrow over time as more samples are added.\nIn blue, the severe winter period for 2021-2022. In orange, the 2021 PNW Heat Dome.\nIn red, 14 day rolling mean.") +
+  theme_minimal()
