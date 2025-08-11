@@ -304,6 +304,27 @@ list(
                                                          group_by = c("season", "method"),
                                                          prct_1_col = "prct_year_1_within_year_2",
                                                          prct_2_col = "prct_year_2_within_year_1")),
+  ##### Aggregate seasonal overlap #####
+  # Pool all winter MCPs (e.g.), calculate max overlap metrics
+  # for the pooled seasonal areas. Using two methods:
+  # 1) max overlap area / union of all areas
+  # 2) GOI metric described in Ferrarini et al. (2021)
+  tar_target(mcp_winter_agg_overlap, lapply(unique(winter_mcp$animal_id),
+                                            function(x){
+                                              shp <- winter_mcp[which(winter_mcp$animal_id == x), ]
+                                              out <- aggregate_overlap(shp)
+                                              out$animal_id <- x
+                                              out <- out[,c(3, 1, 2)]
+                                              return(out)
+                                            }) |> dplyr::bind_rows()),
+  tar_target(dbbmm_winter_agg_overlap, lapply(unique(winter_dbbmm$animal_id),
+                                            function(x){
+                                              shp <- winter_dbbmm[which(winter_dbbmm$animal_id == x), ]
+                                              out <- aggregate_overlap(shp)
+                                              out$animal_id <- x
+                                              out <- out[,c(3, 1, 2)]
+                                              return(out)
+                                            }) |> dplyr::bind_rows()),
   #### STEP LENGTHS ####
   # Step lengths filtered to only include 3 hour timegaps
   # (Otherwise you might get large step lengths that are legit,

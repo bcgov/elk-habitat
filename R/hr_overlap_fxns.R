@@ -186,11 +186,70 @@ yearly_prct_overlap <- function(shp,
 }
 
 
+cumulative_overlap <- function(shp,
+                               area_unit = "ha",
+                               round = TRUE) {
+  i <- sf::st_intersection(shp)
+  
+  i$area <- sf::st_area(i)
+  i$area <- units::set_units(i$area, value = area_unit, mode = "standard")
+  
+  union <- dplyr::summarise(shp)
+  union$area <- st_area(union)
+  union$area <- units::set_units(union$area, value = area_unit, mode = "standard")
+  
+  if (nrow(i) > 1) {
+    out <- 100 * i[["area"]][i$n.overlaps == max(i$n.overlaps)] / union$area
+    out <- max(out) # in cases where multiple patches of overlap exist with max n.overlaps, choose the largest area of overlap!
+  } else {
+    out <- NaN
+  }
+  
+  if (round) out <- round(out, 1)
+  
+  return(out)
+}
 
 
-# Helpful example for lead/lag distances between points
-# Ultimately wasn't useful for overlap, but may be useful for step-length.
-# https://stackoverflow.com/questions/49853696/distances-of-points-between-rows-with-sf
-#dplyr::mutate(dist = st_distance(geometry, dplyr::lead(geometry), by_element = T))
+ferrarini_goi <- function(shp, 
+                          area_unit = "ha",
+                          round = TRUE) {
+  
+  shp$area <- sf::st_area(shp)
+  shp$area <- units::set_units(shp$area, value = area_unit, mode = "standard")
+  
+  union <- dplyr::summarise(shp)
+  union$area <- st_area(union)
+  union$area <- units::set_units(union$area, value = area_unit, mode = "standard")
+  
+  b <- sum(shp$area)
+  a <- max(shp$area)
+  X <- union$area
+  
+  out <- 100 * (b - X) / (b - a)
+  
+  if (round) out <- round(out, 1)
+  
+  return(out)
+}
 
+
+# Bit silly the area_unit arg is totally useless since it's a %,
+# but it's already done, so...
+aggregate_overlap <- function(shp, ...) {
+  dots <- list(...)
+  if (length(dots) > 0) {
+    dots$shp <- shp
+    out1 <- do.call(cumulative_overlap, dots)
+    out2 <- do.call(ferrarini_goi, dots)
+  } else {
+    out1 <- cumulative_overlap(shp)
+    out2 <- ferrarini_goi(shp)
+  }
+  
+  out <- data.frame(cumulative_overlap = out1,
+                    ferrarini_goi = out2)
+  out <- units::drop_units(out)
+  return(out)
+}
 
