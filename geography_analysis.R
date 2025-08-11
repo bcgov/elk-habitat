@@ -29,7 +29,7 @@ swp_days <- c(lubridate::yday("2021-12-18"):366, 1:14)
 tar_load(elk)
 tar_load(all_seasons_mcp) # Seasonal MCP ranges
 tar_load(elk_dem) # TRIM DEM-derived attributes
-tar_load(elk_lidar) # UWR LiDAR-derived attributes
+elk_lidar <- tar_read(elk_uwr) # UWR LiDAR-derived attributes
 tar_load(elk_chm) # BCTS Crown Height Model
 tar_load(elk_vri) # Madrone VRI-derived attributes
 
