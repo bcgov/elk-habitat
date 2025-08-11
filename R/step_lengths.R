@@ -10,3 +10,9 @@ steplength <- function(elk) {
   out <- bayesmove::prep_data(dat = dat, coord.names = c("X", "Y"), id = "animal_id")
   return(out)
 }
+
+
+# Helpful example for lead/lag distances between points
+# Ultimately wasn't useful for overlap, but may be useful for step-length.
+# https://stackoverflow.com/questions/49853696/distances-of-points-between-rows-with-sf
+#dplyr::mutate(dist = st_distance(geometry, dplyr::lead(geometry), by_element = T))
