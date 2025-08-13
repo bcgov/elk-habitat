@@ -253,3 +253,48 @@ aggregate_overlap <- function(shp, ...) {
   return(out)
 }
 
+
+
+
+# Cumulative HR shapefiles!
+
+#' Cumulative polygon union
+#'
+#' @param shp An `sf` object of home ranges containing the following columns: `animal_id`, `season`, and `year`.
+#' This function assumes each home range increases year by one, i.e. that there are
+#' no gaps in the years. 
+#' @returns An `sf` object of cumulatively unioned home range extents.
+cumulative_shp <- function(shp, area_unit = "ha") {
+  out <- 
+    shp |>
+    dplyr::group_by(animal_id) |>
+    dplyr::mutate(N_year = 1,
+                  N_year = cumsum(N_year)) |>
+    dplyr::arrange(animal_id, desc(year)) |> 
+    dplyr::mutate(grp = 1,
+                  grp = cumsum(grp)) |> 
+    tidyr::uncount(grp, .remove = FALSE) |> # the star of the pipe
+    dplyr::group_by(animal_id) |>
+    dplyr::mutate(min_year = min(year)) |>
+    dplyr::group_by(animal_id, N_year) |>
+    # Reset grp
+    dplyr::mutate(grp = 1,
+                  grp = cumsum(grp),
+                  grp = grp - 1,
+                  years = dplyr::if_else(grp == 0 & N_year == 1,
+                                         as.character(year),
+                                         paste0(min_year, "-", (year + grp)))
+                  ) |>
+    dplyr::group_by(animal_id, years) |>
+    dplyr::select(animal_id, season, years, geometry) |>
+    sf::st_as_sf() |>
+    dplyr::summarize(N = dplyr::n(),
+                     #geometry = sf::st_union(geometry),
+                     .groups = "keep")
+  out$area <- sf::st_area(out)
+  out$area <- units::set_units(out$area, value = area_unit, mode = "standard")
+  return(out)
+}
+
+
+

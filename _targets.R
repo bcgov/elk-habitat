@@ -311,20 +311,32 @@ list(
   # 2) GOI metric described in Ferrarini et al. (2021)
   tar_target(mcp_winter_agg_overlap, lapply(unique(winter_mcp$animal_id),
                                             function(x){
-                                              shp <- winter_mcp[which(winter_mcp$animal_id == x), ]
+                                              shp <- winter_mcp[winter_mcp$animal_id == x, ]
+                                              n <- nrow(shp)
                                               out <- aggregate_overlap(shp)
                                               out$animal_id <- x
-                                              out <- out[,c(3, 1, 2)]
+                                              out$N <- n
+                                              out$method <- "MCP"
+                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
                                               return(out)
-                                            }) |> dplyr::bind_rows()),
+                                            }) |>
+               dplyr::bind_rows()),
   tar_target(dbbmm_winter_agg_overlap, lapply(unique(winter_dbbmm$animal_id),
-                                            function(x){
-                                              shp <- winter_dbbmm[which(winter_dbbmm$animal_id == x), ]
-                                              out <- aggregate_overlap(shp)
-                                              out$animal_id <- x
-                                              out <- out[,c(3, 1, 2)]
-                                              return(out)
-                                            }) |> dplyr::bind_rows()),
+                                              function(x){
+                                                shp <- winter_dbbmm[winter_dbbmm$animal_id == x, ]
+                                                n <- nrow(shp)
+                                                out <- aggregate_overlap(shp)
+                                                out$animal_id <- x
+                                                out$N <- n
+                                                out$method <- "dBBMM"
+                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                                return(out)
+                                              }) |>
+               dplyr::bind_rows()),
+  # And finally, the cumulative union shapes of the polygons themselves!
+  # MCP
+  tar_target(cumulative_winter_mcp, cumulative_shp(winter_mcp)),
+  tar_target(cumulative_winter_dbbmm, cumulative_shp(winter_dbbmm)),
   #### STEP LENGTHS ####
   # Step lengths filtered to only include 3 hour timegaps
   # (Otherwise you might get large step lengths that are legit,
