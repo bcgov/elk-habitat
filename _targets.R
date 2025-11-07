@@ -449,6 +449,10 @@ list(
                                            "CROWN_CLOSURE",
                                            "SHRUB_HEIGHT",
                                            "SHRUB_CROWN_CLOSURE",
+                                           "BCLCS_LEVEL_4", # broad species composition
+                                           "SPECIES_CD_1", # spp composition code - leading species
+                                           "SPECIES_CD_2", 
+                                           "SPECIES_CD_3",
                                            "Creation_Date")))#,
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))

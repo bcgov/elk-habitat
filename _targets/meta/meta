@@ -49,7 +49,7 @@ elk_per_month_plot|function|20740411dc9e6e24|||||||||||||||
 elk_per_year_month|stem|6dc99aebe342294a|7f857d14421b1f2e|cd9aab9a1383470c|692555464||t20248.8941788041s|d9080b1314af5574|528|rds|local|vector|||0.07||
 elk_per_year_month_plot|function|bcfd85732921d5e0|||||||||||||||
 elk_uwr|stem|68457f37dd129085|aa7b666448798592|96e8566c8aaeecdd|-1088510592||t20248.8703688231s|1813142ec6e12c87|1339550|rds|local|vector|||58.58||
-elk_vri|stem|3b4d6911decc35de|bc321d8056ce30d9|65c6cba8982a1fa2|30184935||t20248.8687236284s|ccf05266d29d183d|2674603|rds|local|vector|||20.24|attribute variables are assumed to be spatially constant throughout all geometries|
+elk_vri|stem|750031d8650ce743|5eddc8401af3af5e|65c6cba8982a1fa2|30184935||t20398.9134617126s|9d0202f0ac58c15c|2788462|rds|local|vector|||17.38|attribute variables are assumed to be spatially constant throughout all geometries|
 extract_aspect|function|51978e47b39bbbbd|||||||||||||||
 extract_chm|function|aa787ca0cac449b3|||||||||||||||
 extract_dem|function|df1b1a3940b3219b|||||||||||||||
