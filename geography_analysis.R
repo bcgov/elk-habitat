@@ -4677,11 +4677,15 @@ p |>
                     name = "Type",
                     #labels = c()
   ) +
-  labs(title = "Land Cover Class - available vs elk",
+  labs(title = "Primary Species - available vs elk",
        subtitle = "All dates",
-       x = "Land Cover Class",
+       x = "Primary Species",
        y = "Proportion",
-       caption = paste0("N data points per group = ", nrow(p)/2)) +
+       caption = paste0("N data points real data = ", 
+                        nrow(p[p$pool == "real data",]),
+                        "\nN data points random data = ", 
+                        nrow(p[p$pool != "real data",]))
+       ) +
   theme_minimal()
 
 # PROPORTIONAL BAR - Random vs Selected
@@ -4695,11 +4699,15 @@ p |>
                     name = "Type",
                     #labels = c()
   ) +
-  labs(title = "Land Cover Class - available vs elk",
+  labs(title = "Primary Species - available vs elk",
        subtitle = "All dates",
-       x = "Land Cover Class",
+       x = "Primary Species",
        y = "Proportion",
-       caption = paste0("N data points per group = ", nrow(p)/2)) +
+       caption = paste0("N data points real data = ", 
+                        nrow(p[p$pool == "real data",]),
+                        "\nN data points random data = ", 
+                        nrow(p[p$pool != "real data",]))
+       ) +
   theme_minimal()
 
 # Seasonal differences
@@ -4707,10 +4715,13 @@ p |>
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
-p <- p |> dplyr::mutate(val = dplyr::if_else(val %in% c("HE", "HG", "SL", "TB", "TC", "TM"),
+p <- p |> dplyr::mutate(val = dplyr::if_else(val %in% c("ACT", "BA", "CW", "DR", "FD",
+                                                        "FDC", "HM", "HW", "SS", "YC"),
                                              val,
                                              "Other")) |>
-  dplyr::mutate(val = factor(val, c("TC", "TM", "TB", "SL", "HE", "HG", "Other")))
+  dplyr::mutate(val = factor(val, c("HW", "FDC", "BA", "FD", "YC",
+                                    "HM", "CW", "DR", "SS", "ACT",
+                                    "Other")))
 
 # SEASONAL MOSAIC
 p |> 
@@ -4727,7 +4738,7 @@ p |>
                     values = okabe[1:3]) +
   #scale_fill_manual(values = c("#E69F00", "#009E73", "#CC79A7")) +
   #khroma::scale_fill_okabeito(black_position = "last") +
-  labs(x = "Land Cover Class",
+  labs(x = "Primary Species",
        y = "Season") +
   coord_flip() +
   theme_mosaic()
@@ -4742,9 +4753,9 @@ p |>
            position = "fill",
            alpha = 0.7) +
   facet_wrap(~ season, nrow = 3) +
-  labs(title = "Land Cover Class - available vs elk",
+  labs(title = "Primary Species - available vs elk",
        subtitle = "All dates",
-       x = "Land Cover Class",
+       x = "Primary Speices",
        y = "Proportion",
        caption = paste0("N data points per group = ", nrow(p)/2)) +
   theme_minimal()
@@ -4785,7 +4796,7 @@ s3 <- p |>
            fill = okabe[3]) +
   scale_alpha_manual("Type", values = c(0.8, 0.3)) +
   facet_wrap(~ season, nrow = 3) +
-  labs(x = "Land Cover Class",
+  labs(x = "Primary Species",
        y = "Proportion") +
   theme_minimal()
 
@@ -4800,7 +4811,7 @@ p$year <- lubridate::year(p$dttm)
 
 # MOSAIC - Yearly SWP variation
 p |>
-  dplyr::filter(type == "Elk Land Cover Class") |>
+  dplyr::filter(type == "Elk Primary Spp") |>
   dplyr::filter(yday %in% swp_days) |>
   dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
@@ -4810,7 +4821,7 @@ p |>
                   fill = year)) +
   scale_fill_manual("Year",
                     values = okabe[1:5]) +
-  labs(x = "Land Cover Class",
+  labs(x = "Primary Species",
        y = "Year",
        caption = "2021-2022 was the 'Severe' year.") +
   coord_flip() +
@@ -4830,9 +4841,9 @@ p |>
                     values = okabe[1:5]) +
   scale_alpha_manual("Type", values = c(0.8, 0.3)) +
   facet_wrap(~ year, ncol = 1) +
-  labs(title = "Land Cover Class - SWP across years",
+  labs(title = "Primary Species - SWP across years",
        subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
-       x = "Land Cover Class",
+       x = "Primary Species",
        y = "Proportion",
        caption = "2021-2022 was the 'Severe' year.
        All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
