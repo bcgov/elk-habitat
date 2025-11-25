@@ -21,9 +21,9 @@ cumulative_winter_mcp|stem|f819dcd9d4b90d44|6ca1f2d3d6672f99|d4246d7195878d71|15
 cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|9f51fc2273e14e7c|471b22bf3dd17154|64c1f9cd7cf38ddc|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20248.8950478107s|a1b9eeb1fda37183|2725147|file|local|vector|||58.48||
 daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
-daily_mcp_seasonal_summary|stem|202b9d0f729f8751|c76a534c4bcf61a3|4063d5beaec92919|-282887321||t20265.9446159486s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.04||
-daily_mcp_swp_summary|stem|85d5ce74f193fc16|b1b723ecf468bcbb|c46b3b71a6dea8c0|-2092308185||t20265.9446180481s|3894ebe67ff7c23d|553|rds|local|vector|||0.16||
-daily_mcps|stem|1ea09ece72203f48|e0e86123403304c3|2f7d0ca17d5b579b|958011176||t20265.9446101922s|ea421c7472dc1a34|4449093|rds|local|vector|||1471.2||
+daily_mcp_seasonal_summary|stem|6ed2282448025d9a|c76a534c4bcf61a3|4f70402ac2d9d3a8|-282887321||t20417.0442880995s|a3496bd4cf32175c|517|rds|local|vector|||0.04||
+daily_mcp_swp_summary|stem|ffb1a4123783e69c|b1b723ecf468bcbb|2113c647493dcd59|-2092308185||t20417.044290571s|3894ebe67ff7c23d|553|rds|local|vector|||0.19||
+daily_mcps|stem|0eeaedd5ea17f93d|540635566233b505|f6bad2197cc63820|958011176||t20417.0442862486s|b913992295a3e20d|4686688|rds|local|vector|||987.32||
 dbbmm_all_szn_yearly_overlap|stem|2fd09ca11f27b950|524694ad3e4966eb|faf2a6a4d2016102|1525540815||t20273.7411313479s|6451a29a15b713f5|4616|rds|local|vector|||0.05||
 dbbmm_seasonal_summary|stem|cdf0aca6c6b43e25|953aea498725d956|1ffd73f54e4296bf|1789842921||t20265.06171067s|d2dac0e3941019b6|475|rds|local|vector|||0.03||
 dBBMM_seasonal_ud|object|29e816842fabc47d|||||||||||||||

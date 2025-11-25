@@ -235,12 +235,12 @@ list(
   # sensitive to lower sample sizes for daily home range estimates.
   tar_target(daily_mcps, daily_mcp(elk = elk,
                                     min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
-                                    percent = MCP_pctl) |> # 95% MCP - convex hull that encompasses 95th distance-from-centre percentile points. Defaults to Delaunay triangulation to find the center of the points.
+                                    percent = 1) |> # 100% MCP - no outliers in daily MCPs if all 8 points passed the data cleaning step!
                assign_daily_seasons(seasons = list("winter" = winter, # defined toward the top of this document
                                                    "spring" = spring, # defined toward the top of this document
                                                    "summer" = summer), # defined toward the top of this document
                                     date_col = "date") |>
-               sf::st_write(paste0("temp/Pipeline outputs/MCP_Daily_", (MCP_pctl * 100), "pctl.shp"),
+               sf::st_write(paste0("temp/Pipeline outputs/MCP_Daily_", 100, "pctl.shp"),
                             append = FALSE)),
   tar_target(daily_mcp_seasonal_summary, daily_mcps |>
                summarize_area(group_by = c("season"))),
