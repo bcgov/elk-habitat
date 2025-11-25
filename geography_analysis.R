@@ -1,3 +1,6 @@
+# This script generates visuals for our variables of interest that will
+# be included in our habitat selection models. They are intended to 
+# visualize use (selection) vs availability of various landscape features.
 
 # SETUP -----------------------------------------------------------------
 
@@ -6,6 +9,7 @@ library(targets)
 library(sf)
 library(ggplot2)
 library(ggsignif)
+library(ggmosaic)
 library(DataExplorer)
 library(units)
 
@@ -43,9 +47,6 @@ non_swp_elk <- c("20-1001", "20-1002")
 # severe winter (i.e. cuts out any that also weren't collared
 # yet)
 swp_elk <- unique(elk[["animal_id"]][lubridate::date(elk$dttm) %in% swp_dates])
-
-
-#tar_load(vri) # vri polyons
 
 elk <- janitor::remove_empty(elk)
 elk <- merge(elk, elk_dem, by = "idposition", all = TRUE)
@@ -2237,6 +2238,16 @@ plot(density(vri$len_ar_ratio), xlim = c(1000, 5000)) # zoom in to try and find 
 
 vri <- vri[vri$len_ar_ratio < 2000, ]
 hist(vri$Shape_Area, xlim = c(0, 50), breaks = 1000)
+
+# Clean up mislabelled spp
+# All "FD" (Douglas fir) on VI should be == "FDC" (Coastal Douglas fir)
+vri[["SPECIES_CD_1"]][which(vri$SPECIES_CD_1 == "FD")] <- "FDC"
+vri[["SPECIES_CD_2"]][which(vri$SPECIES_CD_2 == "FD")] <- "FDC"
+vri[["SPECIES_CD_3"]][which(vri$SPECIES_CD_3 == "FD")] <- "FDC"
+
+elk[["species_cd_1"]][which(elk$species_cd_1 == "FD")] <- "FDC"
+elk[["species_cd_2"]][which(elk$species_cd_2 == "FD")] <- "FDC"
+elk[["species_cd_3"]][which(elk$species_cd_3 == "FD")] <- "FDC"
 
 # Now merge random points w VRI.
 random_pts <- sf::st_intersection(random_pts, vri)
@@ -4650,6 +4661,8 @@ p |>
 
 ## Primary Species Composition ####
 
+# Note VRI fixes done at the start of this section + start of document
+# prior to running this code
 
 # Create a df of data to plot - our elk data
 # merged with the random sampling data
@@ -4715,11 +4728,11 @@ p |>
 # Set factor for plotting
 p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
 
-p <- p |> dplyr::mutate(val = dplyr::if_else(val %in% c("ACT", "BA", "CW", "DR", "FD",
+p <- p |> dplyr::mutate(val = dplyr::if_else(val %in% c("ACT", "BA", "CW", "DR",
                                                         "FDC", "HM", "HW", "SS", "YC"),
                                              val,
                                              "Other")) |>
-  dplyr::mutate(val = factor(val, c("HW", "FDC", "BA", "FD", "YC",
+  dplyr::mutate(val = factor(val, c("HW", "FDC", "BA", "YC",
                                     "HM", "CW", "DR", "SS", "ACT",
                                     "Other")))
 
@@ -4850,6 +4863,218 @@ p |>
        Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
   theme_minimal()
 
+
+
+## Secondary Species Composition ####
+
+# Note VRI fixes done at the start of this section + start of document
+
+# Create a df of data to plot - our elk data
+# merged with the random sampling data
+p <- rbind(data.frame("val" = random_pts$SPECIES_CD_2,
+                      "type" = "Random Secondary Spp",
+                      "dttm" = random_pts$dttm,
+                      "season" = random_pts$season,
+                      "pool" = random_pts$pool),
+           data.frame("val" = elk$species_cd_2,
+                      "type" = "Elk Secondary Spp",
+                      "dttm" = elk$dttm,
+                      "season" = elk$season,
+                      "pool" = "real data"))
+
+# Remove NA
+p <- p[!is.na(p$val), ]
+
+# STACKED BAR - Random vs Selected
+p |> 
+  dplyr::filter(pool %in% c("real data", "full study area")) |> 
+  dplyr::group_by(val) |>
+  dplyr::mutate(n = dplyr::n()) |> 
+  dplyr::filter(n > 1000) |>
+  ggplot(aes(val)) + 
+  geom_bar(aes(fill = type),
+           alpha = 0.7) +
+  scale_fill_manual(values = c("#E69F00", "#009E73"),
+                    name = "Type",
+                    #labels = c()
+  ) +
+  labs(title = "Secondary Species - available vs elk",
+       subtitle = "All dates",
+       x = "Secondary Species",
+       y = "Proportion",
+       caption = paste0("N data points real data = ", 
+                        nrow(p[p$pool == "real data",]),
+                        "\nN data points random data = ", 
+                        nrow(p[p$pool != "real data",]))
+  ) +
+  theme_minimal()
+
+# PROPORTIONAL BAR - Random vs Selected
+p |> 
+  dplyr::filter(pool %in% c("real data", "full study area")) |> 
+  dplyr::group_by(val) |>
+  dplyr::mutate(n = dplyr::n()) |> 
+  dplyr::filter(n > 1000) |>
+  ggplot(aes(val)) + 
+  geom_bar(aes(fill = type),
+           position = "fill",
+           alpha = 0.7) +
+  scale_fill_manual(values = c("#E69F00", "#009E73"),
+                    name = "Type",
+                    #labels = c()
+  ) +
+  labs(title = "Secondary Species - available vs elk",
+       subtitle = "All dates",
+       x = "Secondary Species",
+       y = "Proportion",
+       caption = paste0("N data points real data = ", 
+                        nrow(p[p$pool == "real data",]),
+                        "\nN data points random data = ", 
+                        nrow(p[p$pool != "real data",]))
+  ) +
+  theme_minimal()
+
+# Seasonal differences
+
+# Set factor for plotting
+p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
+
+p <- p |> dplyr::mutate(val = dplyr::if_else(val %in% c("HW", "BA", "FDC", "CW",
+                                                        "YC", "HM", "PW", "SS",
+                                                        "DR", "BG", "MB"),
+                                             val,
+                                             "Other")) |>
+  dplyr::mutate(val = factor(val, c("HW", "BA", "FDC", "CW",
+                                    "YC", "HM", "PW", "SS",
+                                    "DR", "BG", "MB",
+                                    "Other")))
+
+# SEASONAL MOSAIC
+p |> 
+  dplyr::filter(pool %in% c("real data")) |> 
+  dplyr::mutate(type = dplyr::if_else(pool == "real data",
+                                      season,
+                                      type)) |>
+  dplyr::select(val, type) |>
+  dplyr::filter(!is.na(type)) |>
+  ggplot() +
+  geom_mosaic(aes(x = product(val),
+                  fill = type)) +
+  scale_fill_manual("Season",
+                    values = okabe[1:3]) +
+  #scale_fill_manual(values = c("#E69F00", "#009E73", "#CC79A7")) +
+  #khroma::scale_fill_okabeito(black_position = "last") +
+  labs(x = "Secondary Species",
+       y = "Season") +
+  coord_flip() +
+  theme_mosaic()
+
+
+# PROPORTIONAL BAR - Seasonal Random vs Selected
+p |> 
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs"),
+                !is.na(season)) |> 
+  ggplot(aes(val)) + 
+  geom_bar(aes(fill = type),
+           position = "fill",
+           alpha = 0.7) +
+  facet_wrap(~ season, nrow = 3) +
+  labs(title = "Primary Species - available vs elk",
+       subtitle = "All dates",
+       x = "Secondary Speices",
+       y = "Proportion",
+       caption = paste0("N data points per group = ", nrow(p)/2)) +
+  theme_minimal()
+
+# Spring
+s1 <- p |> 
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs"),
+                season == "Spring") |> 
+  ggplot(aes(val)) + 
+  geom_bar(aes(alpha = type),
+           position = "fill",
+           fill = okabe[1]) +
+  scale_alpha_manual("Type", values = c(0.8, 0.3)) +
+  facet_wrap(~ season, nrow = 3) +
+  labs(y = "Proportion") +
+  theme_minimal()
+
+# Summer
+s2 <- p |> 
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs"),
+                season == "Summer") |> 
+  ggplot(aes(val)) + 
+  geom_bar(aes(alpha = type),
+           position = "fill",
+           fill = okabe[2]) +
+  scale_alpha_manual("Type", values = c(0.8, 0.3)) +
+  facet_wrap(~ season, nrow = 3) +
+  labs(y = "Proportion") +
+  theme_minimal()
+
+# Winter
+s3 <- p |> 
+  dplyr::filter(pool %in% c("real data", "seasonal MCPs"),
+                season == "Winter") |> 
+  ggplot(aes(val)) + 
+  geom_bar(aes(alpha = type),
+           position = "fill",
+           fill = okabe[3]) +
+  scale_alpha_manual("Type", values = c(0.8, 0.3)) +
+  facet_wrap(~ season, nrow = 3) +
+  labs(x = "Secondary Species",
+       y = "Proportion") +
+  theme_minimal()
+
+
+ggpubr::ggarrange(s1, s2, s3, ncol = 1)
+
+
+# SWP plots
+p$yday <- lubridate::yday(p$dttm)
+p$year <- lubridate::year(p$dttm)
+
+
+# MOSAIC - Yearly SWP variation
+p |>
+  dplyr::filter(type == "Elk Secondary Spp") |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::select(val, year) |>
+  ggplot() +
+  geom_mosaic(aes(x = product(val),
+                  fill = year)) +
+  scale_fill_manual("Year",
+                    values = okabe[1:5]) +
+  labs(x = "Secondary Species",
+       y = "Year",
+       caption = "2021-2022 was the 'Severe' year.") +
+  coord_flip() +
+  theme_mosaic()
+
+# PROPORTIONAL AREA - Yearly SWP
+p |> 
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::select(val, type, year) |>
+  ggplot(aes(val)) + 
+  geom_bar(aes(fill = year,
+               alpha = type),
+           position = "fill") +
+  scale_fill_manual("Year", 
+                    values = okabe[1:5]) +
+  scale_alpha_manual("Type", values = c(0.8, 0.3)) +
+  facet_wrap(~ year, ncol = 1) +
+  labs(title = "Secondary Species - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Secondary Species",
+       y = "Proportion",
+       caption = "2021-2022 was the 'Severe' year.
+       All 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
 
 
 
