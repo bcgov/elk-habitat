@@ -1,3 +1,6 @@
+# This script generates visuals for our variables of interest that will
+# be included in our habitat selection models. They are intended to 
+# visualize use (selection) vs availability of various landscape features.
 
 # SETUP -----------------------------------------------------------------
 
@@ -44,9 +47,6 @@ non_swp_elk <- c("20-1001", "20-1002")
 # severe winter (i.e. cuts out any that also weren't collared
 # yet)
 swp_elk <- unique(elk[["animal_id"]][lubridate::date(elk$dttm) %in% swp_dates])
-
-
-#tar_load(vri) # vri polyons
 
 elk <- janitor::remove_empty(elk)
 elk <- merge(elk, elk_dem, by = "idposition", all = TRUE)
