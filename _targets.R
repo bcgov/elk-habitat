@@ -128,6 +128,9 @@ list(
              "reports/elk_nsd.Rmd",
              output_file = "elk_nsd.pdf",
              params = list(elk_data = elk)),
+
+# >> HOME RANGE ------------------------------------------------------------
+
   #### SEASONAL HOME RANGE ESTIMATES ####
   ##### Minimum Convex Polygons (MCPs) #####
   tar_target(winter_mcp, seasonal_mcp(elk = elk,
@@ -333,8 +336,7 @@ list(
                                                 return(out)
                                               }) |>
                dplyr::bind_rows()),
-  # And finally, the cumulative union shapes of the polygons themselves!
-  # MCP
+  ##### Cumulative home range #####
   tar_target(cumulative_winter_mcp, cumulative_shp(winter_mcp)),
   tar_target(cumulative_winter_dbbmm, cumulative_shp(winter_dbbmm)),
   #### STEP LENGTHS ####
@@ -377,15 +379,17 @@ list(
                                 sd_nsd = sd(NSD, na.rm = TRUE),
                                 median_nsd = median(NSD, na.rm = TRUE),
                                 N = dplyr::n())),
-  #### DEM ATTRIBUTES ####
-  ##### Download and extract DEM attributes #####
+
+# >> HABITAT SELECTION ANALYSIS --------------------------------------------
+
+  #### DATA EXTRACTION ####
+  ##### DEM attributes #####
   # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
   # extract elevation, slope grade (%), slope aspect (degrees), and
   # roughness.
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
   tar_target(elk_dem, extract_dem(elk, cded_path = cded)),
-  #### LiDAR ATTRIBUTES ####
-  ##### Download and extract LiDAR attributes #####
+  ##### LiDAR attributes #####
   # Pull the LiDAR-derived data products off the W:/ drive onto local
   # machine + keep track of it if it changes on the server, then extract
   # the data from it (elevation, slope grade (%), canopy height, edge
@@ -418,8 +422,7 @@ list(
   tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
   tar_target(elk_chm, extract_chm(elk = elk,
                                   path = chm_path)),
-  #### VRI ATTRIBUTES ####
-  ##### Download and extract VRI attributes #####
+  ##### VRI attributes #####
   # Note we are using the improved VRI layer that was provided by Madrone.
   # tar_target(madrone_vri_gdb_path,
   #            "W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb",
