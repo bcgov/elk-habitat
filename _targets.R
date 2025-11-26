@@ -379,6 +379,10 @@ list(
                                 sd_nsd = sd(NSD, na.rm = TRUE),
                                 median_nsd = median(NSD, na.rm = TRUE),
                                 N = dplyr::n())),
+  ##### 99 pctl step length #####
+  # The 99th pctl step length is the distance that 99% of the elk are 
+  # moving within the 3 hr gap between successive fixes. This will be
+  # used to buffer 
 
 # >> HABITAT SELECTION ANALYSIS --------------------------------------------
 
@@ -456,7 +460,36 @@ list(
                                            "SPECIES_CD_1", # spp composition code - leading species
                                            "SPECIES_CD_2", 
                                            "SPECIES_CD_3",
-                                           "Creation_Date")))#,
+                                           "Creation_Date"))),
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))
+  #### RANDOM POINTS SELECTION ####
+  ##### Availability MCPs #####
+  # Rather than pull from the 95 percentile MCPs, known available habitat
+  # should pull from 100% of the area covered by the GPS points. The area
+  # we draw from for availability is just that - *available* space - and it
+  # is *not* equivalent to a home range. So, draw MCPs around any points
+  # that have passed our data QC filters.
+  tar_target(winter_rsf_mcp, seasonal_mcp(elk = elk,
+                                      season = winter,
+                                      min_days = 0, # we want to include the full dataset, regardless of minimum N points
+                                      percent = 100) |> # 100% MCP - include all points
+               sf::st_union() |>
+               sf::st_write(paste0("temp/Pipeline outputs/MCP_RSF_Winter.shp"),
+                            append = FALSE)),
+  tar_target(spring_rsf_mcp, seasonal_mcp(elk = elk,
+                                          season = spring,
+                                          min_days = 0, # we want to include the full dataset, regardless of minimum N points
+                                          percent = 100) |> # 100% MCP - include all points
+               sf::st_union() |>
+               sf::st_write(paste0("temp/Pipeline outputs/MCP_RSF_Spring.shp"),
+                            append = FALSE)),
+  tar_target(summer_rsf_mcp, seasonal_mcp(elk = elk,
+                                          season = summer,
+                                          min_days = 0, # we want to include the full dataset, regardless of minimum N points
+                                          percent = 100) |> # 100% MCP - include all points
+               sf::st_union() |>
+               sf::st_write(paste0("temp/Pipeline outputs/MCP_RSF_Summer.shp"),
+                            append = FALSE))
 )
+

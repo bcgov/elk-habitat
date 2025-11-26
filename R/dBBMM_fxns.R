@@ -44,7 +44,7 @@ seasonal_dbbmm <- function(elk, season, min_days = NA, ...) {
                       as.POSIXct(format = "%m-%d-%Y", tz = "America/Vancouver"))
   
   # Subset to only include season of interest
-  elk_seasons <- lapply(seasons, function(x) elk[which(elk$dttm >= x[1] & elk$dttm <= x[2]), ])
+  elk_seasons <- lapply(seasons, function(x) elk[which(lubridate::date(elk$dttm) >= x[1] & lubridate::date(elk$dttm) <= x[2]), ])
   names(elk_seasons) <- paste0("x", years) # R doesn't play nice with names that start w a number
   
   # Drop any empty seasons (e.g., Spring 2024 would be after the default cutoff date of March 31 2024)
