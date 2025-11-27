@@ -38,8 +38,8 @@ detection_efficiency|stem|9b30fbc43eb62da9|8d8488432aca6501|0135757affed2e7e|947
 dets_per_elk|stem|9ea9de4cf64cc701|cffc3ee6ced78c00|0e32a3ce99815265|-360331643||t20248.8696885664s|73e589b388d3f2b1|172|rds|local|vector|||0.11||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
 elk|stem|4a421396a5893093|828064bfaffe2696|959f5a658c71a7c1|-188372202||t20248.707131434s|fc327d8efd2fcd21|29184672|rds|local|vector|||360.62|Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Message 6 Field dttm create as date field, though DateTime requested.. GDAL Message 1 Value 103994407.081 of field NSD of feature 320 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104914962.474999994 of field NSD of feature 321 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104705113.225999996 of field NSD of feature 322 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105109748.726999998 of field NSD of feature 323 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105713927.145999998 of field NSD of feature 324 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 107216481.253000006 of field NSD of feature 325 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 100120932.984999999 of field NSD of feature 326 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 102755309.833000004 of field NSD of feature 327 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104171478.883000001 of field NSD of feature 328 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104128103.865999997 of field NSD of feature 329 not successfully written. Possibly due to too larger number w|
-elk_chm|stem|f828c336b00f14fb|71266482f5ce580b|efb35f105a0205c8|-323457739||t20248.8943709088s|f3d51ee5e5ada658|2283884|rds|local|vector|||8.9||
-elk_dem|stem|9ece844e2e16d2ad|a0ef153da88ced48|cd860afa50aae217|1885558796||t20248.895389253s|34036a7db61e0075|3783058|rds|local|vector|||24.14||
+elk_chm|stem|f828c336b00f14fb|6eff3ea325a5d7f0|7ea21807e5e4fd47|-323457739||t20419.7293635583s|f3d51ee5e5ada658|2283884|rds|local|vector|||10.98||
+elk_dem|stem|9ece844e2e16d2ad|aaeea8ee6f238e2f|654e8427ea6f5a73|1885558796||t20419.7386406251s|34036a7db61e0075|3783058|rds|local|vector|||42.44||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|6bae7970375258f3|94d5abc6f5fa7398|7649efbf05f8a678|-2021513789||t20248.8705831503s|568c5e6e1e4387a7|146101721|rds|local|vector|||0.01||
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
@@ -48,18 +48,18 @@ elk_per_month|stem|b2e2184542180755|34b671afed2e2692|505590d63b391b50|-293717621
 elk_per_month_plot|function|20740411dc9e6e24|||||||||||||||
 elk_per_year_month|stem|6dc99aebe342294a|7f857d14421b1f2e|cd9aab9a1383470c|692555464||t20248.8941788041s|d9080b1314af5574|528|rds|local|vector|||0.07||
 elk_per_year_month_plot|function|bcfd85732921d5e0|||||||||||||||
-elk_uwr|stem|68457f37dd129085|aa7b666448798592|96e8566c8aaeecdd|-1088510592||t20248.8703688231s|1813142ec6e12c87|1339550|rds|local|vector|||58.58||
-elk_vri|stem|750031d8650ce743|5eddc8401af3af5e|65c6cba8982a1fa2|30184935||t20398.9134617126s|9d0202f0ac58c15c|2788462|rds|local|vector|||17.38|attribute variables are assumed to be spatially constant throughout all geometries|
-extract_aspect|function|51978e47b39bbbbd|||||||||||||||
-extract_chm|function|aa787ca0cac449b3|||||||||||||||
-extract_dem|function|df1b1a3940b3219b|||||||||||||||
-extract_elevation|function|de3da352b88d1c56|||||||||||||||
-extract_roughness|function|c3a4b2bca9c07efd|||||||||||||||
-extract_slope|function|439790adca07790e|||||||||||||||
-extract_uwr|function|280e4944e64df5c9|||||||||||||||
-extract_uwr_lyr|function|637f5737df35e4c1|||||||||||||||
-extract_vri|function|880ac76e89778e9c|||||||||||||||
-extract_vri_edges|function|fbcfbd935db67d7d|||||||||||||||
+elk_uwr|stem|68457f37dd129085|8d1ea3e7887be7ee|524034d7c8cbbd7a|-1088510592||t20419.7301862552s|1813142ec6e12c87|1339550|rds|local|vector|||70.81||
+elk_vri|stem|0609f4f5065a8457|3397cd3e74625890|28187abc8be1b46c|30184935||t20419.7381364448s|4165c2cb2542b48b|2807139|rds|local|vector|||42.35|attribute variables are assumed to be spatially constant throughout all geometries|
+extract_aspect|function|e722cb8c6a77b0df|||||||||||||||
+extract_chm|function|bb7c44026e7a7e0f|||||||||||||||
+extract_dem|function|fdc911684d754783|||||||||||||||
+extract_elevation|function|fc349fe66eed0a3a|||||||||||||||
+extract_roughness|function|73637308bede2c76|||||||||||||||
+extract_slope|function|3d5162b08ff873d5|||||||||||||||
+extract_uwr|function|a5d71e14b92bab5b|||||||||||||||
+extract_uwr_lyr|function|e9a185d741e7b39b|||||||||||||||
+extract_vri|function|ba7489e87225610d|||||||||||||||
+extract_vri_edges|function|bc07afb96bd2c693|||||||||||||||
 ferrarini_goi|function|a44344d174e2a91f|||||||||||||||
 find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
