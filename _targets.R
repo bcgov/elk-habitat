@@ -398,7 +398,7 @@ list(
   # extract elevation, slope grade (%), slope aspect (degrees), and
   # roughness.
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
-  tar_target(elk_dem, extract_dem(pts, cded_path = cded)),
+  tar_target(elk_dem, extract_dem(pts = elk, cded_path = cded)),
   ##### LiDAR attributes #####
   # Pull the LiDAR-derived data products off the W:/ drive onto local
   # machine + keep track of it if it changes on the server, then extract
@@ -463,6 +463,7 @@ list(
                                            "SHRUB_HEIGHT",
                                            "SHRUB_CROWN_CLOSURE",
                                            "BCLCS_LEVEL_4", # broad species composition
+                                           "BCLCS_LEVEL_5", # broad spp composition, but with density
                                            "SPECIES_CD_1", # spp composition code - leading species
                                            "SPECIES_CD_2", 
                                            "SPECIES_CD_3",
