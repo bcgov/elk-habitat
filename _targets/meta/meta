@@ -94,6 +94,10 @@ p_elk_per_month|stem|0a86b207df062fa2|fb1b1ddd4d188b87|08235c06486dc25c|21391222
 p_elk_per_year_month|stem|22ed87656221ed68|e7c8f3f0705a43fa|b05c731a3acf9e76|-669630683||t20248.8706298468s|28c0a048a414a409|29359240|rds|local|vector|||0.1||
 prct_overlap|function|5b70fe85cb4cce78|||||||||||||||
 query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
+random_spring|stem|52608a77bc5fc1dc|e8c8d618ea77e4c1|e96f966755671fbf|1803844473||t20419.7598599001s|64c3839ba2e6fa43|7044219|rds|local|vector|||13.48||
+random_summer|stem|e47b2b20494f2fa0|52aa2331a20d5441|69b833406b21a388|-1628418462||t20419.7604197515s|1b63425093a8f886|7048424|rds|local|vector|||14.2||
+random_swp|stem|b5babca9debe1a6f|1a38ce778ad33b52|c22cb10552855940|-1905150981||t20419.7602453845s|ef4a907031b3c7e9|7039634|rds|local|vector|||17.03||
+random_winter|stem|3e9db3b52816cc6f|9b6c98598923ecd6|9ad38b636ad5e2ba|2030135424||t20419.7600382019s|b7de5e93c5014bda|7051312|rds|local|vector|||14.58||
 rarify_pts|function|8e9017b7cb1d3c7f|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
 read_vri|function|16df774cb8cb8e9c|||||||||||||||

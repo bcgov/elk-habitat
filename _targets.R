@@ -131,7 +131,7 @@ list(
              output_file = "elk_nsd.pdf",
              params = list(elk_data = elk)),
 
-# >> HOME RANGE ------------------------------------------------------------
+  # >> HOME RANGE ####
 
   #### SEASONAL HOME RANGE ESTIMATES ####
   ##### Minimum Convex Polygons (MCPs) #####
@@ -390,7 +390,7 @@ list(
                dplyr::pull() |> 
                quantile(0.99)),
 
-# >> HABITAT SELECTION ANALYSIS --------------------------------------------
+  # >> HABITAT SELECTION ANALYSIS ####
 
   #### GPS DATA EXTRACTION ####
   ##### DEM attributes #####
@@ -470,7 +470,7 @@ list(
                                            "Creation_Date"))),
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))
-  #### RANDOM POINTS SELECTION ####
+  #### DEFINE AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat
   # should pull from 100% of the area covered by the GPS points. The area
@@ -543,6 +543,16 @@ list(
                sf::st_intersection(study_area) |>
                sf::st_write("temp/Pipeline outputs/MCP_RSF_SWP.shp",
                             append = FALSE)
-             )
+             ),
+  #### RANDOM POINTS ####
+  ##### Sample random pts #####
+  # Sample random points within each of our availability MCPs to use in RSFs
+  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk))),
+  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk))),
+  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk))),
+  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)))
+  ##### Extract attributes from random pts #####
+  
+
 )
 
