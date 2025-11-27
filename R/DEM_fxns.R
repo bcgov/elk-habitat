@@ -27,7 +27,7 @@ query_cded <- function(elk, output_dir) {
 
 #### PROCESS DEM ####
 
-extract_elevation <- function(elk, cded_path) {
+extract_elevation <- function(pts, cded_path) {
   # Load up CDED VRT
   cded <- terra::rast(cded_path)
   # Extract CRS
@@ -35,18 +35,18 @@ extract_elevation <- function(elk, cded_path) {
   cded_epsg <- stringr::str_extract(cded_crs, "EPSG.*$") |> 
     stringr::str_extract(pattern = "\\d+") |>
     as.numeric()
-  # Transform elk data to match DEM CRS
-  elk <- sf::st_transform(elk, cded_epsg)
+  # Transform pts data to match DEM CRS
+  pts <- sf::st_transform(pts, cded_epsg)
   # Extract elevation
-  out <- terra::extract(cded, elk, ID = FALSE)
+  out <- terra::extract(cded, pts, ID = FALSE)
   # Return out
-  out <- cbind(elk$idposition, out)
+  out <- cbind(pts$idposition, out)
   names(out) <- c("idposition", "elevation_m")
   return(out)
 }
 
 
-extract_slope <- function(elk, cded_path) {
+extract_slope <- function(pts, cded_path) {
   # Load up CDED VRT
   cded <- terra::rast(cded_path)
   # Extract CRS
@@ -54,23 +54,23 @@ extract_slope <- function(elk, cded_path) {
   cded_epsg <- stringr::str_extract(cded_crs, "EPSG.*$") |> 
     stringr::str_extract(pattern = "\\d+") |>
     as.numeric()
-  # Transform elk data to match DEM CRS
-  elk <- sf::st_transform(elk, cded_epsg)
+  # Transform pts data to match DEM CRS
+  pts <- sf::st_transform(pts, cded_epsg)
   # Transform DEM to slope
   slope <- terra::terrain(cded, v = "slope", unit = "radians")
   # Extract slope
-  out <- terra::extract(slope, elk, ID = FALSE)
+  out <- terra::extract(slope, pts, ID = FALSE)
   # Convert from degrees to %
   out$slope_prct <- tan(out$slope)
   # Return out
-  out <- cbind(elk$idposition, out)
+  out <- cbind(pts$idposition, out)
   names(out) <- c("idposition", "slope_rad", "slope_prct")
   out <- out[,c("idposition", "slope_prct")]
   return(out)
 }
 
 
-extract_aspect <- function(elk, cded_path) {
+extract_aspect <- function(pts, cded_path) {
   # Load up CDED VRT
   cded <- terra::rast(cded_path)
   # Extract CRS
@@ -78,20 +78,20 @@ extract_aspect <- function(elk, cded_path) {
   cded_epsg <- stringr::str_extract(cded_crs, "EPSG.*$") |> 
     stringr::str_extract(pattern = "\\d+") |>
     as.numeric()
-  # Transform elk data to match DEM CRS
-  elk <- sf::st_transform(elk, cded_epsg)
+  # Transform pts data to match DEM CRS
+  pts <- sf::st_transform(pts, cded_epsg)
   # Transform DEM to aspect
   aspect <- terra::terrain(cded, v = "aspect", unit = "degrees")
   # Extract aspect
-  out <- terra::extract(aspect, elk, ID = FALSE)
+  out <- terra::extract(aspect, pts, ID = FALSE)
   # Return out
-  out <- cbind(elk$idposition, out)
+  out <- cbind(pts$idposition, out)
   names(out) <- c("idposition", "slope_aspect")
   return(out)
 }
 
 
-extract_roughness <- function(elk, cded_path) {
+extract_roughness <- function(pts, cded_path) {
   # Load up CDED VRT
   cded <- terra::rast(cded_path)
   # Extract CRS
@@ -99,29 +99,29 @@ extract_roughness <- function(elk, cded_path) {
   cded_epsg <- stringr::str_extract(cded_crs, "EPSG.*$") |> 
     stringr::str_extract(pattern = "\\d+") |>
     as.numeric()
-  # Transform elk data to match DEM CRS
-  elk <- sf::st_transform(elk, cded_epsg)
+  # Transform pts data to match DEM CRS
+  pts <- sf::st_transform(pts, cded_epsg)
   # Transform DEM to roughness
   roughness <- terra::terrain(cded, v = "roughness")
   # Extract aspect
-  out <- terra::extract(roughness, elk, ID = FALSE)
+  out <- terra::extract(roughness, pts, ID = FALSE)
   # Return out
-  out <- cbind(elk$idposition, out)
+  out <- cbind(pts$idposition, out)
   names(out) <- c("idposition", "roughness")
   return(out)
 }
 
 
 # Wrap up all 4
-extract_dem <- function(elk, cded_path) {
+extract_dem <- function(pts, cded_path) {
   message("Extracting elevation...")
-  elev <- extract_elevation(elk, cded_path)
+  elev <- extract_elevation(pts, cded_path)
   message("Extracting slope...")
-  slope <- extract_slope(elk, cded_path)
+  slope <- extract_slope(pts, cded_path)
   message("Extracting aspect...")
-  aspect <- extract_aspect(elk, cded_path)
+  aspect <- extract_aspect(pts, cded_path)
   message("Extracting roughness...")
-  roughness <- extract_roughness(elk, cded_path)
+  roughness <- extract_roughness(pts, cded_path)
   
   # Merge all 3
   out <- merge(elev, slope, all = TRUE)

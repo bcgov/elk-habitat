@@ -392,13 +392,13 @@ list(
 
 # >> HABITAT SELECTION ANALYSIS --------------------------------------------
 
-  #### DATA EXTRACTION ####
+  #### GPS DATA EXTRACTION ####
   ##### DEM attributes #####
   # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
   # extract elevation, slope grade (%), slope aspect (degrees), and
   # roughness.
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
-  tar_target(elk_dem, extract_dem(elk, cded_path = cded)),
+  tar_target(elk_dem, extract_dem(pts, cded_path = cded)),
   ##### LiDAR attributes #####
   # Pull the LiDAR-derived data products off the W:/ drive onto local
   # machine + keep track of it if it changes on the server, then extract
@@ -418,19 +418,19 @@ list(
                                   local_path = "GIS/LiDAR products",
                                   download = FALSE), # set to FALSE bc I just manually moved it over in the end
              format = "file"),
-  tar_target(elk_uwr, extract_uwr(elk = elk,
-                                    gdb = uwr_lidar_gdb,
-                                    layers = c("canopy_height",
-                                               "Edge_Category",
-                                               "Edge_Distance_LiDAR",
-                                               "elevation",
-                                               "slope_percent")
+  tar_target(elk_uwr, extract_uwr(pts = elk,
+                                  gdb = uwr_lidar_gdb,
+                                  layers = c("canopy_height",
+                                             "Edge_Category",
+                                             "Edge_Distance_LiDAR",
+                                             "elevation",
+                                             "slope_percent")
                                     )),
   # Since the UWR layers might not be suitable for this analysis, let's
   # also extract data from a crown height model that was provided to us
   # by BCTS.
   tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
-  tar_target(elk_chm, extract_chm(elk = elk,
+  tar_target(elk_chm, extract_chm(pts = elk,
                                   path = chm_path)),
   ##### VRI attributes #####
   # Note we are using the improved VRI layer that was provided by Madrone.
@@ -443,7 +443,7 @@ list(
                                                    download = FALSE)), # set to FALSE bc I just manually moved it over in the end
   tar_target(vri, read_vri(gdb = madrone_vri_gdb)),
   #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
-  tar_target(elk_vri, extract_vri(feature = elk,
+  tar_target(elk_vri, extract_vri(pts = elk,
                                   vri = vri,
                                   cols = c("Shape_Area",
                                            "INTERPRETATION_DATE",

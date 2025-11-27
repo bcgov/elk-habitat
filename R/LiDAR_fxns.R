@@ -29,7 +29,7 @@ download_from_server <- function(server_path, local_path, download = TRUE) {
 
 # Generic function to extract data from any of these
 # layers
-extract_uwr_lyr <- function(elk, gdb, layer) {
+extract_uwr_lyr <- function(pts, gdb, layer) {
   # Load up the layer
   gdb_dat <- terra::rast(gdb, subds = layer)
   # Extract CRS
@@ -37,12 +37,12 @@ extract_uwr_lyr <- function(elk, gdb, layer) {
   gdb_dat_epsg <- stringr::str_extract(gdb_dat_crs, "EPSG.*$") |> 
     stringr::str_extract(pattern = "\\d+") |>
     as.numeric()
-  # Transform elk data to match DEM CRS
-  elk <- sf::st_transform(elk, gdb_dat_epsg)
+  # Transform pts data to match DEM CRS
+  pts <- sf::st_transform(pts, gdb_dat_epsg)
   # Extract raster value
-  out <- terra::extract(gdb_dat, elk, ID = FALSE)
+  out <- terra::extract(gdb_dat, pts, ID = FALSE)
   # Return out
-  out <- cbind(elk$idposition, out)
+  out <- cbind(pts$idposition, out)
   names(out)[1] <- "idposition"
   # Pare down to only cols with data
   out <- na.omit(out)
@@ -50,11 +50,11 @@ extract_uwr_lyr <- function(elk, gdb, layer) {
 }
 
 # Bundle extracting all of them together
-extract_uwr <- function(elk, gdb, layers) {
+extract_uwr <- function(pts, gdb, layers) {
   # Extract out data from each relevant layer
   uwr <- lapply(layers, function(l) {
     message("Extracting ", l, "...")
-    l_out <- extract_uwr_lyr(elk = elk, gdb = gdb, layer = l)
+    l_out <- extract_uwr_lyr(pts = pts, gdb = gdb, layer = l)
     return(l_out)
   })
   # Assign the datatype as a column name to each df
@@ -73,7 +73,7 @@ extract_uwr <- function(elk, gdb, layers) {
 
 
 # Extract from Crown Height Model raster directly, rather than the UWR GDB
-extract_chm <- function(elk, path) {
+extract_chm <- function(pts, path) {
   message("Extracting crown height model data...")
   # Load up the raster
   chm <- terra::rast(path)
@@ -82,12 +82,12 @@ extract_chm <- function(elk, path) {
   dat_epsg <- stringr::str_extract(dat_crs, "EPSG.*$") |> 
     stringr::str_extract(pattern = "\\d+") |>
     as.numeric()
-  # Transform elk data to match DEM CRS
-  elk <- sf::st_transform(elk, dat_epsg)
+  # Transform pts data to match DEM CRS
+  pts <- sf::st_transform(pts, dat_epsg)
   # Extract raster value
-  out <- terra::extract(chm, elk, ID = FALSE)
+  out <- terra::extract(chm, pts, ID = FALSE)
   # Return out
-  out <- cbind(elk$idposition, out)
+  out <- cbind(pts$idposition, out)
   names(out)[1] <- "idposition"
   # Pare down to only cols with data
   out <- na.omit(out)
