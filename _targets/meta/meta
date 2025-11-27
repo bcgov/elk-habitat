@@ -104,19 +104,25 @@ seasonal_overlap_summary|stem|1fc3ff9dbd8f5f89|1fcfbc0c1dbcaf3a|3d865cf280392439
 spring|object|6398ef5e90b44e6d|||||||||||||||
 spring_dbbmm|stem|035a00ad92d7d0d6|097b0d7b735f88b6|ba1b2bfd64b3c250|1234634189||t20418.9858412596s|49287f6969807657|3912419|rds|local|vector|||1879.72||
 spring_mcp|stem|7251b074c4e1f02e|b8b92ce6deeb7d5b|52146cf8a39c1adb|2029814444||t20418.929712682s|290c852846b2e8a5|34407|rds|local|vector|||9.81||
-spring_rsf_mcp|stem|40a2d12f4af22e32|c0f76758972203b2|40c275d3061cf356|436210894||t20418.9298065395s|eb885ebdf089cb4c|13491|rds|local|vector|||4.02||
+spring_rsf_mcp|stem|93380dcf4d7627bd|0ad717f5eaec2935|2e1f50cc9d4c07f6|436210894||t20419.0166786598s|65edc19c06eda07a|82890|rds|local|vector|||4.47||
 st_edge_dist|function|67233d498ccee62c|||||||||||||||
+step_length_buffer|stem|17f42ec8a3e9718e|5575f7cfb463632e|1e1cad4baf0073e6|-1689872844||t20418.9938614805s|afe1c0564fcfafab|85|rds|local|vector|||0.01||
 step_length_seasonal_summary|stem|84f9cd1453ca39e6|179992cd659af689|1e1cad4baf0073e6|-1064318883||t20266.7279821753s|378c305854a4daa0|440|rds|local|vector|||0.07||
 step_length_swp_summary|stem|e7a96de39cef310e|fe5abe52ea4151c2|1e1cad4baf0073e6|-448053997||t20266.7318718934s|c5d2549088e4e73e|505|rds|local|vector|||0.06||
 step_lengths_3hr|stem|bee70f5180aa6cf2|f2e0bf5e73fcb64c|b226fc20fcd1fd8c|-1194693083||t20266.7279803181s|aef6e5937c3c2393|16764815|rds|local|vector|||0.28||
 steplength|function|97a0717a017cb942|||||||||||||||
+study_area|stem|c1a0f74a05dd2edb|978954f74551f375|07cecfa545574e7e|-822575283||t20419.0166255603s|0808d3549dece7dc|27705|rds|local|vector|||8.59|repeating attributes for all subgeometries for which they may not be constant. attribute variables are assumed to be spatially constant throughout all geometries|
+study_area_poly|function|b2d1e003e6d8b14d|||||||||||||||
 summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
 summarize_overlap|function|9836c2414ab06df1|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
 summer_dbbmm|stem|200ef3dbc41a5d2c|8b5a0c6a15234658|cf375fd1849eaa68|320407742||t20418.9450906233s|82267307cb5e0356|3726191|rds|local|vector|||1003.26||
 summer_mcp|stem|1b4e229227d756ae|239ca60e88e96776|0f9f5540c287cd13|1803065787||t20418.9295987738s|617173fa462f540b|35246|rds|local|vector|||10.85||
-summer_rsf_mcp|stem|18aeb6af4e4e115c|a37ae0f810764f9c|dc1e9bd862a12f30|-987843483||t20418.9297597736s|e402625db44e0bdb|14321|rds|local|vector|||4.03||
+summer_rsf_mcp|stem|13d9cb7819670cbb|c662f3ec4d8502c6|e0e22989efa19377|-987843483||t20419.0167269088s|5e6999d0b251dfbc|89617|rds|local|vector|||4.14||
+swp_dates|object|bd5ecf35a6fb3fcc|||||||||||||||
 swp_days|object|a66a035b5e000a9e|||||||||||||||
+swp_elk|stem|63218ec186e5835a|0e548acfba9dd6dc|333e020b5d869d8d|-1053022346||t20419.0330042473s|514534cdb13dcc77|156|rds|local|vector|||0.43||
+swp_rsf_mcp|stem|f37df66191b8c37b|fa627f5f215e2fbd|9445ddc933b52d51|1485982528||t20419.0502920389s|2466feaff4b7400d|66820|rds|local|vector|||3.65||
 swp_weeks|object|b40b8812ed5a52af|||||||||||||||
 szn_margin|object|c7b1ac4588323176|||||||||||||||
 szn_window|object|87c2fdbe3686b6eb|||||||||||||||
@@ -138,6 +144,6 @@ weekly_window|object|87c2fdbe3686b6eb|||||||||||||||
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|cf1831013bbbb6e3|c81b66de12f68329|189bb62d099851fc|-99852116||t20418.9640796604s|a0db12cdfa30e723|3756596|rds|local|vector|||1639.57||
 winter_mcp|stem|9f216aaecec42f1b|7bcad1dd10552d50|ec12cc3d5c55fd3d|844460800||t20418.9294728067s|c5d31fa5dc4df19b|29699|rds|local|vector|||11||
-winter_rsf_mcp|stem|a7fc089f25f4d982|d4ed32056b96e613|52422394a55a6b8e|-994354900||t20418.9293452s|dc334f923f3a1754|16926|rds|local|vector|||5.28||
+winter_rsf_mcp|stem|fc5d0510cfe20d5a|eb91c3a5b7d9979a|a3c3ece1ad2d5164|-994354900||t20419.0167913052s|ec9291986bf9d710|95113|rds|local|vector|||5.53||
 yearly_prct_overlap|function|6d8800d84d72e357|||||||||||||||
 yearly_seasonal_overlap_summary|stem|eca055662d946b5b|0c48be53267369b6|3d865cf280392439|-1519448991||t20418.9862666011s|e143a0c7741721eb|1246|rds|local|vector|||0.09||

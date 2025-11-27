@@ -32,6 +32,8 @@ cutoff_date <- "2024-04-01"
 non_swp_elk <- c("20-1001", "20-1002")
 
 # Severe winter period was 18 Dec 2021 - 14 Jan 2022
+swp_dates <- seq(lubridate::ymd("2021-12-18"), lubridate::ymd("2022-01-14"), by = "1 day")
+
 #lubridate::isoweek("2021-12-18")
 #lubridate::isoweek("2022-01-14")
 swp_weeks <- c(50, 51, 52, 53, 1, 2) # weeks 51 thru 1
@@ -382,7 +384,11 @@ list(
   ##### 99 pctl step length #####
   # The 99th pctl step length is the distance that 99% of the elk are 
   # moving within the 3 hr gap between successive fixes. This will be
-  # used to buffer 
+  # used to buffer the RSF polygons down the line.
+  tar_target(step_length_buffer, step_lengths_3hr |> 
+               dplyr::select(step) |> 
+               dplyr::pull() |> 
+               quantile(0.99)),
 
 # >> HABITAT SELECTION ANALYSIS --------------------------------------------
 
@@ -464,32 +470,78 @@ list(
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))
   #### RANDOM POINTS SELECTION ####
-  ##### Availability MCPs #####
+  ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat
   # should pull from 100% of the area covered by the GPS points. The area
   # we draw from for availability is just that - *available* space - and it
   # is *not* equivalent to a home range. So, draw MCPs around any points
   # that have passed our data QC filters.
+  # First create a polygon that is the shapefile of our overall study area
+  # This will be used to clip our RSF MCPs to land (i.e. ensure our RSF MCPs
+  # all occur in areas elk can actually access)
+  tar_target(study_area, study_area_poly(elk)),
+  # Winter RSF MCP
   tar_target(winter_rsf_mcp, seasonal_mcp(elk = elk,
                                       season = winter,
                                       min_days = 0, # we want to include the full dataset, regardless of minimum N points
                                       percent = 100) |> # 100% MCP - include all points
                sf::st_union() |>
-               sf::st_write(paste0("temp/Pipeline outputs/MCP_RSF_Winter.shp"),
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points. In theory, an elk could move half it's step length out, and then half it's step length back in within the 3 hour gap btwn fixes.
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_Winter.shp",
                             append = FALSE)),
+  # Spring RSF MCP
   tar_target(spring_rsf_mcp, seasonal_mcp(elk = elk,
                                           season = spring,
                                           min_days = 0, # we want to include the full dataset, regardless of minimum N points
                                           percent = 100) |> # 100% MCP - include all points
                sf::st_union() |>
-               sf::st_write(paste0("temp/Pipeline outputs/MCP_RSF_Spring.shp"),
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_Spring.shp",
                             append = FALSE)),
+  # Summer RSF MCP
   tar_target(summer_rsf_mcp, seasonal_mcp(elk = elk,
                                           season = summer,
                                           min_days = 0, # we want to include the full dataset, regardless of minimum N points
                                           percent = 100) |> # 100% MCP - include all points
                sf::st_union() |>
-               sf::st_write(paste0("temp/Pipeline outputs/MCP_RSF_Summer.shp"),
-                            append = FALSE))
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_Summer.shp",
+                            append = FALSE)),
+  ##### Availability MCPs - SWP #####
+  # The severe winter period avialability polygon is a special case
+  # of the Winter polygons. It is the merged Winter MCPs of only elk
+  # that experienced the SWP (i.e. were collared and we have tracking
+  # for).
+  # First subset to SWP elk
+  # These are the elk IDs that specifically experienced the 2021
+  # severe winter (i.e. cuts out any that also weren't collared
+  # yet) 
+  tar_target(swp_elk, elk |> 
+               sf::st_drop_geometry() |>
+               dplyr::filter(lubridate::date(dttm) %in% swp_dates) |>
+               dplyr::select(animal_id) |> 
+               dplyr::distinct() |> 
+               dplyr::pull()),
+  # Severe Winter Period RSF MCP
+  tar_target(swp_rsf_mcp, elk |>
+               dplyr::filter(animal_id %in% swp_elk) |>
+               seasonal_mcp(season = winter,
+                            min_days = 0,
+                            percent = 100) |> # 100% MCP - include all points
+               # Merge in two weekly MCPs from two individuals whose 
+               # Dec 14-Dec 31 data is not actually captured within the Winter MCP
+               dplyr::bind_rows(weekly_mcps |>
+                                dplyr::filter((animal_id == '20-1000' & isoyear_week == '2021.51')|
+                                              (animal_id == '20-0982' & isoyear_week == '2021.52'))
+                                ) |>
+               sf::st_union() |>
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_SWP.shp",
+                            append = FALSE)
+             )
 )
 
