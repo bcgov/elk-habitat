@@ -78,6 +78,38 @@ szn_margin <- 11
 weekly_window <- 31
 weekly_margin <- 11
 
+# UWR LiDAR columns to extract
+lidar_cols <- c("canopy_height",
+                "Edge_Category",
+                "Edge_Distance_LiDAR",
+                "elevation",
+                "slope_percent")
+
+# VRI columns to extract
+vri_cols <- c("Shape_Area",
+              "INTERPRETATION_DATE",
+              "REFERENCE_YEAR",
+              "ATTRIBUTION_BASE_DATE",
+              "PROJECTED_DATE",
+              "HARVEST_DATE",
+              "Disturbance_Start_Date",
+              "Disturbance_End_Date",
+              "Harvest_Year",
+              "PROJ_AGE_1",
+              "NEW_VRI_CC_RES_AGE",
+              "BEST_AGE_CL_STS",
+              "PROJ_HEIGHT_1",
+              "VRI_LIVE_STEMS_PER_HA",
+              "CROWN_CLOSURE",
+              "SHRUB_HEIGHT",
+              "SHRUB_CROWN_CLOSURE",
+              "BCLCS_LEVEL_4", # broad species composition
+              "BCLCS_LEVEL_5", # broad spp composition, but with density
+              "SPECIES_CD_1", # spp composition code - leading species
+              "SPECIES_CD_2", 
+              "SPECIES_CD_3",
+              "Creation_Date")
+
 #### PIPELINE ####
 list(
   #### SETUP ####
@@ -420,12 +452,7 @@ list(
              format = "file"),
   tar_target(elk_uwr, extract_uwr(pts = elk,
                                   gdb = uwr_lidar_gdb,
-                                  layers = c("canopy_height",
-                                             "Edge_Category",
-                                             "Edge_Distance_LiDAR",
-                                             "elevation",
-                                             "slope_percent")
-                                    )),
+                                  layers = lidar_cols)),
   # Since the UWR layers might not be suitable for this analysis, let's
   # also extract data from a crown height model that was provided to us
   # by BCTS.
@@ -445,29 +472,7 @@ list(
   #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
   tar_target(elk_vri, extract_vri(pts = elk,
                                   vri = vri,
-                                  cols = c("Shape_Area",
-                                           "INTERPRETATION_DATE",
-                                           "REFERENCE_YEAR",
-                                           "ATTRIBUTION_BASE_DATE",
-                                           "PROJECTED_DATE",
-                                           "HARVEST_DATE",
-                                           "Disturbance_Start_Date",
-                                           "Disturbance_End_Date",
-                                           "Harvest_Year",
-                                           "PROJ_AGE_1",
-                                           "NEW_VRI_CC_RES_AGE",
-                                           "BEST_AGE_CL_STS",
-                                           "PROJ_HEIGHT_1",
-                                           "VRI_LIVE_STEMS_PER_HA",
-                                           "CROWN_CLOSURE",
-                                           "SHRUB_HEIGHT",
-                                           "SHRUB_CROWN_CLOSURE",
-                                           "BCLCS_LEVEL_4", # broad species composition
-                                           "BCLCS_LEVEL_5", # broad spp composition, but with density
-                                           "SPECIES_CD_1", # spp composition code - leading species
-                                           "SPECIES_CD_2", 
-                                           "SPECIES_CD_3",
-                                           "Creation_Date"))),
+                                  cols = vri_cols)),
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))
   #### DEFINE AVAILABILITY ####
@@ -547,12 +552,43 @@ list(
   #### RANDOM POINTS ####
   ##### Sample random pts #####
   # Sample random points within each of our availability MCPs to use in RSFs
-  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk))),
-  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk))),
-  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk))),
-  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)))
-  ##### Extract attributes from random pts #####
-  
+  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
+  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
+  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
+  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
+  #### RANDOM DATA EXTRACTION ####
+  ##### DEM attributes #####
+  tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
+  tar_target(random_spring_dem, extract_dem(pts = random_spring, cded_path = cded)),
+  tar_target(random_summer_dem, extract_dem(pts = random_summer, cded_path = cded)),
+  tar_target(random_swp_dem, extract_dem(pts = random_swp, cded_path = cded)),
+  ##### LiDAR attributes #####
+  # TODO: add CHM
+  tar_target(random_winter_uwr, extract_uwr(pts = random_winter,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_spring_uwr, extract_uwr(pts = random_spring,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_summer_uwr, extract_uwr(pts = random_summer,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_swp_uwr, extract_uwr(pts = random_swp,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  ##### VRI attributes #####
+  tar_target(random_winter_vri, extract_vri(pts = random_winter,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_spring_vri, extract_vri(pts = random_spring,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_summer_vri, extract_vri(pts = random_summer,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_swp_vri, extract_vri(pts = random_swp,
+                                            vri = vri,
+                                            cols = vri_cols))
 
 )
 

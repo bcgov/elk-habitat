@@ -38,7 +38,7 @@ extract_vri_edges <- function(pts, vri) {
 
 
 
-extract_vri <- function(pts, id_col = "idposition",
+extract_vri <- function(pts, #id_col = "idposition",
                         vri, cols) {
   # Data health checks
   stopifnot("`pts` must be a sf class geometry." = inherits(pts, "sf"))
@@ -58,17 +58,33 @@ extract_vri <- function(pts, id_col = "idposition",
   #sf::st_geometry(pts) <- "geom"
   #sf::st_geometry(vri) <- "geom"
   
-  # Subset pts to just ID column
-  pts <- pts[,id_col]
+  # Update: removing ID col from fxn so it can generically run
+  # with any point feature rather than just the elk one.
+  ## Subset pts to just ID column
+  #pts <- pts[,id_col]
+  pts <- sf::st_geometry(pts)
   
+  ## Intersect with VRI
+  #ixn <- sf::st_intersection(pts, vri)
+  
+  # THIS IS IMPORTANT!! 
+  # The ORDER that you supply to st_intersection will affect the 
+  # row orders of the output. (vri, pts) will output the result 
+  # in the same order as `pts`, so you don't need an ID col. You
+  # can then run cbind(pts, output) and not worry about mismatched 
+  # row order.
+  # (pts, vri) will output the result in whatever order the vri
+  # data is in. You CANNOT simply then run cbind(pts, output),
+  # because output will be arranged according to VRI polygon ID, 
+  # NOT pts!
   # Intersect with VRI
-  ixn <- sf::st_intersection(pts, vri)
+  ixn <- sf::st_intersection(vri, pts)
   
   ixn <- sf::st_drop_geometry(ixn)
   return(ixn)
 }
 
-
+# TODO: if we end up using the edge dist fxn, remove id_col
 st_edge_dist <- function(feature, id_col = "idposition", edges) {
   # Data health checks
   stopifnot("`feature` must be a sf class geometry." = inherits(feature, "sf"))

@@ -39,9 +39,9 @@ extract_elevation <- function(pts, cded_path) {
   pts <- sf::st_transform(pts, cded_epsg)
   # Extract elevation
   out <- terra::extract(cded, pts, ID = FALSE)
-  # Return out
-  out <- cbind(pts$idposition, out)
-  names(out) <- c("idposition", "elevation_m")
+  # # Return out
+  # out <- cbind(pts$idposition, out)
+  # names(out) <- c("idposition", "elevation_m")
   return(out)
 }
 
@@ -60,12 +60,12 @@ extract_slope <- function(pts, cded_path) {
   slope <- terra::terrain(cded, v = "slope", unit = "radians")
   # Extract slope
   out <- terra::extract(slope, pts, ID = FALSE)
-  # Convert from degrees to %
+  # Convert from radians to %
   out$slope_prct <- tan(out$slope)
   # Return out
-  out <- cbind(pts$idposition, out)
-  names(out) <- c("idposition", "slope_rad", "slope_prct")
-  out <- out[,c("idposition", "slope_prct")]
+  # out <- cbind(pts$idposition, out)
+  # names(out) <- c("idposition", "slope_rad", "slope_prct")
+  # out <- out[,c("idposition", "slope_prct")]
   return(out)
 }
 
@@ -84,9 +84,9 @@ extract_aspect <- function(pts, cded_path) {
   aspect <- terra::terrain(cded, v = "aspect", unit = "degrees")
   # Extract aspect
   out <- terra::extract(aspect, pts, ID = FALSE)
-  # Return out
-  out <- cbind(pts$idposition, out)
-  names(out) <- c("idposition", "slope_aspect")
+  # # Return out
+  # out <- cbind(pts$idposition, out)
+  # names(out) <- c("idposition", "slope_aspect")
   return(out)
 }
 
@@ -103,11 +103,11 @@ extract_roughness <- function(pts, cded_path) {
   pts <- sf::st_transform(pts, cded_epsg)
   # Transform DEM to roughness
   roughness <- terra::terrain(cded, v = "roughness")
-  # Extract aspect
+  # Extract roughness
   out <- terra::extract(roughness, pts, ID = FALSE)
-  # Return out
-  out <- cbind(pts$idposition, out)
-  names(out) <- c("idposition", "roughness")
+  # # Return out
+  # out <- cbind(pts$idposition, out)
+  # names(out) <- c("idposition", "roughness")
   return(out)
 }
 
@@ -124,13 +124,16 @@ extract_dem <- function(pts, cded_path) {
   roughness <- extract_roughness(pts, cded_path)
   
   # Merge all 3
-  out <- merge(elev, slope, all = TRUE)
-  out <- merge(out, aspect, all = TRUE)
-  out <- merge(out, roughness, all = TRUE)
+  # out <- merge(elev, slope, all = TRUE)
+  # out <- merge(out, aspect, all = TRUE)
+  # out <- merge(out, roughness, all = TRUE)
+  
+  # No longer using ID column - can simply cbind
+  out <- cbind(elev, slope, aspect, roughness)
   
   # Clean up
   out$slope_prct <- round(out$slope_prct * 100, 1)
-  out$slope_aspect <- round(out$slope_aspect, 0)
+  out$aspect <- round(out$aspect, 0)
   
   return(out)
 }

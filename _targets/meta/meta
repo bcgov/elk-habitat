@@ -38,8 +38,8 @@ detection_efficiency|stem|9b30fbc43eb62da9|8d8488432aca6501|0135757affed2e7e|947
 dets_per_elk|stem|9ea9de4cf64cc701|cffc3ee6ced78c00|0e32a3ce99815265|-360331643||t20248.8696885664s|73e589b388d3f2b1|172|rds|local|vector|||0.11||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
 elk|stem|4a421396a5893093|828064bfaffe2696|959f5a658c71a7c1|-188372202||t20248.707131434s|fc327d8efd2fcd21|29184672|rds|local|vector|||360.62|Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Message 6 Field dttm create as date field, though DateTime requested.. GDAL Message 1 Value 103994407.081 of field NSD of feature 320 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104914962.474999994 of field NSD of feature 321 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104705113.225999996 of field NSD of feature 322 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105109748.726999998 of field NSD of feature 323 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105713927.145999998 of field NSD of feature 324 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 107216481.253000006 of field NSD of feature 325 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 100120932.984999999 of field NSD of feature 326 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 102755309.833000004 of field NSD of feature 327 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104171478.883000001 of field NSD of feature 328 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104128103.865999997 of field NSD of feature 329 not successfully written. Possibly due to too larger number w|
-elk_chm|stem|f828c336b00f14fb|6eff3ea325a5d7f0|7ea21807e5e4fd47|-323457739||t20419.7293635583s|f3d51ee5e5ada658|2283884|rds|local|vector|||10.98||
-elk_dem|stem|9ece844e2e16d2ad|aaeea8ee6f238e2f|654e8427ea6f5a73|1885558796||t20419.7386406251s|34036a7db61e0075|3783058|rds|local|vector|||42.44||
+elk_chm|stem|91abcaa271f6ea05|6eff3ea325a5d7f0|d557d78a3dc7f8db|-323457739||t20419.8393253598s|f6440a9042ff2bc9|384043|rds|local|vector|||21.39||
+elk_dem|stem|e70d451e41ebe04b|aaeea8ee6f238e2f|108dbb61687cfc69|1885558796||t20419.8622395846s|9f16ff87df45e295|5368976|rds|local|vector|||111.29||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|6bae7970375258f3|94d5abc6f5fa7398|7649efbf05f8a678|-2021513789||t20248.8705831503s|568c5e6e1e4387a7|146101721|rds|local|vector|||0.01||
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
@@ -48,17 +48,17 @@ elk_per_month|stem|b2e2184542180755|34b671afed2e2692|505590d63b391b50|-293717621
 elk_per_month_plot|function|20740411dc9e6e24|||||||||||||||
 elk_per_year_month|stem|6dc99aebe342294a|7f857d14421b1f2e|cd9aab9a1383470c|692555464||t20248.8941788041s|d9080b1314af5574|528|rds|local|vector|||0.07||
 elk_per_year_month_plot|function|bcfd85732921d5e0|||||||||||||||
-elk_uwr|stem|68457f37dd129085|8d1ea3e7887be7ee|524034d7c8cbbd7a|-1088510592||t20419.7301862552s|1813142ec6e12c87|1339550|rds|local|vector|||70.81||
-elk_vri|stem|0609f4f5065a8457|3397cd3e74625890|28187abc8be1b46c|30184935||t20419.7381364448s|4165c2cb2542b48b|2807139|rds|local|vector|||42.35|attribute variables are assumed to be spatially constant throughout all geometries|
-extract_aspect|function|e722cb8c6a77b0df|||||||||||||||
-extract_chm|function|bb7c44026e7a7e0f|||||||||||||||
-extract_dem|function|fdc911684d754783|||||||||||||||
-extract_elevation|function|fc349fe66eed0a3a|||||||||||||||
-extract_roughness|function|73637308bede2c76|||||||||||||||
-extract_slope|function|3d5162b08ff873d5|||||||||||||||
-extract_uwr|function|a5d71e14b92bab5b|||||||||||||||
-extract_uwr_lyr|function|e9a185d741e7b39b|||||||||||||||
-extract_vri|function|ba7489e87225610d|||||||||||||||
+elk_uwr|stem|dbae3f2dff341142|c32f396d15e831f8|78867043b1e6cb38|-1088510592||t20419.8497571745s|76ee4151d6378526|495101|rds|local|vector|||118.05||
+elk_vri|stem|5022f0e11948d44a|fc1fc2b973c8b3d8|42bdab62e51b84d3|30184935||t20419.8535849615s|1abe3056d76b40d1|25356144|rds|local|vector|||229.28|attribute variables are assumed to be spatially constant throughout all geometries|
+extract_aspect|function|e61c1ff6d2799bdc|||||||||||||||
+extract_chm|function|791b39d3f4c0e14f|||||||||||||||
+extract_dem|function|934f05a2aa0409da|||||||||||||||
+extract_elevation|function|a4323a3a0542b801|||||||||||||||
+extract_roughness|function|d34c2af095a2fced|||||||||||||||
+extract_slope|function|6a3ec43ecca65102|||||||||||||||
+extract_uwr|function|bcd3fbe9a8cb04d3|||||||||||||||
+extract_uwr_lyr|function|1b9e601a3071fb65|||||||||||||||
+extract_vri|function|70a32085359e7b3a|||||||||||||||
 extract_vri_edges|function|bc07afb96bd2c693|||||||||||||||
 ferrarini_goi|function|a44344d174e2a91f|||||||||||||||
 find_center|function|738ee6d69ce867bc|||||||||||||||
@@ -68,6 +68,7 @@ flagged_pts|stem|cf8db2bff0ccaa1c|06dab63f5aa25ddc|23e56ec4a18989e0|1665965602||
 full_collar_data|stem|c7b188dfe3b39be2|fcaac25f0f6c862d|74e190121af2c202|1289326002||t20242.919711579s|fb06c3f30cb074fd|12073699|rds|local|vector|||4.14|package RSQLite was built under R version 4.4.3|
 individual_dbbmm|function|3495f8b948f0a5cb|||||||||||||||
 individual_mcp|function|390e0ed3e3283042|||||||||||||||
+lidar_cols|object|96cc9ffa65341d87|||||||||||||||
 load_capture_data|function|ed5263bf9bc6840e|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
@@ -94,10 +95,22 @@ p_elk_per_month|stem|0a86b207df062fa2|fb1b1ddd4d188b87|08235c06486dc25c|21391222
 p_elk_per_year_month|stem|22ed87656221ed68|e7c8f3f0705a43fa|b05c731a3acf9e76|-669630683||t20248.8706298468s|28c0a048a414a409|29359240|rds|local|vector|||0.1||
 prct_overlap|function|5b70fe85cb4cce78|||||||||||||||
 query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
-random_spring|stem|52608a77bc5fc1dc|e8c8d618ea77e4c1|e96f966755671fbf|1803844473||t20419.7598599001s|64c3839ba2e6fa43|7044219|rds|local|vector|||13.48||
-random_summer|stem|e47b2b20494f2fa0|52aa2331a20d5441|69b833406b21a388|-1628418462||t20419.7604197515s|1b63425093a8f886|7048424|rds|local|vector|||14.2||
-random_swp|stem|b5babca9debe1a6f|1a38ce778ad33b52|c22cb10552855940|-1905150981||t20419.7602453845s|ef4a907031b3c7e9|7039634|rds|local|vector|||17.03||
-random_winter|stem|3e9db3b52816cc6f|9b6c98598923ecd6|9ad38b636ad5e2ba|2030135424||t20419.7600382019s|b7de5e93c5014bda|7051312|rds|local|vector|||14.58||
+random_spring|stem|264c9aba498df233|94881adcf9e365de|e96f966755671fbf|1803844473||t20419.7710479935s|507b6ac19101f9e2|7044362|rds|local|vector|||14.35||
+random_spring_dem|stem|80caa5afcaeabd01|4688574c2c3a8ec4|9adddd1b5fca877f|-882559391||t20419.8746071325s|4c686e0d2172b497|6433547|rds|local|vector|||68.53||
+random_spring_uwr|stem|17f16fa0a090709e|78017863a23073a3|9e8e60f0172eca07|675732823||t20419.8737805041s|cb84de0b2235c2fc|1102548|rds|local|vector|||138.88||
+random_spring_vri|stem|0d4d725519dbd93e|8e1ec0969bf782ac|0bb03af2197525de|36721359||t20419.8721644886s|f7e892baa2cd46b2|12483698|rds|local|vector|||184.75|attribute variables are assumed to be spatially constant throughout all geometries|
+random_summer|stem|f29ced121a90c32f|c3c0c44787d0cf74|69b833406b21a388|-1628418462||t20419.7712256638s|5fcf3677a376dd5a|7048562|rds|local|vector|||14.48||
+random_summer_dem|stem|5462ea920374056f|4d0db3ae2bfbfe93|2a54b7ef19993e79|-1612840113||t20419.8774949742s|ba7c0707a9345517|6493187|rds|local|vector|||83.68||
+random_summer_uwr|stem|b205ff70fd05df96|9cc8f4f2f904184a|ac0ce7b9c2f49343|943586207||t20419.8764910432s|56af9d98911d6590|1125373|rds|local|vector|||160.88||
+random_summer_vri|stem|3d17ef98325aa6d9|fe739900fabd4e18|6a2ec0fcc4582761|-1766705154||t20419.8807071039s|30eed9436f46ec17|11917652|rds|local|vector|||268.12|attribute variables are assumed to be spatially constant throughout all geometries|
+random_swp|stem|95f99acec9e2c087|c5cd2be5fa7ec6e5|c22cb10552855940|-1905150981||t20419.7706963912s|06f8a18f772ad429|7039764|rds|local|vector|||16.11||
+random_swp_dem|stem|336f662a1ef33ff0|dd0b5d4b970828f3|d4237dfc755ca4bc|-170673047||t20419.8654841005s|f666d0deeb867f31|6361908|rds|local|vector|||42||
+random_swp_uwr|stem|8440a0ef5226e928|f0213aaf9f9833de|fb4ac8badf3d9827|-1306453010||t20419.8631792667s|33d68720b434b86d|921288|rds|local|vector|||76.67||
+random_swp_vri|stem|c376cc7cbd4474d0|8511b0c3978f497e|bca377a1a2e5185f|-763469556||t20419.8649810469s|04f65a5a1c678afb|12053816|rds|local|vector|||98.84|attribute variables are assumed to be spatially constant throughout all geometries|
+random_winter|stem|04eb5f9a37d9b4bc|1aabfa0e5c79ae81|9ad38b636ad5e2ba|2030135424||t20419.7708720198s|45c3cfb16d8cf258|7051451|rds|local|vector|||14.35||
+random_winter_dem|stem|4c87510cf4b816bf|015c997ac65bf8a7|8e4dd88a629c452a|124403925||t20419.8699132868s|ec01676b380e2d98|6416716|rds|local|vector|||83.38||
+random_winter_uwr|stem|d17d7c8e9f7f0308|4da4378e39ed9355|2e9971dfb7148e34|-1997755743||t20419.8665907056s|4654d3a1ba960a9c|1076063|rds|local|vector|||94.43||
+random_winter_vri|stem|c212a173c68cc658|64920334b8ef9710|d1749d7d40d56ee6|1761764807||t20419.8688938191s|7400277869d6e5ac|12414156|rds|local|vector|||189.11|attribute variables are assumed to be spatially constant throughout all geometries|
 rarify_pts|function|8e9017b7cb1d3c7f|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
 read_vri|function|16df774cb8cb8e9c|||||||||||||||
@@ -134,6 +147,7 @@ unassigned_detections|stem|a216051b3f1068b6|6286e9ca467fe184|59ef7f677119210a|-1
 uwr_lidar_gdb|stem|d75c6248a3d67767|dc45d4d7d5da144c|86d3172805fa286a|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20134.1192011005s|d3256ba881f5d4b7|65536|file|local|vector|||0.36||
 uwr_lidar_gdb_path|stem|d75c6248a3d67767|794406ab5299b854|2c530c1562a7fbd1|2052183110|W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb|t20269.7701157308s|d3256ba881f5d4b7|65536|file|local|vector|||0.88||
 vri|stem|e33a0daac99c4a73|44ec05d8757c0cb7|f7f352d9d267200b|-1341468610||t20146.0132776079s|966d39975026ea8c|526153274|rds|local|vector|||1151.77|GDAL Message 1 organizePolygons received a polygon with more than 100 parts. The processing may be really slow.  You can skip the processing by setting METHODSKIP, or only make it analyze counterclock wise parts by setting METHODONLY_CCW if you can assume that the outline of holes is counterclock wise defined|
+vri_cols|object|0e6f8e2cd5a1e62d|||||||||||||||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
 weekly_dbbmm_seasonal_summary|stem|9027f05a75b9ace3|f49ea575bd1afc1f|360ed1ff55600e85|35394069||t20265.9446154756s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.02||

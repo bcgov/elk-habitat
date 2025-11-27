@@ -42,10 +42,10 @@ extract_uwr_lyr <- function(pts, gdb, layer) {
   # Extract raster value
   out <- terra::extract(gdb_dat, pts, ID = FALSE)
   # Return out
-  out <- cbind(pts$idposition, out)
-  names(out)[1] <- "idposition"
-  # Pare down to only cols with data
-  out <- na.omit(out)
+  # out <- cbind(pts$idposition, out)
+  # names(out)[1] <- "idposition"
+  # # Pare down to only cols with data
+  # out <- na.omit(out)
   return(out)
 }
 
@@ -59,15 +59,24 @@ extract_uwr <- function(pts, gdb, layers) {
   })
   # Assign the datatype as a column name to each df
   names(uwr) <- layers
-  invisible(lapply(layers, function(l) {
-    uwr[[l]][["layer"]] <<- names(uwr[[l]])[2] # add a column called "layer", whose values consist of the second column name
-    names(uwr[[l]])[2] <<- "value" # rename the second column name to "value"
-    uwr[[l]][["value"]] <<- as.numeric(uwr[[l]][["value"]]) # convert the data in "value" to be numeric data type
-  }))
-  # Merge all the uwr dfs into a single df
-  uwr <- dplyr::bind_rows(uwr)
-  # Widen
-  uwr <- tidyr::pivot_wider(uwr, names_from = "layer", values_from = "value")
+  
+  # Cut this...
+  # invisible(lapply(layers, function(l) {
+  #   uwr[[l]][["layer"]] <<- names(uwr[[l]])[2] # add a column called "layer", whose values consist of the second column name
+  #   names(uwr[[l]])[2] <<- "value" # rename the second column name to "value"
+  #   uwr[[l]][["value"]] <<- as.numeric(uwr[[l]][["value"]]) # convert the data in "value" to be numeric data type
+  # }))
+  # # Merge all the uwr dfs into a single df
+  # uwr <- dplyr::bind_rows(uwr)
+  # # Widen
+  # uwr <- tidyr::pivot_wider(uwr, names_from = "layer", values_from = "value")
+  
+  # ...Because we are no longer removing NAs from indivdual
+  # dfs at the individual extraction step (i.e. no longer running na.omit(out) 
+  # in `extract_uwr_lyr`), our outputs will all be the same length.
+  # We can therefore simply run dplyr::bind_cols.
+  uwr <- dplyr::bind_cols(uwr)
+  
   return(uwr)
 }
 
@@ -87,10 +96,10 @@ extract_chm <- function(pts, path) {
   # Extract raster value
   out <- terra::extract(chm, pts, ID = FALSE)
   # Return out
-  out <- cbind(pts$idposition, out)
-  names(out)[1] <- "idposition"
-  # Pare down to only cols with data
-  out <- na.omit(out)
+  # out <- cbind(pts$idposition, out)
+  # names(out)[1] <- "idposition"
+  # # Pare down to only cols with data
+  # out <- na.omit(out)
   return(out)
 }
 
