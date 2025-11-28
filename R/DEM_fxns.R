@@ -120,7 +120,7 @@ extract_roughness <- function(pts, id_col, cded_path) {
   roughness <- terra::terrain(cded, v = "roughness")
   # Extract roughness
   out <- terra::extract(roughness, pts, ID = FALSE)
-  # # Return out
+  # Return out
   out <- cbind(pts, out)
   names(out)[2] <- "roughness"
   out <- sf::st_drop_geometry(out)
