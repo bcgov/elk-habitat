@@ -552,10 +552,18 @@ list(
   #### RANDOM POINTS ####
   ##### Sample random pts #####
   # Sample random points within each of our availability MCPs to use in RSFs
-  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
-  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
-  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
-  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |> sf::st_as_sf()),
+  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
+  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
+  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
+  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####
   tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
