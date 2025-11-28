@@ -38,7 +38,7 @@ extract_vri_edges <- function(pts, vri) {
 
 
 
-extract_vri <- function(pts, #id_col = "idposition",
+extract_vri <- function(pts, id_col = "idposition",
                         vri, cols) {
   # Data health checks
   stopifnot("`pts` must be a sf class geometry." = inherits(pts, "sf"))
@@ -52,20 +52,17 @@ extract_vri <- function(pts, #id_col = "idposition",
   if (nrow(pts) == 0) return(NULL)
   
   # Pare down to cols of interest
-  vri <- vri[, cols]
+  vri <- vri[,cols]
   
   # Ensure name of the geometry column is the same for all ptss
   #sf::st_geometry(pts) <- "geom"
   #sf::st_geometry(vri) <- "geom"
+
+  # Subset pts to just ID column
+  pts <- pts[,id_col]
   
-  # Update: removing ID col from fxn so it can generically run
-  # with any point feature rather than just the elk one.
-  ## Subset pts to just ID column
-  #pts <- pts[,id_col]
-  pts <- sf::st_geometry(pts)
-  
-  ## Intersect with VRI
-  #ixn <- sf::st_intersection(pts, vri)
+  # Intersect with VRI
+  ixn <- sf::st_intersection(pts, vri)
   
   # THIS IS IMPORTANT!! 
   # The ORDER that you supply to st_intersection will affect the 
@@ -78,7 +75,7 @@ extract_vri <- function(pts, #id_col = "idposition",
   # because output will be arranged according to VRI polygon ID, 
   # NOT pts!
   # Intersect with VRI
-  ixn <- sf::st_intersection(vri, pts)
+  #ixn <- sf::st_intersection(vri, pts)
   
   ixn <- sf::st_drop_geometry(ixn)
   return(ixn)
