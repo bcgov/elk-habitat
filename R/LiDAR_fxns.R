@@ -79,7 +79,7 @@ extract_uwr <- function(pts, id_col = "idposition", gdb, layers) {
 
 
 # Extract from Crown Height Model raster directly, rather than the UWR GDB
-extract_chm <- function(pts, path) {
+extract_chm <- function(pts, id_col = "idposition", path) {
   message("Extracting crown height model data...")
   # Load up the raster
   chm <- terra::rast(path)
