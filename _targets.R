@@ -571,7 +571,7 @@ list(
   tar_target(random_summer_dem, extract_dem(pts = random_summer, cded_path = cded)),
   tar_target(random_swp_dem, extract_dem(pts = random_swp, cded_path = cded)),
   ##### LiDAR attributes #####
-  # TODO: add CHM
+  # UWR data
   tar_target(random_winter_uwr, extract_uwr(pts = random_winter,
                                             gdb = uwr_lidar_gdb,
                                             layers = lidar_cols)),
@@ -582,8 +582,17 @@ list(
                                             gdb = uwr_lidar_gdb,
                                             layers = lidar_cols)),
   tar_target(random_swp_uwr, extract_uwr(pts = random_swp,
-                                            gdb = uwr_lidar_gdb,
-                                            layers = lidar_cols)),
+                                         gdb = uwr_lidar_gdb,
+                                         layers = lidar_cols)),
+  # CHM data
+  tar_target(random_winter_chm, extract_chm(pts = random_winter, 
+                                            path = chm_path)),
+  tar_target(random_spring_chm, extract_chm(pts = random_spring, 
+                                            path = chm_path)),
+  tar_target(random_summer_chm, extract_chm(pts = random_summer, 
+                                            path = chm_path)),
+  tar_target(random_swp_chm, extract_chm(pts = random_swp, 
+                                         path = chm_path)),
   ##### VRI attributes #####
   tar_target(random_winter_vri, extract_vri(pts = random_winter,
                                             vri = vri,
