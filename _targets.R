@@ -223,7 +223,7 @@ list(
   ##### MCP #####
   tar_target(weekly_mcps, weekly_mcp(elk = elk,
                                      min_days = 1, # percentage of days - we want 100% of days
-                                     min_dets_per_day = 7, # we also want at minimum 7 detections per day, otherwise that week of data is thrown out
+                                     min_dets_per_day = 6, # we also want at minimum 6 detections per day, otherwise that week of data is thrown out
                                      percent = MCP_pctl) |> # 95% MCP - convex hull that encompasses 95th distance-from-centre percentile points. Defaults to Delaunay triangulation to find the center of the points.
                assign_weekly_seasons(seasons = list("winter" = winter, # defined toward the top of this document
                                                     "spring" = spring, # defined toward the top of this document
@@ -245,7 +245,7 @@ list(
   ##### dBBMM #####
   tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
                                          min_days = 1,
-                                         min_dets_per_day = 7,
+                                         min_dets_per_day = 6,
                                          window.size = weekly_window, # 21 hours
                                          margin = weekly_margin, # 9 hours
                                          location.error = 11.5,
