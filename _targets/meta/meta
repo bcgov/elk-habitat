@@ -1,14 +1,14 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
-all_seasons_dbbmm|stem|9f435926dd5fdcee|04c92914fe89f26c|a99260015d6f751d|-436251714||t20265.0615833859s|b5468028d6175f3b|11307332|rds|local|vector|||0.02||
-all_seasons_mcp|stem|95bf16f196516082|49512c53edbb9f8e|10cafa94deb01aa3|37521217||t20244.1603927783s|ae679688e2f1e8f7|95651|rds|local|vector|||0.01||
-all_szn_yearly_overlap|stem|b2bedf1561671b4a|0650ec91c3e3ba32|75535b67ad008489|-1713324419||t20273.7411317345s|0cd2fed45827ca37|8267|rds|local|vector|||0.02||
+all_seasons_dbbmm|stem|30fc7477016da31f|04c92914fe89f26c|e03334ac0d250f30|-436251714||t20418.9862599363s|ebd7ae62ea70bfed|11391689|rds|local|vector|||0.03||
+all_seasons_mcp|stem|01d7357fb59a0e3e|49512c53edbb9f8e|72e8850b1cd041af|37521217||t20418.9299505108s|689d581227ae981b|96084|rds|local|vector|||0.02||
+all_szn_yearly_overlap|stem|bee412ace389e7ad|0650ec91c3e3ba32|4227b823f093fb6e|-1713324419||t20418.9862653039s|616d04c4cbf424ee|8265|rds|local|vector|||0||
 assign_daily_seasons|function|738918b74e6a16fe|||||||||||||||
 assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|9d65df7e940b435f|||||||||||||||
 capture_data|stem|12bdb83573be937b|e14ef5cd5be2470c|42d6a860cf84bb4c|1127347996||t20242.9196286274s|a31fe2a31585068b|12482|rds|local|vector|||0.36||
 capture_data_path|stem|21a819747fabe06a|70e4449647399076|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20250415.xlsx|t20239.0881285566s|a67621ae84340c38|112484|file|local|vector|||0.81||
-cded|stem|625beeba987df5d8|785e6cdb0578efdb|10f8715d9ef60b1f|-438085499|GIS/DEM/CDED_VRT.vrt|t20311.9495043621s|5a2fd5cba14367e1|21214|file|local|vector|||9.88||
+cded|stem|625beeba987df5d8|785e6cdb0578efdb|10f8715d9ef60b1f|-438085499|GIS/DEM/CDED_VRT.vrt|t20425.0724296269s|5a2fd5cba14367e1|21214|file|local|vector|||14.86||
 chm_path|stem|29e226684ac9a3ef|7678dac5a50beb30|2c530c1562a7fbd1|131809279|GIS/LiDAR products/crown_height.tif|t20183.0142095376s|f77f63eb8093eecb|67587177|file|local|vector|||0.47|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
 clean_collar_data|function|e2c296d1cf8e1e23|||||||||||||||
 cleaned_collar_data|stem|31d2d57b21ebc810|cbbf49070c725880|4f48f37386fe5c67|-1799209495||t20248.7177642671s|8ade31971408355a|33764823|rds|local|vector|||425.98||
@@ -16,30 +16,30 @@ collar_data|stem|f44134ce2c42825a|712f93e9cbbedd9c|59ef7f677119210a|245132817||t
 collar_keys|stem|e065fe1973201e6b|532970a144734d7b|2c530c1562a7fbd1|34646257|C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar31995_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34746_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34747_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34748_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34749_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34750_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34751_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar34752_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39609_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39610_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39611_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39612_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar39613_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41134_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41135_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41136_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41137_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41138_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41139_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41140_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41141_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41142_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41143_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41144_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41145_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41146_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41147_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar41148_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42633_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42634_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42635_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42636_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42637_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42638_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42639_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42640_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42641_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar42642_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45541_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45542_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45543_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45544_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45793_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45794_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45795_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45796_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45797_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45798_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45799_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45800_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45801_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45802_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45803_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45804_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45805_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45806_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45807_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar45808_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80000_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80001_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80002_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80003_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80004_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80005_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80006_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80007_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80008_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80009_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar80506_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar85132_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar85133_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94432_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94433_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94434_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94435_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94436_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94437_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94438_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94439_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94440_Registration.keyx*C:/Users/SPOPOV/Documents/Elk/elk-habitat/data/Collar Keys/Collar94441_Registration.keyx|t20017.7375874065s|45a156ae2ea5044b|60390|file|local|vector|||0.06||
 cumulative_overlap|function|1ad7c1a9e7c6b24c|||||||||||||||
 cumulative_shp|function|f9451dee8617d9e5|||||||||||||||
-cumulative_winter_dbbmm|stem|f1b88d3a84b6f3d0|3c07a4bec98c5840|5877be28dc10527e|-312512595||t20313.8021420056s|9042f0c9fe6af148|4590385|rds|local|vector|||0.59||
-cumulative_winter_mcp|stem|f819dcd9d4b90d44|6ca1f2d3d6672f99|d4246d7195878d71|1500740159||t20313.8022137911s|0ebe5dcc48036d7d|28602|rds|local|vector|||0.31||
+cumulative_winter_dbbmm|stem|806dfe5eca2c348d|3c07a4bec98c5840|227aa365457913df|-312512595||t20418.9860432231s|38cda55e11b91431|4626289|rds|local|vector|||0.93||
+cumulative_winter_mcp|stem|786c2951520f3fd1|6ca1f2d3d6672f99|08c2834547193118|1500740159||t20418.929842749s|48f7e9afadffa37f|28882|rds|local|vector|||0.72||
 cutoff_date|object|9ae2787af414062a|||||||||||||||
 daily_dets_plots|stem|9f51fc2273e14e7c|471b22bf3dd17154|64c1f9cd7cf38ddc|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20248.8950478107s|a1b9eeb1fda37183|2725147|file|local|vector|||58.48||
-daily_mcp|function|8378b0fe5e408c6b|||||||||||||||
+daily_mcp|function|b6550459ae91769e|||||||||||||||
 daily_mcp_seasonal_summary|stem|6ed2282448025d9a|c76a534c4bcf61a3|4f70402ac2d9d3a8|-282887321||t20417.0442880995s|a3496bd4cf32175c|517|rds|local|vector|||0.04||
 daily_mcp_swp_summary|stem|ffb1a4123783e69c|b1b723ecf468bcbb|2113c647493dcd59|-2092308185||t20417.044290571s|3894ebe67ff7c23d|553|rds|local|vector|||0.19||
-daily_mcps|stem|0eeaedd5ea17f93d|540635566233b505|f6bad2197cc63820|958011176||t20417.0442862486s|b913992295a3e20d|4686688|rds|local|vector|||987.32||
-dbbmm_all_szn_yearly_overlap|stem|2fd09ca11f27b950|524694ad3e4966eb|faf2a6a4d2016102|1525540815||t20273.7411313479s|6451a29a15b713f5|4616|rds|local|vector|||0.05||
-dbbmm_seasonal_summary|stem|cdf0aca6c6b43e25|953aea498725d956|1ffd73f54e4296bf|1789842921||t20265.06171067s|d2dac0e3941019b6|475|rds|local|vector|||0.03||
+daily_mcps|stem|0eeaedd5ea17f93d|540635566233b505|44bb96fa094f1b61|958011176||t20418.8435840642s|b913992295a3e20d|4686688|rds|local|vector|||1296.73||
+dbbmm_all_szn_yearly_overlap|stem|0e8443fe20a75443|524694ad3e4966eb|735dd1e9059c0606|1525540815||t20418.9862633905s|dc286ff79968f7f7|4613|rds|local|vector|||0.01||
+dbbmm_seasonal_summary|stem|0b69790ebc46c1ca|953aea498725d956|9b8c4e6fc5dccf18|1789842921||t20418.986264316s|003b188731e92d26|469|rds|local|vector|||0.03||
 dBBMM_seasonal_ud|object|29e816842fabc47d|||||||||||||||
-dbbmm_spring_yearly_overlap|stem|eceed509ab0239fc|39a9b295d50aa699|e06ab440f090a811|-2038073459||t20273.6456738394s|c0160bac006cda27|2156|rds|local|vector|||6.33||
-dbbmm_summer_yearly_overlap|stem|d6ccee37d4446c6b|22432e9590bfe93c|e7a46d72279bbbbc|408432813||t20273.6453940386s|7c032f440ac329dd|2079|rds|local|vector|||5.3||
-dBBMM_weekly_ud|object|f43fe2c999030d30|||||||||||||||
-dbbmm_winter_agg_overlap|stem|e35512829059ecea|a775d7b4475df247|bfce6f92dbf74b0c|-1889499879||t20313.8021797142s|9f5ff70d0e41d17c|743|rds|local|vector|||3.25||
-dbbmm_winter_spring_overlap|stem|ddfb61cb6e04abd3|b930075dc00053b3|639c10ba09cda7a6|-1789060891||t20266.7570621911s|59ef16d9cba44fb1|2661|rds|local|vector|||9.61||
-dbbmm_winter_yearly_overlap|stem|39df5fcf5f71e42c|3a8acfeaffe76901|b2cf405caf696a7f|2111524819||t20273.6454741499s|86b7064cf66fe42e|1565|rds|local|vector|||3.52||
-dbbmm_wso_summary|stem|9bfd28339074fdff|ae36d9ecb25d1dc8|080964adb4ff96af|-516662678||t20294.9648957272s|950dfd882046f9ea|524|rds|local|vector|||0.17||
+dbbmm_spring_yearly_overlap|stem|091bc90b9524eb07|39a9b295d50aa699|7d0ec883176c641f|-2038073459||t20418.9862485117s|233761e517fdb211|2167|rds|local|vector|||6.67||
+dbbmm_summer_yearly_overlap|stem|140e93afb6c6f3c5|22432e9590bfe93c|2beef697e386245a|408432813||t20418.9859290146s|59fe6edf7dec7e7b|2072|rds|local|vector|||7.48||
+dBBMM_weekly_ud|object|29e816842fabc47d|||||||||||||||
+dbbmm_winter_agg_overlap|stem|6ee1b020ac39d06a|a775d7b4475df247|e5358fdc52013af1|-1889499879||t20418.9859783889s|9ed1990733649bbf|750|rds|local|vector|||4.22||
+dbbmm_winter_spring_overlap|stem|61bdf4cce677992f|b930075dc00053b3|823a5d7a6951375e|-1789060891||t20418.9861708332s|7dc53ad1db76290f|2656|rds|local|vector|||10.95||
+dbbmm_winter_yearly_overlap|stem|b3c63def032ebd79|3a8acfeaffe76901|4ff14723dde83c26|2111524819||t20418.986027917s|17ca129ff4ab3ee5|1567|rds|local|vector|||4.22||
+dbbmm_wso_summary|stem|fbdcb05c196c0250|ae36d9ecb25d1dc8|8071b10c884f43cf|-516662678||t20418.9862627484s|ffeb2fb5fa1a1d60|518|rds|local|vector|||0.17||
 detection_efficiency|stem|9b30fbc43eb62da9|8d8488432aca6501|0135757affed2e7e|947972721||t20294.9648921863s|fc2446d516419728|2410|rds|local|vector|||0.52||
 dets_per_elk|stem|9ea9de4cf64cc701|cffc3ee6ced78c00|0e32a3ce99815265|-360331643||t20248.8696885664s|73e589b388d3f2b1|172|rds|local|vector|||0.11||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
 elk|stem|4a421396a5893093|828064bfaffe2696|959f5a658c71a7c1|-188372202||t20248.707131434s|fc327d8efd2fcd21|29184672|rds|local|vector|||360.62|Field names abbreviated for ESRI Shapefile driver. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4 Unable to open tempPipeline outputselk_positions.shx or tempPipeline outputselk_positions.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Message 6 Field dttm create as date field, though DateTime requested.. GDAL Message 1 Value 103994407.081 of field NSD of feature 320 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104914962.474999994 of field NSD of feature 321 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104705113.225999996 of field NSD of feature 322 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105109748.726999998 of field NSD of feature 323 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105713927.145999998 of field NSD of feature 324 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 107216481.253000006 of field NSD of feature 325 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 100120932.984999999 of field NSD of feature 326 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 102755309.833000004 of field NSD of feature 327 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104171478.883000001 of field NSD of feature 328 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104128103.865999997 of field NSD of feature 329 not successfully written. Possibly due to too larger number w|
-elk_chm|stem|f828c336b00f14fb|71266482f5ce580b|efb35f105a0205c8|-323457739||t20248.8943709088s|f3d51ee5e5ada658|2283884|rds|local|vector|||8.9||
-elk_dem|stem|9ece844e2e16d2ad|a0ef153da88ced48|cd860afa50aae217|1885558796||t20248.895389253s|34036a7db61e0075|3783058|rds|local|vector|||24.14||
+elk_chm|stem|4166e2b35a99a101|6eff3ea325a5d7f0|86290a5ae588bb16|-323457739||t20420.0409692222s|bf7bed6cbd3ec01e|1084269|rds|local|vector|||8.89||
+elk_dem|stem|9ece844e2e16d2ad|aaeea8ee6f238e2f|10dab3eb16b94280|1885558796||t20420.041456479s|34036a7db61e0075|3783058|rds|local|vector|||40.94||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
 elk_dotplot|stem|6bae7970375258f3|94d5abc6f5fa7398|7649efbf05f8a678|-2021513789||t20248.8705831503s|568c5e6e1e4387a7|146101721|rds|local|vector|||0.01||
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
@@ -48,18 +48,18 @@ elk_per_month|stem|b2e2184542180755|34b671afed2e2692|505590d63b391b50|-293717621
 elk_per_month_plot|function|20740411dc9e6e24|||||||||||||||
 elk_per_year_month|stem|6dc99aebe342294a|7f857d14421b1f2e|cd9aab9a1383470c|692555464||t20248.8941788041s|d9080b1314af5574|528|rds|local|vector|||0.07||
 elk_per_year_month_plot|function|bcfd85732921d5e0|||||||||||||||
-elk_uwr|stem|68457f37dd129085|aa7b666448798592|96e8566c8aaeecdd|-1088510592||t20248.8703688231s|1813142ec6e12c87|1339550|rds|local|vector|||58.58||
-elk_vri|stem|750031d8650ce743|5eddc8401af3af5e|65c6cba8982a1fa2|30184935||t20398.9134617126s|9d0202f0ac58c15c|2788462|rds|local|vector|||17.38|attribute variables are assumed to be spatially constant throughout all geometries|
-extract_aspect|function|51978e47b39bbbbd|||||||||||||||
-extract_chm|function|aa787ca0cac449b3|||||||||||||||
-extract_dem|function|df1b1a3940b3219b|||||||||||||||
-extract_elevation|function|de3da352b88d1c56|||||||||||||||
-extract_roughness|function|c3a4b2bca9c07efd|||||||||||||||
-extract_slope|function|439790adca07790e|||||||||||||||
-extract_uwr|function|280e4944e64df5c9|||||||||||||||
-extract_uwr_lyr|function|637f5737df35e4c1|||||||||||||||
-extract_vri|function|880ac76e89778e9c|||||||||||||||
-extract_vri_edges|function|fbcfbd935db67d7d|||||||||||||||
+elk_uwr|stem|b9c062eb8106c01f|c32f396d15e831f8|f918bf3eb0366273|-1088510592||t20420.0408638157s|a52bd8a0a05b65da|1397086|rds|local|vector|||80.39||
+elk_vri|stem|0609f4f5065a8457|fc1fc2b973c8b3d8|30d67c8630566811|30184935||t20420.039930533s|4165c2cb2542b48b|2807139|rds|local|vector|||28.21|attribute variables are assumed to be spatially constant throughout all geometries|
+extract_aspect|function|c1824b5878c68dec|||||||||||||||
+extract_chm|function|44c511fee01f1c4c|||||||||||||||
+extract_dem|function|e091c890c97affa4|||||||||||||||
+extract_elevation|function|b2ade2561728b9a1|||||||||||||||
+extract_roughness|function|2f400d5f99e57c24|||||||||||||||
+extract_slope|function|3325d33de0f74e0e|||||||||||||||
+extract_uwr|function|550f6d35719f844f|||||||||||||||
+extract_uwr_lyr|function|ad86d871a3ba0d42|||||||||||||||
+extract_vri|function|ba7489e87225610d|||||||||||||||
+extract_vri_edges|function|bc07afb96bd2c693|||||||||||||||
 ferrarini_goi|function|a44344d174e2a91f|||||||||||||||
 find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
@@ -67,21 +67,22 @@ fix_rate|function|2197936bd65279fe|||||||||||||||
 flagged_pts|stem|cf8db2bff0ccaa1c|06dab63f5aa25ddc|23e56ec4a18989e0|1665965602||t20244.0038792456s|583e226966d43fcc|62879|rds|local|vector|||0.05||
 full_collar_data|stem|c7b188dfe3b39be2|fcaac25f0f6c862d|74e190121af2c202|1289326002||t20242.919711579s|fb06c3f30cb074fd|12073699|rds|local|vector|||4.14|package RSQLite was built under R version 4.4.3|
 individual_dbbmm|function|3495f8b948f0a5cb|||||||||||||||
-individual_mcp|function|a5b63584ab3a100b|||||||||||||||
+individual_mcp|function|390e0ed3e3283042|||||||||||||||
+lidar_cols|object|96cc9ffa65341d87|||||||||||||||
 load_capture_data|function|ed5263bf9bc6840e|||||||||||||||
 load_collar_data|function|ea7e9fd9b6f54805|||||||||||||||
 logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
 madrone_vri_gdb|stem|7168272542bd9a59|c1612ce260a6716b|e6647d15d87cd713|126529910||t20145.0955484706s|2b07dbd8c37abf3d|86|rds|local|vector|||0||
 madrone_vri_gdb_path|stem|4194bf2bdb104c83|1985f825afc26878|2c530c1562a7fbd1|367518910||t20145.095548109s|62801cc8727d3ecd|162|rds|local|vector|||0.28|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
-mcp_all_szn_yearly_overlap|stem|35275097111b0f70|dba2504ba289b49b|26760a8b921ad22e|1853652501||t20273.7386011542s|f11c002d8abe9928|4718|rds|local|vector|||0.03||
+mcp_all_szn_yearly_overlap|stem|f8c274edd2717f28|dba2504ba289b49b|aab4d6f08d5f905b|1853652501||t20418.9301090869s|9cceb3e5d261ccfd|4719|rds|local|vector|||0.03||
 MCP_pctl|object|f43fe2c999030d30|||||||||||||||
-mcp_seasonal_summary|stem|7bdce914d2b0b053|41c36d11592ebd28|f444f799ecae88a2|-939293508||t20244.1604502886s|9bdc275d448ae2fa|472|rds|local|vector|||0.02||
-mcp_spring_yearly_overlap|stem|bb4cc0686547c217|36e1a77fe1c04832|b2d77d6bc76b6d4a|410806255||t20273.645536882s|bd69fa5d1f8ef91f|2216|rds|local|vector|||5.39||
-mcp_summer_yearly_overlap|stem|aa2674d309ce1588|ceb332a84eacf958|3881aea57f1d08fe|-1442130744||t20273.645599756s|5fc0631e8c4cfb5b|2102|rds|local|vector|||5.41||
-mcp_winter_agg_overlap|stem|cbe154a273f60114|5b3509fe4df069fc|16bfe1eb7279060e|-1594817376||t20313.8022100294s|8bb614b0adc30dda|739|rds|local|vector|||2.59||
-mcp_winter_spring_overlap|stem|0d6e38e92b37e3a4|22eb826872ff85ea|31e2c89de43f0acf|-1809842540||t20266.7568974675s|dabe972fb3cc84b0|2717|rds|local|vector|||9.14||
-mcp_winter_yearly_overlap|stem|e77596b5b00fde60|7582a03bec5b992d|9af6bb9807e40e6d|-1053605382||t20273.645432994s|aa75fd07d97251e6|1583|rds|local|vector|||3.34||
-mcp_wso_summary|stem|c8102ac2832fb5ac|b9903ea67aedd227|155a333e13a2d595|532120343||t20294.9648968844s|0051a85449b1d783|513|rds|local|vector|||0.07||
+mcp_seasonal_summary|stem|054e836deaaf88cf|41c36d11592ebd28|81315f1cfe204dab|-939293508||t20418.9301064545s|d2dac0e3941019b6|475|rds|local|vector|||0.01||
+mcp_spring_yearly_overlap|stem|1df9e645c8725258|36e1a77fe1c04832|a09e65b1e98fd2be|410806255||t20418.9301054831s|27764e5a40d16020|2189|rds|local|vector|||4.97||
+mcp_summer_yearly_overlap|stem|700e4a2794e1c833|ceb332a84eacf958|a022c4f908cc48b9|-1442130744||t20418.9299496165s|b54d11f82f064570|2086|rds|local|vector|||4.55||
+mcp_winter_agg_overlap|stem|cf3d8a26829122c8|5b3509fe4df069fc|a9dcdc35a2ea6f8e|-1594817376||t20418.9298340759s|3e3eb1d0ca2c3ef1|747|rds|local|vector|||2.34||
+mcp_winter_spring_overlap|stem|e2e23bcfbb1ce5e7|22eb826872ff85ea|f299849cd75596ab|-1809842540||t20418.9300473995s|d0b588304c5fb565|2727|rds|local|vector|||8.34||
+mcp_winter_yearly_overlap|stem|9ae7da6404ad629d|7582a03bec5b992d|d6cd1d91db26b1ab|-1053605382||t20418.9298965686s|d2f5f77ab0407066|1581|rds|local|vector|||4.63||
+mcp_wso_summary|stem|4322689e3d5e4d71|b9903ea67aedd227|1fe2027df1ad01e8|532120343||t20418.9301082024s|41e2cd3cff9f3034|511|rds|local|vector|||0.12||
 merge_dfs|function|51e7110d062d93ef|||||||||||||||
 n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|740bde44b553e278|||||||||||||||
@@ -94,27 +95,55 @@ p_elk_per_month|stem|0a86b207df062fa2|fb1b1ddd4d188b87|08235c06486dc25c|21391222
 p_elk_per_year_month|stem|22ed87656221ed68|e7c8f3f0705a43fa|b05c731a3acf9e76|-669630683||t20248.8706298468s|28c0a048a414a409|29359240|rds|local|vector|||0.1||
 prct_overlap|function|5b70fe85cb4cce78|||||||||||||||
 query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
+random_spring|stem|3e6f0b81eaf66d58|60f839f15fee0ecf|e96f966755671fbf|1803844473||t20420.0421174884s|b294cfa786667476|7044437|rds|local|vector|||26.91||
+random_spring_chm|stem|8496a916656a8e16|227a4762eb338f8d|acbd7be868511d3e|-1235274593||t20420.0460942319s|f22ba4e62a3a204d|349001|rds|local|vector|||9.45||
+random_spring_dem|stem|30be10469beff422|4688574c2c3a8ec4|3cfacb5248950fd9|-882559391||t20420.0466354746s|83deac86ca492605|4084790|rds|local|vector|||44.8||
+random_spring_uwr|stem|9967fd6791b3b13b|78017863a23073a3|15acc833ab443e58|675732823||t20420.0459829911s|8c5c5330ec0581b8|2055699|rds|local|vector|||86.4||
+random_spring_vri|stem|47bdab95625276fa|8e1ec0969bf782ac|132d8633ab36b379|36721359||t20420.0449732045s|44fe648fd5ef8804|3458528|rds|local|vector|||32.69|attribute variables are assumed to be spatially constant throughout all geometries|
+random_summer|stem|640b9c94a4acabbc|d16ff0ad5a5e6e9d|69b833406b21a388|-1628418462||t20420.0426526576s|3d1ed6c09436238e|7048639|rds|local|vector|||23.39||
+random_summer_chm|stem|562c8c7711da1606|4692580dc1600dbe|847217f3d74c7fbf|1021494091||t20420.0513367734s|ed71e07abc629e77|301675|rds|local|vector|||11.1||
+random_summer_dem|stem|f258f0881d205882|4d0db3ae2bfbfe93|e7b723a33dd93ed3|-1612840113||t20420.0507054165s|dbd710b401c78c4b|4130090|rds|local|vector|||52.39||
+random_summer_uwr|stem|6cb72737e1df064b|9cc8f4f2f904184a|c170b8fe07c19014|943586207||t20420.0500748559s|b286eab177e80c48|2078231|rds|local|vector|||111.15||
+random_summer_vri|stem|c717c5364df08ad2|fe739900fabd4e18|53f6fbea0bc6dae1|-1766705154||t20420.0512070005s|80437a85395678c1|3339529|rds|local|vector|||41.68|attribute variables are assumed to be spatially constant throughout all geometries|
+random_swp|stem|1d49680a180dc76c|5aaedbf618cc3975|c22cb10552855940|-1905150981||t20420.0417890921s|ff33056126f53005|7039847|rds|local|vector|||26.52||
+random_swp_chm|stem|a7c62d01c69d35e1|be6de38f54701914|485ff59ead9d624f|1253940723||t20420.0435808812s|b054121824e97727|415043|rds|local|vector|||8.87||
+random_swp_dem|stem|09a26c335fbb648e|dd0b5d4b970828f3|4310298cca62ade3|-170673047||t20420.0441618061s|1070724c9bbd6c5e|4029770|rds|local|vector|||48.65||
+random_swp_uwr|stem|4d1d88c718ae0379|f0213aaf9f9833de|5b24e9d60a502a22|-1306453010||t20420.0434761716s|08bb83f5a00fe373|1877692|rds|local|vector|||70.5||
+random_swp_vri|stem|291fd712a1482e19|8511b0c3978f497e|a2e077be0e00b3b0|-763469556||t20420.0445749905s|9d82a2201f414339|3190452|rds|local|vector|||34.27|attribute variables are assumed to be spatially constant throughout all geometries|
+random_winter|stem|0da361751fa1aab3|04e5546795cf1cde|9ad38b636ad5e2ba|2030135424||t20420.0423604389s|8575e9a5eb9e817a|7051523|rds|local|vector|||19.3||
+random_winter_chm|stem|0f0df7d1181d6b99|94219e5c68ec1ec1|260c9dfda2b025b3|-321507621||t20420.0481594759s|02f11fbd697c5e6d|383384|rds|local|vector|||9.95||
+random_winter_dem|stem|2e565e4bc7573061|015c997ac65bf8a7|e059f729110f1927|124403925||t20420.0487787317s|ed21d2e517941a46|4076549|rds|local|vector|||51.73||
+random_winter_uwr|stem|a95a83caef9aab7f|4da4378e39ed9355|746fe7acbd024935|-1997755743||t20420.0480409026s|65f018e4173f0ee9|2030723|rds|local|vector|||82.33||
+random_winter_vri|stem|f599d289ea916c98|64920334b8ef9710|db0f7e8f1fb49b96|1761764807||t20420.0470816688s|8e2fa88d941c80f2|3434754|rds|local|vector|||36.51|attribute variables are assumed to be spatially constant throughout all geometries|
 rarify_pts|function|8e9017b7cb1d3c7f|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
 read_vri|function|16df774cb8cb8e9c|||||||||||||||
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
-seasonal_dbbmm|function|6c03db33d638a2b1|||||||||||||||
-seasonal_mcp|function|31f048fa99a50e51|||||||||||||||
-seasonal_overlap_summary|stem|9e8e26bf1d88d1e8|1fcfbc0c1dbcaf3a|be5f9007a0abdc1c|627036650||t20294.9648985838s|a8b96b6a30ddcd22|626|rds|local|vector|||0.04||
+seasonal_dbbmm|function|098e6421db5fcde6|||||||||||||||
+seasonal_mcp|function|44e6e62e9bb4961a|||||||||||||||
+seasonal_overlap_summary|stem|1fc3ff9dbd8f5f89|1fcfbc0c1dbcaf3a|3d865cf280392439|627036650||t20418.9862679583s|c6e38985179f57aa|623|rds|local|vector|||0.07||
 spring|object|6398ef5e90b44e6d|||||||||||||||
-spring_dbbmm|stem|85b4aa8c6e75abea|097b0d7b735f88b6|96df23ec97b5f118|1234634189||t20265.833825556s|0099085a287c27a1|3891414|rds|local|vector|||977.7||
-spring_mcp|stem|e97e260b045f114e|b8b92ce6deeb7d5b|c76d0d701e021489|2029814444||t20248.7179572042s|778aba7565a4782a|34408|rds|local|vector|||15.21||
+spring_dbbmm|stem|035a00ad92d7d0d6|097b0d7b735f88b6|ba1b2bfd64b3c250|1234634189||t20418.9858412596s|49287f6969807657|3912419|rds|local|vector|||1879.72||
+spring_mcp|stem|7251b074c4e1f02e|b8b92ce6deeb7d5b|52146cf8a39c1adb|2029814444||t20418.929712682s|290c852846b2e8a5|34407|rds|local|vector|||9.81||
+spring_rsf_mcp|stem|93380dcf4d7627bd|0ad717f5eaec2935|2e1f50cc9d4c07f6|436210894||t20419.0166786598s|65edc19c06eda07a|82890|rds|local|vector|||4.47||
 st_edge_dist|function|67233d498ccee62c|||||||||||||||
+step_length_buffer|stem|17f42ec8a3e9718e|5575f7cfb463632e|1e1cad4baf0073e6|-1689872844||t20418.9938614805s|afe1c0564fcfafab|85|rds|local|vector|||0.01||
 step_length_seasonal_summary|stem|84f9cd1453ca39e6|179992cd659af689|1e1cad4baf0073e6|-1064318883||t20266.7279821753s|378c305854a4daa0|440|rds|local|vector|||0.07||
 step_length_swp_summary|stem|e7a96de39cef310e|fe5abe52ea4151c2|1e1cad4baf0073e6|-448053997||t20266.7318718934s|c5d2549088e4e73e|505|rds|local|vector|||0.06||
 step_lengths_3hr|stem|bee70f5180aa6cf2|f2e0bf5e73fcb64c|b226fc20fcd1fd8c|-1194693083||t20266.7279803181s|aef6e5937c3c2393|16764815|rds|local|vector|||0.28||
 steplength|function|97a0717a017cb942|||||||||||||||
+study_area|stem|c1a0f74a05dd2edb|978954f74551f375|07cecfa545574e7e|-822575283||t20419.0166255603s|0808d3549dece7dc|27705|rds|local|vector|||8.59|repeating attributes for all subgeometries for which they may not be constant. attribute variables are assumed to be spatially constant throughout all geometries|
+study_area_poly|function|b2d1e003e6d8b14d|||||||||||||||
 summarize_area|function|e27ed1cdb10c2f9f|||||||||||||||
 summarize_overlap|function|9836c2414ab06df1|||||||||||||||
 summer|object|292209e1f8fbf494|||||||||||||||
-summer_dbbmm|stem|692766b9a2291ea1|8b5a0c6a15234658|a78b3ba1e5600b4a|320407742||t20265.843444803s|809c94470cc0fd8a|3704433|rds|local|vector|||830.83||
-summer_mcp|stem|fd086ca66c1a37ed|239ca60e88e96776|09feb9a9d2bc0c7c|1803065787||t20248.8681088547s|1b54a48507052fef|34949|rds|local|vector|||12.03||
+summer_dbbmm|stem|200ef3dbc41a5d2c|8b5a0c6a15234658|cf375fd1849eaa68|320407742||t20418.9450906233s|82267307cb5e0356|3726191|rds|local|vector|||1003.26||
+summer_mcp|stem|1b4e229227d756ae|239ca60e88e96776|0f9f5540c287cd13|1803065787||t20418.9295987738s|617173fa462f540b|35246|rds|local|vector|||10.85||
+summer_rsf_mcp|stem|13d9cb7819670cbb|c662f3ec4d8502c6|e0e22989efa19377|-987843483||t20419.0167269088s|5e6999d0b251dfbc|89617|rds|local|vector|||4.14||
+swp_dates|object|bd5ecf35a6fb3fcc|||||||||||||||
 swp_days|object|a66a035b5e000a9e|||||||||||||||
+swp_elk|stem|63218ec186e5835a|0e548acfba9dd6dc|333e020b5d869d8d|-1053022346||t20419.0330042473s|514534cdb13dcc77|156|rds|local|vector|||0.43||
+swp_rsf_mcp|stem|f37df66191b8c37b|fa627f5f215e2fbd|f97dc43f4954b0ef|1485982528||t20424.1455136463s|2466feaff4b7400d|66820|rds|local|vector|||6.87||
 swp_weeks|object|b40b8812ed5a52af|||||||||||||||
 szn_margin|object|c7b1ac4588323176|||||||||||||||
 szn_window|object|87c2fdbe3686b6eb|||||||||||||||
@@ -122,19 +151,21 @@ unassigned_detections|stem|a216051b3f1068b6|6286e9ca467fe184|59ef7f677119210a|-1
 uwr_lidar_gdb|stem|d75c6248a3d67767|dc45d4d7d5da144c|86d3172805fa286a|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20134.1192011005s|d3256ba881f5d4b7|65536|file|local|vector|||0.36||
 uwr_lidar_gdb_path|stem|d75c6248a3d67767|794406ab5299b854|2c530c1562a7fbd1|2052183110|W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb|t20269.7701157308s|d3256ba881f5d4b7|65536|file|local|vector|||0.88||
 vri|stem|e33a0daac99c4a73|44ec05d8757c0cb7|f7f352d9d267200b|-1341468610||t20146.0132776079s|966d39975026ea8c|526153274|rds|local|vector|||1151.77|GDAL Message 1 organizePolygons received a polygon with more than 100 parts. The processing may be really slow.  You can skip the processing by setting METHODSKIP, or only make it analyze counterclock wise parts by setting METHODONLY_CCW if you can assume that the outline of holes is counterclock wise defined|
+vri_cols|object|0e6f8e2cd5a1e62d|||||||||||||||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
-weekly_dbbmm_seasonal_summary|stem|9027f05a75b9ace3|f49ea575bd1afc1f|360ed1ff55600e85|35394069||t20265.9446154756s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.02||
-weekly_dbbmm_swp_summary|stem|42099b1f622db66c|4114bd9eda70e5ea|5a4012f34dfa4f6f|-1052199150||t20265.944615118s|c4562ec57f43f223|552|rds|local|vector|||0.22||
-weekly_dbbmms|stem|2ed904ea950db7f3|7ed35f138c5e824e|65f181c8d447522c|-2101101675||t20265.9275767502s|9d5af98b857c5085|33159881|rds|local|vector|||6207.86|Field names abbreviated for ESRI Shapefile driver|
-weekly_margin|object|c7b1ac4588323176|||||||||||||||
-weekly_mcp|function|f3ffc9f2781e03b7|||||||||||||||
-weekly_mcp_seasonal_summary|stem|09d3bb06982f6c8c|c1b8781b3abb3eec|78755dd9324d7b8f|-1911070737||t20265.9446123494s|a3496bd4cf32175c|517|rds|local|vector|||0.03||
-weekly_mcp_swp_summary|stem|a7735e675aa62585|21c78168eb8e0959|d8feee167aa191d3|-1290166597||t20265.9446119341s|baf9ff9f6b5aaee8|551|rds|local|vector|||0.08||
-weekly_mcps|stem|9126a4f7e5f2714b|b7b0a146294b5b46|6226acbcb1b88067|-1315591038||t20265.8557018978s|f5f83348677fdec3|1140793|rds|local|vector|||250.81|Field names abbreviated for ESRI Shapefile driver|
-weekly_window|object|87c2fdbe3686b6eb|||||||||||||||
+weekly_dbbmm_seasonal_summary|stem|f8d9daf30ba97b57|f49ea575bd1afc1f|1ad444a37fa709c5|35394069||t20425.2094927299s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.09||
+weekly_dbbmm_swp_summary|stem|7c9779429e6c370c|4114bd9eda70e5ea|367f8dfc6c9bc0bd|-1052199150||t20425.2095066499s|baf9ff9f6b5aaee8|551|rds|local|vector|||1.16||
+weekly_dbbmms|stem|14bec0d5a2419b8f|9a847b72c4b2b51d|35a4378b0f43b80c|-2101101675||t20425.2094880573s|600ac917adacc9a7|65448441|rds|local|vector|||11833.5|Field names abbreviated for ESRI Shapefile driver|
+weekly_margin|object|1383ef88fd9bbb0e|||||||||||||||
+weekly_mcp|function|df86e293d7054eac|||||||||||||||
+weekly_mcp_seasonal_summary|stem|8000a53d355c8022|c1b8781b3abb3eec|7fcb08986d525ec5|-1911070737||t20424.1454305306s|41e2cd3cff9f3034|511|rds|local|vector|||0.11||
+weekly_mcp_swp_summary|stem|a7735e675aa62585|21c78168eb8e0959|b15e54706d8aeda9|-1290166597||t20424.1454324758s|baf9ff9f6b5aaee8|551|rds|local|vector|||0.1||
+weekly_mcps|stem|b175daebe8fa385c|5729369fdfbc5e26|05c5e4a0be17c619|-1315591038||t20424.1454156507s|3441898495772cb5|1157030|rds|local|vector|||399.31|Field names abbreviated for ESRI Shapefile driver|
+weekly_window|object|4c06678fced12882|||||||||||||||
 winter|object|326711d79cc870d3|||||||||||||||
-winter_dbbmm|stem|22215bf92d6ef7ce|c81b66de12f68329|6596a0fe8ad5bc0b|-99852116||t20265.8527978678s|bf1b8fba976ce90d|3714462|rds|local|vector|||807.75||
-winter_mcp|stem|9fdd3a18904bffa0|7bcad1dd10552d50|2ae5a6fed2e20be5|844460800||t20248.7181638112s|bdeb02f462cbd3b7|29565|rds|local|vector|||17.81||
+winter_dbbmm|stem|cf1831013bbbb6e3|c81b66de12f68329|189bb62d099851fc|-99852116||t20418.9640796604s|a0db12cdfa30e723|3756596|rds|local|vector|||1639.57||
+winter_mcp|stem|9f216aaecec42f1b|7bcad1dd10552d50|ec12cc3d5c55fd3d|844460800||t20418.9294728067s|c5d31fa5dc4df19b|29699|rds|local|vector|||11||
+winter_rsf_mcp|stem|fc5d0510cfe20d5a|eb91c3a5b7d9979a|a3c3ece1ad2d5164|-994354900||t20419.0167913052s|ec9291986bf9d710|95113|rds|local|vector|||5.53||
 yearly_prct_overlap|function|6d8800d84d72e357|||||||||||||||
-yearly_seasonal_overlap_summary|stem|94cb70cfdc348379|0c48be53267369b6|be5f9007a0abdc1c|-1519448991||t20294.964897823s|c515e452fa4424f7|1241|rds|local|vector|||0.06||
+yearly_seasonal_overlap_summary|stem|eca055662d946b5b|0c48be53267369b6|3d865cf280392439|-1519448991||t20418.9862666011s|e143a0c7741721eb|1246|rds|local|vector|||0.09||

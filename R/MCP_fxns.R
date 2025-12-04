@@ -73,36 +73,43 @@ find_centre <- find_center <- function(coords, method = "delaunay") {
 individual_mcp <- function(elk_dat, percent = 0.99, area_unit = "ha",...) {
   
   e <- elk_dat
-  # Dots = args to pass on to `find_center` (i.e. `method` arg)
-  # Unpack dots, see if a percent and/or alternative method was supplied
-  dots <- list(...)
-  if ("method" %in% names(dots)) method <- dots$method
   
-  if (percent > 1) percent <- percent / 100 # ensure percent is btwn 0 and 1
-  if (percent < 1) { 
-    # Only bother calculating center/distance to center etc. if the user
-    # specifies they want an MCP for <100% of the points
-    # Calculate the geographic center of the points
-    center <- if (exists("method")) find_center(sf::st_coordinates(e, method = method)) else find_center(sf::st_coordinates(e))
-    # Calc distance to center
-    e$distance_to_center <- sf::st_distance(e, center)
-    distance_cutoff <- quantile(e$distance_to_center, percent)
-    # Cut out any points >distance_cutoff
-    e <- e[e$distance_to_center <= distance_cutoff, ]
-  } 
+  if (nrow(e) > 1) {
+    # Dots = args to pass on to `find_center` (i.e. `method` arg)
+    # Unpack dots, see if a percent and/or alternative method was supplied
+    dots <- list(...)
+    if ("method" %in% names(dots)) method <- dots$method
+    
+    if (percent > 1) percent <- percent / 100 # ensure percent is btwn 0 and 1
+    if (percent < 1) { 
+      # Only bother calculating center/distance to center etc. if the user
+      # specifies they want an MCP for <100% of the points
+      # Calculate the geographic center of the points
+      center <- if (exists("method")) find_center(sf::st_coordinates(e, method = method)) else find_center(sf::st_coordinates(e))
+      # Calc distance to center
+      e$distance_to_center <- sf::st_distance(e, center)
+      distance_cutoff <- quantile(e$distance_to_center, percent)
+      # Cut out any points >distance_cutoff
+      e <- e[e$distance_to_center <= distance_cutoff, ]
+    } 
+    
+    # Calculate convex hull
+    e <- e |> 
+      sf::st_union() |> 
+      sf::st_convex_hull() |>
+      sf::st_as_sf()
+    
+    # Add cols of interest
+    e$animal_id <- unique(elk_dat$animal_id)
+    #e$year <- unique(elk_dat$year) # this fails in cases where last week of the year contains two years. Better to let the user assign the year how they want after the fact
+    e$area <- units::set_units(sf::st_area(e), value = area_unit, mode = "standard")
+    
+    return(e)
   
-  # Calculate convex hull
-  e <- e |> 
-    sf::st_union() |> 
-    sf::st_convex_hull() |>
-    sf::st_as_sf()
+  } else {
+      return(NULL)
+    }
   
-  # Add cols of interest
-  e$animal_id <- unique(elk_dat$animal_id)
-  #e$year <- unique(elk_dat$year) # this fails in cases where last week of the year contains two years. Better to let the user assign the year how they want after the fact
-  e$area <- units::set_units(sf::st_area(e), value = area_unit, mode = "standard")
-  
-  return(e)
   
 }
 
@@ -116,7 +123,7 @@ seasonal_mcp <- function(elk, season, min_days, ...) {
                       as.POSIXct(format = "%m-%d-%Y", tz = "America/Vancouver"))
   
   # Subset to only include season of interest
-  elk_seasons <- lapply(seasons, function(x) elk[which(elk$dttm >= x[1] & elk$dttm <= x[2]), ])
+  elk_seasons <- lapply(seasons, function(x) elk[which(lubridate::date(elk$dttm) >= x[1] & lubridate::date(elk$dttm) <= x[2]), ])
   names(elk_seasons) <- paste0("x", years) # R doesn't play nice with names that start w a number
   
   # Drop any empty seasons (e.g., Spring 2024 would be after the default cutoff date of March 31 2024)

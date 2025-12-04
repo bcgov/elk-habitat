@@ -32,6 +32,8 @@ cutoff_date <- "2024-04-01"
 non_swp_elk <- c("20-1001", "20-1002")
 
 # Severe winter period was 18 Dec 2021 - 14 Jan 2022
+swp_dates <- seq(lubridate::ymd("2021-12-18"), lubridate::ymd("2022-01-14"), by = "1 day")
+
 #lubridate::isoweek("2021-12-18")
 #lubridate::isoweek("2022-01-14")
 swp_weeks <- c(50, 51, 52, 53, 1, 2) # weeks 51 thru 1
@@ -60,21 +62,51 @@ MCP_pctl <- 0.95
 # do this if there's going to be lots of exploration of various UD levels.
 # This comes at the cost of storage space - lots of rasters = lots of space.
 
-# Previously used settings...
-# szn_window <- 57
-# szn_margin <- 9 
-# weekly_window <- 7
-# weekly_margin <- 3
-
-# Now using default margin & window settings
-# but keeping them stored as vars so the filename 
-# can be built correctly
+# After a sensitivity analysis, we found that
+# a window of 7 (21 hours) and 3 (9 hours) suitable
+# at both the weekly and seasonal scale. 
+# Keeping 99% UD for both scales as well to 
+# capture both core resident areas plus movement 
+# corridors.
 dBBMM_seasonal_ud <- 0.99 # To capture corridors of use btwn hotspots
-dBBMM_weekly_ud <- 0.95 # To exclude transitory behavior
-szn_window <- 31
-szn_margin <- 11 
-weekly_window <- 31
-weekly_margin <- 11
+#dBBMM_weekly_ud <- 0.95 # To exclude transitory behavior
+dBBMM_weekly_ud <- 0.99
+szn_window <- 7
+szn_margin <- 3 
+weekly_window <- 7
+weekly_margin <- 3
+
+# UWR LiDAR columns to extract
+lidar_cols <- c("canopy_height",
+                "Edge_Category",
+                "Edge_Distance_LiDAR",
+                "elevation",
+                "slope_percent")
+
+# VRI columns to extract
+vri_cols <- c("Shape_Area",
+              "INTERPRETATION_DATE",
+              "REFERENCE_YEAR",
+              "ATTRIBUTION_BASE_DATE",
+              "PROJECTED_DATE",
+              "HARVEST_DATE",
+              "Disturbance_Start_Date",
+              "Disturbance_End_Date",
+              "Harvest_Year",
+              "PROJ_AGE_1",
+              "NEW_VRI_CC_RES_AGE",
+              "BEST_AGE_CL_STS",
+              "PROJ_HEIGHT_1",
+              "VRI_LIVE_STEMS_PER_HA",
+              "CROWN_CLOSURE",
+              "SHRUB_HEIGHT",
+              "SHRUB_CROWN_CLOSURE",
+              "BCLCS_LEVEL_4", # broad species composition
+              "BCLCS_LEVEL_5", # broad spp composition, but with density
+              "SPECIES_CD_1", # spp composition code - leading species
+              "SPECIES_CD_2", 
+              "SPECIES_CD_3",
+              "Creation_Date")
 
 #### PIPELINE ####
 list(
@@ -129,7 +161,7 @@ list(
              output_file = "elk_nsd.pdf",
              params = list(elk_data = elk)),
 
-# >> HOME RANGE ------------------------------------------------------------
+  # >> HOME RANGE ####
 
   #### SEASONAL HOME RANGE ESTIMATES ####
   ##### Minimum Convex Polygons (MCPs) #####
@@ -189,7 +221,7 @@ list(
   ##### MCP #####
   tar_target(weekly_mcps, weekly_mcp(elk = elk,
                                      min_days = 1, # percentage of days - we want 100% of days
-                                     min_dets_per_day = 7, # we also want at minimum 7 detections per day, otherwise that week of data is thrown out
+                                     min_dets_per_day = 6, # we also want at minimum 6 detections per day, otherwise that week of data is thrown out
                                      percent = MCP_pctl) |> # 95% MCP - convex hull that encompasses 95th distance-from-centre percentile points. Defaults to Delaunay triangulation to find the center of the points.
                assign_weekly_seasons(seasons = list("winter" = winter, # defined toward the top of this document
                                                     "spring" = spring, # defined toward the top of this document
@@ -211,7 +243,7 @@ list(
   ##### dBBMM #####
   tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
                                          min_days = 1,
-                                         min_dets_per_day = 7,
+                                         min_dets_per_day = 6,
                                          window.size = weekly_window, # 21 hours
                                          margin = weekly_margin, # 9 hours
                                          location.error = 11.5,
@@ -379,16 +411,25 @@ list(
                                 sd_nsd = sd(NSD, na.rm = TRUE),
                                 median_nsd = median(NSD, na.rm = TRUE),
                                 N = dplyr::n())),
+  ##### 99 pctl step length #####
+  # The 99th pctl step length is the distance that 99% of the elk are 
+  # moving within the 3 hr gap between successive fixes. This will be
+  # used to buffer the RSF polygons down the line.
+  # TODO: filter to just winter period
+  tar_target(step_length_buffer, step_lengths_3hr |> 
+               dplyr::select(step) |> 
+               dplyr::pull() |> 
+               quantile(0.99)),
 
-# >> HABITAT SELECTION ANALYSIS --------------------------------------------
+  # >> HABITAT SELECTION ANALYSIS ####
 
-  #### DATA EXTRACTION ####
+  #### GPS DATA EXTRACTION ####
   ##### DEM attributes #####
   # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
   # extract elevation, slope grade (%), slope aspect (degrees), and
   # roughness.
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
-  tar_target(elk_dem, extract_dem(elk, cded_path = cded)),
+  tar_target(elk_dem, extract_dem(pts = elk, cded_path = cded)),
   ##### LiDAR attributes #####
   # Pull the LiDAR-derived data products off the W:/ drive onto local
   # machine + keep track of it if it changes on the server, then extract
@@ -408,19 +449,14 @@ list(
                                   local_path = "GIS/LiDAR products",
                                   download = FALSE), # set to FALSE bc I just manually moved it over in the end
              format = "file"),
-  tar_target(elk_uwr, extract_uwr(elk = elk,
-                                    gdb = uwr_lidar_gdb,
-                                    layers = c("canopy_height",
-                                               "Edge_Category",
-                                               "Edge_Distance_LiDAR",
-                                               "elevation",
-                                               "slope_percent")
-                                    )),
+  tar_target(elk_uwr, extract_uwr(pts = elk,
+                                  gdb = uwr_lidar_gdb,
+                                  layers = lidar_cols)),
   # Since the UWR layers might not be suitable for this analysis, let's
   # also extract data from a crown height model that was provided to us
   # by BCTS.
   tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
-  tar_target(elk_chm, extract_chm(elk = elk,
+  tar_target(elk_chm, extract_chm(pts = elk,
                                   path = chm_path)),
   ##### VRI attributes #####
   # Note we are using the improved VRI layer that was provided by Madrone.
@@ -433,30 +469,142 @@ list(
                                                    download = FALSE)), # set to FALSE bc I just manually moved it over in the end
   tar_target(vri, read_vri(gdb = madrone_vri_gdb)),
   #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
-  tar_target(elk_vri, extract_vri(feature = elk,
+  tar_target(elk_vri, extract_vri(pts = elk,
                                   vri = vri,
-                                  cols = c("Shape_Area",
-                                           "INTERPRETATION_DATE",
-                                           "REFERENCE_YEAR",
-                                           "ATTRIBUTION_BASE_DATE",
-                                           "PROJECTED_DATE",
-                                           "HARVEST_DATE",
-                                           "Disturbance_Start_Date",
-                                           "Disturbance_End_Date",
-                                           "Harvest_Year",
-                                           "PROJ_AGE_1",
-                                           "NEW_VRI_CC_RES_AGE",
-                                           "BEST_AGE_CL_STS",
-                                           "PROJ_HEIGHT_1",
-                                           "VRI_LIVE_STEMS_PER_HA",
-                                           "CROWN_CLOSURE",
-                                           "SHRUB_HEIGHT",
-                                           "SHRUB_CROWN_CLOSURE",
-                                           "BCLCS_LEVEL_4", # broad species composition
-                                           "SPECIES_CD_1", # spp composition code - leading species
-                                           "SPECIES_CD_2", 
-                                           "SPECIES_CD_3",
-                                           "Creation_Date")))#,
+                                  cols = vri_cols)),
   # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
   #                                        edges = vri_edges))
+  #### DEFINE AVAILABILITY ####
+  ##### Availability MCPs - Seasonal #####
+  # Rather than pull from the 95 percentile MCPs, known available habitat
+  # should pull from 100% of the area covered by the GPS points. The area
+  # we draw from for availability is just that - *available* space - and it
+  # is *not* equivalent to a home range. So, draw MCPs around any points
+  # that have passed our data QC filters.
+  # First create a polygon that is the shapefile of our overall study area
+  # This will be used to clip our RSF MCPs to land (i.e. ensure our RSF MCPs
+  # all occur in areas elk can actually access)
+  tar_target(study_area, study_area_poly(elk)),
+  # Winter RSF MCP
+  tar_target(winter_rsf_mcp, seasonal_mcp(elk = elk,
+                                      season = winter,
+                                      min_days = 0, # we want to include the full dataset, regardless of minimum N points
+                                      percent = 100) |> # 100% MCP - include all points
+               sf::st_union() |>
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points. In theory, an elk could move half it's step length out, and then half it's step length back in within the 3 hour gap btwn fixes.
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_Winter.shp",
+                            append = FALSE)),
+  # Spring RSF MCP
+  tar_target(spring_rsf_mcp, seasonal_mcp(elk = elk,
+                                          season = spring,
+                                          min_days = 0, # we want to include the full dataset, regardless of minimum N points
+                                          percent = 100) |> # 100% MCP - include all points
+               sf::st_union() |>
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_Spring.shp",
+                            append = FALSE)),
+  # Summer RSF MCP
+  tar_target(summer_rsf_mcp, seasonal_mcp(elk = elk,
+                                          season = summer,
+                                          min_days = 0, # we want to include the full dataset, regardless of minimum N points
+                                          percent = 100) |> # 100% MCP - include all points
+               sf::st_union() |>
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_Summer.shp",
+                            append = FALSE)),
+  ##### Availability MCPs - SWP #####
+  # The severe winter period avialability polygon is a special case
+  # of the Winter polygons. It is the merged Winter MCPs of only elk
+  # that experienced the SWP (i.e. were collared and we have tracking
+  # for).
+  # First subset to SWP elk
+  # These are the elk IDs that specifically experienced the 2021
+  # severe winter (i.e. cuts out any that also weren't collared
+  # yet) 
+  tar_target(swp_elk, elk |> 
+               sf::st_drop_geometry() |>
+               dplyr::filter(lubridate::date(dttm) %in% swp_dates) |>
+               dplyr::select(animal_id) |> 
+               dplyr::distinct() |> 
+               dplyr::pull()),
+  # Severe Winter Period RSF MCP
+  tar_target(swp_rsf_mcp, elk |>
+               dplyr::filter(animal_id %in% swp_elk) |>
+               seasonal_mcp(season = winter,
+                            min_days = 0,
+                            percent = 100) |> # 100% MCP - include all points
+               # Merge in two weekly MCPs from two individuals whose 
+               # Dec 14-Dec 31 data is not actually captured within the Winter MCP
+               dplyr::bind_rows(weekly_mcps |>
+                                dplyr::filter((animal_id == '20-1000' & isoyear_week == '2021.51')|
+                                              (animal_id == '20-0982' & isoyear_week == '2021.52'))
+                                ) |>
+               sf::st_union() |>
+               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+               sf::st_intersection(study_area) |>
+               sf::st_write("temp/Pipeline outputs/MCP_RSF_SWP.shp",
+                            append = FALSE)
+             ),
+  #### RANDOM POINTS ####
+  ##### Sample random pts #####
+  # Sample random points within each of our availability MCPs to use in RSFs
+  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
+  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
+  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
+  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |> 
+               sf::st_as_sf() |>
+               dplyr::mutate(idposition = dplyr::row_number())),
+  #### RANDOM DATA EXTRACTION ####
+  ##### DEM attributes #####
+  tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
+  tar_target(random_spring_dem, extract_dem(pts = random_spring, cded_path = cded)),
+  tar_target(random_summer_dem, extract_dem(pts = random_summer, cded_path = cded)),
+  tar_target(random_swp_dem, extract_dem(pts = random_swp, cded_path = cded)),
+  ##### LiDAR attributes #####
+  # UWR data
+  tar_target(random_winter_uwr, extract_uwr(pts = random_winter,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_spring_uwr, extract_uwr(pts = random_spring,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_summer_uwr, extract_uwr(pts = random_summer,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_swp_uwr, extract_uwr(pts = random_swp,
+                                         gdb = uwr_lidar_gdb,
+                                         layers = lidar_cols)),
+  # CHM data
+  tar_target(random_winter_chm, extract_chm(pts = random_winter, 
+                                            path = chm_path)),
+  tar_target(random_spring_chm, extract_chm(pts = random_spring, 
+                                            path = chm_path)),
+  tar_target(random_summer_chm, extract_chm(pts = random_summer, 
+                                            path = chm_path)),
+  tar_target(random_swp_chm, extract_chm(pts = random_swp, 
+                                         path = chm_path)),
+  ##### VRI attributes #####
+  tar_target(random_winter_vri, extract_vri(pts = random_winter,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_spring_vri, extract_vri(pts = random_spring,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_summer_vri, extract_vri(pts = random_summer,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_swp_vri, extract_vri(pts = random_swp,
+                                            vri = vri,
+                                            cols = vri_cols))
+
 )
+

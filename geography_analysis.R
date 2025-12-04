@@ -2,6 +2,9 @@
 # be included in our habitat selection models. They are intended to 
 # visualize use (selection) vs availability of various landscape features.
 
+# TODO: replace the study area here with the targets pipeline study area
+# for pulling random availability points from.
+
 # SETUP -----------------------------------------------------------------
 
 # Load libraries
