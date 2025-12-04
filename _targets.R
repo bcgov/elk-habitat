@@ -62,21 +62,19 @@ MCP_pctl <- 0.95
 # do this if there's going to be lots of exploration of various UD levels.
 # This comes at the cost of storage space - lots of rasters = lots of space.
 
-# Previously used settings...
-# szn_window <- 57
-# szn_margin <- 9 
-# weekly_window <- 7
-# weekly_margin <- 3
-
-# Now using default margin & window settings
-# but keeping them stored as vars so the filename 
-# can be built correctly
+# After a sensitivity analysis, we found that
+# a window of 7 (21 hours) and 3 (9 hours) suitable
+# at both the weekly and seasonal scale. 
+# Keeping 99% UD for both scales as well to 
+# capture both core resident areas plus movement 
+# corridors.
 dBBMM_seasonal_ud <- 0.99 # To capture corridors of use btwn hotspots
-dBBMM_weekly_ud <- 0.95 # To exclude transitory behavior
-szn_window <- 31
-szn_margin <- 11 
-weekly_window <- 31
-weekly_margin <- 11
+#dBBMM_weekly_ud <- 0.95 # To exclude transitory behavior
+dBBMM_weekly_ud <- 0.99
+szn_window <- 7
+szn_margin <- 3 
+weekly_window <- 7
+weekly_margin <- 3
 
 # UWR LiDAR columns to extract
 lidar_cols <- c("canopy_height",
@@ -417,6 +415,7 @@ list(
   # The 99th pctl step length is the distance that 99% of the elk are 
   # moving within the 3 hr gap between successive fixes. This will be
   # used to buffer the RSF polygons down the line.
+  # TODO: filter to just winter period
   tar_target(step_length_buffer, step_lengths_3hr |> 
                dplyr::select(step) |> 
                dplyr::pull() |> 

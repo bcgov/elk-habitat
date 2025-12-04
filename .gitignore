@@ -61,3 +61,6 @@ data/DATABASE_Elk Capture_Updtd_20240513.xlsx
 GIS/*
 !GIS/regions_wkt.csv
 *.zip
+
+# Map tiles cache
+rosm.cache/*

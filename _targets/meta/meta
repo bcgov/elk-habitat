@@ -8,7 +8,7 @@ assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|9d65df7e940b435f|||||||||||||||
 capture_data|stem|12bdb83573be937b|e14ef5cd5be2470c|42d6a860cf84bb4c|1127347996||t20242.9196286274s|a31fe2a31585068b|12482|rds|local|vector|||0.36||
 capture_data_path|stem|21a819747fabe06a|70e4449647399076|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20250415.xlsx|t20239.0881285566s|a67621ae84340c38|112484|file|local|vector|||0.81||
-cded|stem|625beeba987df5d8|785e6cdb0578efdb|10f8715d9ef60b1f|-438085499|GIS/DEM/CDED_VRT.vrt|t20311.9495043621s|5a2fd5cba14367e1|21214|file|local|vector|||9.88||
+cded|stem|625beeba987df5d8|785e6cdb0578efdb|10f8715d9ef60b1f|-438085499|GIS/DEM/CDED_VRT.vrt|t20425.0724296269s|5a2fd5cba14367e1|21214|file|local|vector|||14.86||
 chm_path|stem|29e226684ac9a3ef|7678dac5a50beb30|2c530c1562a7fbd1|131809279|GIS/LiDAR products/crown_height.tif|t20183.0142095376s|f77f63eb8093eecb|67587177|file|local|vector|||0.47|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
 clean_collar_data|function|e2c296d1cf8e1e23|||||||||||||||
 cleaned_collar_data|stem|31d2d57b21ebc810|cbbf49070c725880|4f48f37386fe5c67|-1799209495||t20248.7177642671s|8ade31971408355a|33764823|rds|local|vector|||425.98||
@@ -29,7 +29,7 @@ dbbmm_seasonal_summary|stem|0b69790ebc46c1ca|953aea498725d956|9b8c4e6fc5dccf18|1
 dBBMM_seasonal_ud|object|29e816842fabc47d|||||||||||||||
 dbbmm_spring_yearly_overlap|stem|091bc90b9524eb07|39a9b295d50aa699|7d0ec883176c641f|-2038073459||t20418.9862485117s|233761e517fdb211|2167|rds|local|vector|||6.67||
 dbbmm_summer_yearly_overlap|stem|140e93afb6c6f3c5|22432e9590bfe93c|2beef697e386245a|408432813||t20418.9859290146s|59fe6edf7dec7e7b|2072|rds|local|vector|||7.48||
-dBBMM_weekly_ud|object|f43fe2c999030d30|||||||||||||||
+dBBMM_weekly_ud|object|29e816842fabc47d|||||||||||||||
 dbbmm_winter_agg_overlap|stem|6ee1b020ac39d06a|a775d7b4475df247|e5358fdc52013af1|-1889499879||t20418.9859783889s|9ed1990733649bbf|750|rds|local|vector|||4.22||
 dbbmm_winter_spring_overlap|stem|61bdf4cce677992f|b930075dc00053b3|823a5d7a6951375e|-1789060891||t20418.9861708332s|7dc53ad1db76290f|2656|rds|local|vector|||10.95||
 dbbmm_winter_yearly_overlap|stem|b3c63def032ebd79|3a8acfeaffe76901|4ff14723dde83c26|2111524819||t20418.986027917s|17ca129ff4ab3ee5|1567|rds|local|vector|||4.22||
@@ -143,7 +143,7 @@ summer_rsf_mcp|stem|13d9cb7819670cbb|c662f3ec4d8502c6|e0e22989efa19377|-98784348
 swp_dates|object|bd5ecf35a6fb3fcc|||||||||||||||
 swp_days|object|a66a035b5e000a9e|||||||||||||||
 swp_elk|stem|63218ec186e5835a|0e548acfba9dd6dc|333e020b5d869d8d|-1053022346||t20419.0330042473s|514534cdb13dcc77|156|rds|local|vector|||0.43||
-swp_rsf_mcp|stem|f37df66191b8c37b|fa627f5f215e2fbd|9445ddc933b52d51|1485982528||t20419.0502920389s|2466feaff4b7400d|66820|rds|local|vector|||3.65||
+swp_rsf_mcp|stem|f37df66191b8c37b|fa627f5f215e2fbd|f97dc43f4954b0ef|1485982528||t20424.1455136463s|2466feaff4b7400d|66820|rds|local|vector|||6.87||
 swp_weeks|object|b40b8812ed5a52af|||||||||||||||
 szn_margin|object|c7b1ac4588323176|||||||||||||||
 szn_window|object|87c2fdbe3686b6eb|||||||||||||||
@@ -154,15 +154,15 @@ vri|stem|e33a0daac99c4a73|44ec05d8757c0cb7|f7f352d9d267200b|-1341468610||t20146.
 vri_cols|object|0e6f8e2cd5a1e62d|||||||||||||||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
-weekly_dbbmm_seasonal_summary|stem|9027f05a75b9ace3|f49ea575bd1afc1f|360ed1ff55600e85|35394069||t20265.9446154756s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.02||
-weekly_dbbmm_swp_summary|stem|42099b1f622db66c|4114bd9eda70e5ea|5a4012f34dfa4f6f|-1052199150||t20265.944615118s|c4562ec57f43f223|552|rds|local|vector|||0.22||
-weekly_dbbmms|stem|2ed904ea950db7f3|7ed35f138c5e824e|65f181c8d447522c|-2101101675||t20265.9275767502s|9d5af98b857c5085|33159881|rds|local|vector|||6207.86|Field names abbreviated for ESRI Shapefile driver|
-weekly_margin|object|c7b1ac4588323176|||||||||||||||
+weekly_dbbmm_seasonal_summary|stem|f8d9daf30ba97b57|f49ea575bd1afc1f|1ad444a37fa709c5|35394069||t20425.2094927299s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.09||
+weekly_dbbmm_swp_summary|stem|7c9779429e6c370c|4114bd9eda70e5ea|367f8dfc6c9bc0bd|-1052199150||t20425.2095066499s|baf9ff9f6b5aaee8|551|rds|local|vector|||1.16||
+weekly_dbbmms|stem|14bec0d5a2419b8f|9a847b72c4b2b51d|35a4378b0f43b80c|-2101101675||t20425.2094880573s|600ac917adacc9a7|65448441|rds|local|vector|||11833.5|Field names abbreviated for ESRI Shapefile driver|
+weekly_margin|object|1383ef88fd9bbb0e|||||||||||||||
 weekly_mcp|function|df86e293d7054eac|||||||||||||||
-weekly_mcp_seasonal_summary|stem|09d3bb06982f6c8c|c1b8781b3abb3eec|78755dd9324d7b8f|-1911070737||t20265.9446123494s|a3496bd4cf32175c|517|rds|local|vector|||0.03||
-weekly_mcp_swp_summary|stem|a7735e675aa62585|21c78168eb8e0959|d8feee167aa191d3|-1290166597||t20265.9446119341s|baf9ff9f6b5aaee8|551|rds|local|vector|||0.08||
-weekly_mcps|stem|9126a4f7e5f2714b|b7b0a146294b5b46|05c5e4a0be17c619|-1315591038||t20418.8490925547s|f5f83348677fdec3|1140793|rds|local|vector|||475.69|Field names abbreviated for ESRI Shapefile driver|
-weekly_window|object|87c2fdbe3686b6eb|||||||||||||||
+weekly_mcp_seasonal_summary|stem|8000a53d355c8022|c1b8781b3abb3eec|7fcb08986d525ec5|-1911070737||t20424.1454305306s|41e2cd3cff9f3034|511|rds|local|vector|||0.11||
+weekly_mcp_swp_summary|stem|a7735e675aa62585|21c78168eb8e0959|b15e54706d8aeda9|-1290166597||t20424.1454324758s|baf9ff9f6b5aaee8|551|rds|local|vector|||0.1||
+weekly_mcps|stem|b175daebe8fa385c|5729369fdfbc5e26|05c5e4a0be17c619|-1315591038||t20424.1454156507s|3441898495772cb5|1157030|rds|local|vector|||399.31|Field names abbreviated for ESRI Shapefile driver|
+weekly_window|object|4c06678fced12882|||||||||||||||
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|cf1831013bbbb6e3|c81b66de12f68329|189bb62d099851fc|-99852116||t20418.9640796604s|a0db12cdfa30e723|3756596|rds|local|vector|||1639.57||
 winter_mcp|stem|9f216aaecec42f1b|7bcad1dd10552d50|ec12cc3d5c55fd3d|844460800||t20418.9294728067s|c5d31fa5dc4df19b|29699|rds|local|vector|||11||
