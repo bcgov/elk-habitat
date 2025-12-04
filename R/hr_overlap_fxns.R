@@ -268,29 +268,34 @@ cumulative_shp <- function(shp, area_unit = "ha") {
   out <- 
     shp |>
     dplyr::group_by(animal_id) |>
+    dplyr::arrange(animal_id, year) |> 
     dplyr::mutate(N_year = 1,
                   N_year = cumsum(N_year)) |>
-    dplyr::arrange(animal_id, desc(year)) |> 
+    dplyr::arrange(animal_id, dplyr::desc(year)) |> 
     dplyr::mutate(grp = 1,
                   grp = cumsum(grp)) |> 
     tidyr::uncount(grp, .remove = FALSE) |> # the star of the pipe
-    dplyr::group_by(animal_id) |>
-    dplyr::mutate(min_year = min(year)) |>
     dplyr::group_by(animal_id, N_year) |>
     # Reset grp
     dplyr::mutate(grp = 1,
                   grp = cumsum(grp),
-                  grp = grp - 1,
-                  years = dplyr::if_else(grp == 0 & N_year == 1,
-                                         as.character(year),
-                                         paste0(min_year, "-", (year + grp)))
-                  ) |>
-    dplyr::group_by(animal_id, years) |>
-    dplyr::select(animal_id, season, years, geometry) |>
+                  grp = grp - 1) |>
+    dplyr::group_by(animal_id, grp) |>
+    dplyr::select(animal_id, season, grp, year, geometry) |>
+    dplyr::arrange(animal_id, grp, year) |>
+    dplyr::mutate(year_diff = year - dplyr::lag(year),
+                  year_diff = dplyr::if_else(is.na(year_diff), 0, year_diff)) |>
     sf::st_as_sf() |>
     dplyr::summarize(N = dplyr::n(),
-                     #geometry = sf::st_union(geometry),
-                     .groups = "keep")
+                     year_diff = sum(year_diff),
+                     min_year = min(year),
+                     max_year = max(year),
+                     years = dplyr::case_when(year_diff == 0 ~ as.character(min_year),
+                                              year_diff > N - 1 ~ paste(year, collapse = ", "),
+                                              year_diff == N - 1 ~ paste0(min_year, "-", max_year)),
+                     .groups = "drop") |>
+    dplyr::select(animal_id, N, years) |>
+    dplyr::arrange(animal_id, N)
   out$area <- sf::st_area(out)
   out$area <- units::set_units(out$area, value = area_unit, mode = "standard")
   return(out)
