@@ -484,7 +484,7 @@ list(
   # First create a polygon that is the shapefile of our overall study area
   # This will be used to clip our RSF MCPs to land (i.e. ensure our RSF MCPs
   # all occur in areas elk can actually access)
-  tar_target(study_area, study_area_poly(elk)),
+  tar_target(study_area, study_area_poly(elk, cded_path = cded)),
   # Winter RSF MCP
   tar_target(winter_rsf_mcp, seasonal_mcp(elk = elk,
                                       season = winter,
