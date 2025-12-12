@@ -61,7 +61,7 @@ study_area_poly <- function(elk, cded_path) {
     dplyr::filter(WSA_STREAM_ORDER_50K > 3) |>
     dplyr::filter(bcdata::INTERSECTS(study_area)) |>
     dplyr::collect()
-  lakes <- sf::st_intersection(lakes, study_area)
+  lakes <- suppressWarnings(sf::st_intersection(lakes, study_area))
   lakes <- sf::st_geometry(lakes)
   
   study_area <- sf::st_difference(study_area, sf::st_union(lakes))
