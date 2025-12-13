@@ -1,4 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+.Random.seed|object|c21eae5b4c299383|||||||||||||||
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
 all_seasons_dbbmm|stem|fa9da4a298b495da|04c92914fe89f26c|f50c748d3f7a2594|-436251714||t20426.0834475676s|88e4f072020fbc01|11317313|rds|local|vector|||0.03||
 all_seasons_mcp|stem|01d7357fb59a0e3e|49512c53edbb9f8e|72e8850b1cd041af|37521217||t20418.9299505108s|689d581227ae981b|96084|rds|local|vector|||0.02||
@@ -8,6 +9,8 @@ assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|9d65df7e940b435f|||||||||||||||
 capture_data|stem|12bdb83573be937b|e14ef5cd5be2470c|42d6a860cf84bb4c|1127347996||t20242.9196286274s|a31fe2a31585068b|12482|rds|local|vector|||0.36||
 capture_data_path|stem|21a819747fabe06a|70e4449647399076|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20250415.xlsx|t20239.0881285566s|a67621ae84340c38|112484|file|local|vector|||0.81||
+cd|stem|59eed62643d503de|5db07916dffd27bb|93eacb0e3115103b|-18542959||t20435.0489677065s|7dd309b9980e383e|2359765|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||0.11||
+cd_path|stem|59eed62643d503de|e138b83babc38d85|2c530c1562a7fbd1|-640483551|GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif|t20194.9672916667s|7dd309b9980e383e|2359765|file|local|vector|||0||
 cded|stem|625beeba987df5d8|785e6cdb0578efdb|10f8715d9ef60b1f|-438085499|GIS/DEM/CDED_VRT.vrt|t20425.0724296269s|5a2fd5cba14367e1|21214|file|local|vector|||14.86||
 chm_path|stem|29e226684ac9a3ef|7678dac5a50beb30|2c530c1562a7fbd1|131809279|GIS/LiDAR products/crown_height.tif|t20183.0142095376s|f77f63eb8093eecb|67587177|file|local|vector|||0.47|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
 clean_collar_data|function|e2c296d1cf8e1e23|||||||||||||||
@@ -34,6 +37,8 @@ dbbmm_winter_agg_overlap|stem|924cd3031b841531|a775d7b4475df247|4c9b80ef9af18c14
 dbbmm_winter_spring_overlap|stem|b85b1184f7f26f95|b930075dc00053b3|77c3d61f3e921940|-1789060891||t20426.0833561484s|08166177d522efa8|2680|rds|local|vector|||11.92||
 dbbmm_winter_yearly_overlap|stem|55641db80cc219ab|3a8acfeaffe76901|fa0d454dd79d7f25|2111524819||t20426.0830399161s|bc5afef1029f6be8|1562|rds|local|vector|||6.87||
 dbbmm_wso_summary|stem|cd7a58bf613c72e5|ae36d9ecb25d1dc8|2db416fa8db9bc6b|-516662678||t20426.0834512885s|9c83226e2b301f18|499|rds|local|vector|||0.22||
+deps|stem|229dc25306eb90b4|04b0529d6662241f|20750ee96c894224|1095278719||t20435.0489559595s|e6783f11bc7e03b6|12208809|rds|local|vector|||1.23||
+deps_path|stem|10e3699f62a4c54d|89bd4cca59c8a17d|2c530c1562a7fbd1|958187293|GIS/Depletions/2025_01_Depletions.gpkg|t20435.0411358775s|80caededd3166cb6|29728768|file|local|vector|||0.85|package ggplot2 was built under R version 4.4.3|
 detection_efficiency|stem|9b30fbc43eb62da9|8d8488432aca6501|0135757affed2e7e|947972721||t20294.9648921863s|fc2446d516419728|2410|rds|local|vector|||0.52||
 dets_per_elk|stem|9ea9de4cf64cc701|cffc3ee6ced78c00|0e32a3ce99815265|-360331643||t20248.8696885664s|73e589b388d3f2b1|172|rds|local|vector|||0.11||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
@@ -150,7 +155,7 @@ szn_window|object|4c06678fced12882|||||||||||||||
 unassigned_detections|stem|a216051b3f1068b6|6286e9ca467fe184|59ef7f677119210a|-1280430989||t20242.9197444094s|324f0a5d5606a313|496063|rds|local|vector|||0.02||
 uwr_lidar_gdb|stem|d75c6248a3d67767|dc45d4d7d5da144c|86d3172805fa286a|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20134.1192011005s|d3256ba881f5d4b7|65536|file|local|vector|||0.36||
 uwr_lidar_gdb_path|stem|d75c6248a3d67767|794406ab5299b854|2c530c1562a7fbd1|2052183110|W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb|t20269.7701157308s|d3256ba881f5d4b7|65536|file|local|vector|||0.88||
-vri|stem|e33a0daac99c4a73|44ec05d8757c0cb7|f7f352d9d267200b|-1341468610||t20146.0132776079s|966d39975026ea8c|526153274|rds|local|vector|||1151.77|GDAL Message 1 organizePolygons received a polygon with more than 100 parts. The processing may be really slow.  You can skip the processing by setting METHODSKIP, or only make it analyze counterclock wise parts by setting METHODONLY_CCW if you can assume that the outline of holes is counterclock wise defined|
+vri|stem|fef281952eb1b7dd|b244d74f11a53b66|0b5b3d85b533e778|-1341468610||t20435.0519788806s|6bc518392997cbe7|36589489|rds|local|vector|||249.19||
 vri_cols|object|0e6f8e2cd5a1e62d|||||||||||||||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||

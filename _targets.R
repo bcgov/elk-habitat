@@ -3,6 +3,7 @@
 # Load packages required to define the pipeline:
 library(targets)
 library(tarchetypes) # for tar_map()
+library(geotargets) # for raster targets
 
 # Set target options:
 tar_option_set(
@@ -110,7 +111,7 @@ vri_cols <- c("Shape_Area",
 
 #### PIPELINE ####
 list(
-  #### SETUP ####
+  #### COLLARS SETUP ####
   # Pull and track all collar keys files
   tar_target(collar_keys, collar::get_paths("data/Collar Keys"), format = "file"),
   # Download off Vectronix website
@@ -420,191 +421,234 @@ list(
                dplyr::select(step) |> 
                dplyr::pull() |> 
                quantile(0.99)),
-
+  
   # >> HABITAT SELECTION ANALYSIS ####
-
-  #### GPS DATA EXTRACTION ####
-  ##### DEM attributes #####
-  # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
-  # extract elevation, slope grade (%), slope aspect (degrees), and
-  # roughness.
+  #### HSA SETUP ####
+  # Here, we will download the main input datasets that
+  # will go into the HSA. 
+  ##### Download DEM #####
+  # Queries CDED tiles overlapping our elk data using the `bcmaps` package
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
-  tar_target(elk_dem, extract_dem(pts = elk, cded_path = cded)),
-  ##### LiDAR attributes #####
-  # Pull the LiDAR-derived data products off the W:/ drive onto local
-  # machine + keep track of it if it changes on the server, then extract
-  # the data from it (elevation, slope grade (%), canopy height, edge
-  # category, edge distance).
-  # Keep track of the W:/ drive LiDAR file
-  # This makes the pipeline a lot slower bc the server is slow. 
-  # So commenting out. 
-  # tar_target(uwr_lidar_gdb_path,
-  #            "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
-  #            format = "file"),
-  # Make a local copy of the W:/ drive LiDAR file (this will get re-downloaded
-  # if the W:/ drive copy is ever updated/modified)
-  tar_target(uwr_lidar_gdb,
-             download_from_server(#server_path = uwr_lidar_gdb_path,
-                                  server_path = "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
-                                  local_path = "GIS/LiDAR products",
-                                  download = FALSE), # set to FALSE bc I just manually moved it over in the end
-             format = "file"),
-  tar_target(elk_uwr, extract_uwr(pts = elk,
-                                  gdb = uwr_lidar_gdb,
-                                  layers = lidar_cols)),
-  # Since the UWR layers might not be suitable for this analysis, let's
-  # also extract data from a crown height model that was provided to us
-  # by BCTS.
-  tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
-  tar_target(elk_chm, extract_chm(pts = elk,
-                                  path = chm_path)),
-  ##### VRI attributes #####
-  # Note we are using the improved VRI layer that was provided by Madrone.
-  # tar_target(madrone_vri_gdb_path,
-  #            "W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb",
-  #            format = "file"),
-  tar_target(madrone_vri_gdb_path, "W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb"),
-  tar_target(madrone_vri_gdb, download_from_server(server_path = madrone_vri_gdb_path,
-                                                   local_path = "GIS/VRI",
-                                                   download = FALSE)), # set to FALSE bc I just manually moved it over in the end
-  tar_target(vri, read_vri(gdb = madrone_vri_gdb)),
-  #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
-  tar_target(elk_vri, extract_vri(pts = elk,
-                                  vri = vri,
-                                  cols = vri_cols)),
-  # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
-  #                                        edges = vri_edges))
-  #### DEFINE AVAILABILITY ####
-  ##### Availability MCPs - Seasonal #####
-  # Rather than pull from the 95 percentile MCPs, known available habitat
-  # should pull from 100% of the area covered by the GPS points. The area
-  # we draw from for availability is just that - *available* space - and it
-  # is *not* equivalent to a home range. So, draw MCPs around any points
-  # that have passed our data QC filters.
-  # First create a polygon that is the shapefile of our overall study area
-  # This will be used to clip our RSF MCPs to land (i.e. ensure our RSF MCPs
-  # all occur in areas elk can actually access)
+  ##### Study Area #####
+  # Create a polygon that is the shapefile of our overall study area on land
+  # This will allow us to spatially limit our queries for big files
   tar_target(study_area, study_area_poly(elk, cded_path = cded)),
-  # Winter RSF MCP
-  tar_target(winter_rsf_mcp, seasonal_mcp(elk = elk,
-                                      season = winter,
-                                      min_days = 0, # we want to include the full dataset, regardless of minimum N points
-                                      percent = 100) |> # 100% MCP - include all points
-               sf::st_union() |>
-               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points. In theory, an elk could move half it's step length out, and then half it's step length back in within the 3 hour gap btwn fixes.
-               sf::st_intersection(study_area) |>
-               sf::st_write("temp/Pipeline outputs/MCP_RSF_Winter.shp",
-                            append = FALSE)),
-  # Spring RSF MCP
-  tar_target(spring_rsf_mcp, seasonal_mcp(elk = elk,
-                                          season = spring,
-                                          min_days = 0, # we want to include the full dataset, regardless of minimum N points
-                                          percent = 100) |> # 100% MCP - include all points
-               sf::st_union() |>
-               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
-               sf::st_intersection(study_area) |>
-               sf::st_write("temp/Pipeline outputs/MCP_RSF_Spring.shp",
-                            append = FALSE)),
-  # Summer RSF MCP
-  tar_target(summer_rsf_mcp, seasonal_mcp(elk = elk,
-                                          season = summer,
-                                          min_days = 0, # we want to include the full dataset, regardless of minimum N points
-                                          percent = 100) |> # 100% MCP - include all points
-               sf::st_union() |>
-               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
-               sf::st_intersection(study_area) |>
-               sf::st_write("temp/Pipeline outputs/MCP_RSF_Summer.shp",
-                            append = FALSE)),
-  ##### Availability MCPs - SWP #####
-  # The severe winter period avialability polygon is a special case
-  # of the Winter polygons. It is the merged Winter MCPs of only elk
-  # that experienced the SWP (i.e. were collared and we have tracking
-  # for).
-  # First subset to SWP elk
-  # These are the elk IDs that specifically experienced the 2021
-  # severe winter (i.e. cuts out any that also weren't collared
-  # yet) 
-  tar_target(swp_elk, elk |> 
-               sf::st_drop_geometry() |>
-               dplyr::filter(lubridate::date(dttm) %in% swp_dates) |>
-               dplyr::select(animal_id) |> 
-               dplyr::distinct() |> 
-               dplyr::pull()),
-  # Severe Winter Period RSF MCP
-  tar_target(swp_rsf_mcp, elk |>
-               dplyr::filter(animal_id %in% swp_elk) |>
-               seasonal_mcp(season = winter,
-                            min_days = 0,
-                            percent = 100) |> # 100% MCP - include all points
-               # Merge in two weekly MCPs from two individuals whose 
-               # Dec 14-Dec 31 data is not actually captured within the Winter MCP
-               dplyr::bind_rows(weekly_mcps |>
-                                dplyr::filter((animal_id == '20-1000' & isoyear_week == '2021.51')|
-                                              (animal_id == '20-0982' & isoyear_week == '2021.52'))
-                                ) |>
-               sf::st_union() |>
-               sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
-               sf::st_intersection(study_area) |>
-               sf::st_write("temp/Pipeline outputs/MCP_RSF_SWP.shp",
-                            append = FALSE)
-             ),
-  #### RANDOM POINTS ####
-  ##### Sample random pts #####
-  # Sample random points within each of our availability MCPs to use in RSFs
-  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk)) |> 
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk)) |> 
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk)) |> 
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |> 
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-  #### RANDOM DATA EXTRACTION ####
-  ##### DEM attributes #####
-  tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
-  tar_target(random_spring_dem, extract_dem(pts = random_spring, cded_path = cded)),
-  tar_target(random_summer_dem, extract_dem(pts = random_summer, cded_path = cded)),
-  tar_target(random_swp_dem, extract_dem(pts = random_swp, cded_path = cded)),
-  ##### LiDAR attributes #####
-  # UWR data
-  tar_target(random_winter_uwr, extract_uwr(pts = random_winter,
-                                            gdb = uwr_lidar_gdb,
-                                            layers = lidar_cols)),
-  tar_target(random_spring_uwr, extract_uwr(pts = random_spring,
-                                            gdb = uwr_lidar_gdb,
-                                            layers = lidar_cols)),
-  tar_target(random_summer_uwr, extract_uwr(pts = random_summer,
-                                            gdb = uwr_lidar_gdb,
-                                            layers = lidar_cols)),
-  tar_target(random_swp_uwr, extract_uwr(pts = random_swp,
-                                         gdb = uwr_lidar_gdb,
-                                         layers = lidar_cols)),
-  # CHM data
-  tar_target(random_winter_chm, extract_chm(pts = random_winter, 
-                                            path = chm_path)),
-  tar_target(random_spring_chm, extract_chm(pts = random_spring, 
-                                            path = chm_path)),
-  tar_target(random_summer_chm, extract_chm(pts = random_summer, 
-                                            path = chm_path)),
-  tar_target(random_swp_chm, extract_chm(pts = random_swp, 
-                                         path = chm_path)),
-  ##### VRI attributes #####
-  tar_target(random_winter_vri, extract_vri(pts = random_winter,
-                                            vri = vri,
-                                            cols = vri_cols)),
-  tar_target(random_spring_vri, extract_vri(pts = random_spring,
-                                            vri = vri,
-                                            cols = vri_cols)),
-  tar_target(random_summer_vri, extract_vri(pts = random_summer,
-                                            vri = vri,
-                                            cols = vri_cols)),
-  tar_target(random_swp_vri, extract_vri(pts = random_swp,
-                                            vri = vri,
-                                            cols = vri_cols))
+  ##### Download VRI #####
+  tar_target(vri, bcdata::bcdc_query_geodata("2ebb35d8-c82f-4a17-9c96-612ac3532d55") |>
+               dplyr::filter(bcdata::INTERSECTS(study_area)) |>
+               dplyr::collect()),
+  ##### Load Depletions #####
+  # This dataset needs to be within the 'GIS/Depletions' directory.
+  # The depletions data is originally from:
+  # W:\wlap\nan\Workarea\Ecosystems_share\Depletions\2025\04_2025_Depletions.gdb
+  # Originally created by Emma Armitage. The '04_2024_Depletions - rslt_depl_01_2025_final' 
+  # layer was recast from multipolygon to polygon, then
+  # clipped to the elk study area and saved as a GPKG. 
+  tar_target(deps_path, "GIS/Depletions/2025_01_Depletions.gpkg", format = "file"),
+  tar_target(deps, sf::st_read(deps_path) |>
+               dplyr::filter(Depletion_Year < 2025)),
+  ##### Load Change Detection #####
+  # This dataset needs to be within the 'GIS/Change Detection' directory.
+  # The change detection data was prepared by Sasha Nasanova at MoF. 
+  # The directory contains a readme.txt file with more information.
+  # `cd` for 'change detection'
+  tar_target(cd_path, "GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif", format = "file"),
+  tar_terra_rast(cd, terra::rast(cd_path))
+  
+  #### DISTURBANCE LAYER ####
+  # TODO: rearrange the order of the targets into an order
+  # that makes more sense for the pipeline
+  
+  # Merge together VRI, Depletions, and S. Nasanova change detections
+  # layer to generate a comprehensive 'disturbance' layer. 
+
+  # >>>> OUTDATED BELOW! <<<< ####
+  # TODO: COMMENTED OUT EEEVERYTHING BELOW, RE-WORK IT ONCE THE 
+  # RASTER LAYERS ARE MADE!
+
+  # #### GPS DATA EXTRACTION ####
+  # ##### DEM attributes #####
+  # # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
+  # # extract elevation, slope grade (%), slope aspect (degrees), and
+  # # roughness.
+  # # TODO: target `cded` has been moved to 'HSA SETUP' above.
+  # #tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
+  # tar_target(elk_dem, extract_dem(pts = elk, cded_path = cded)),
+  # ##### LiDAR attributes #####
+  # # Pull the LiDAR-derived data products off the W:/ drive onto local
+  # # machine + keep track of it if it changes on the server, then extract
+  # # the data from it (elevation, slope grade (%), canopy height, edge
+  # # category, edge distance).
+  # # Keep track of the W:/ drive LiDAR file
+  # # This makes the pipeline a lot slower bc the server is slow. 
+  # # So commenting out. 
+  # # tar_target(uwr_lidar_gdb_path,
+  # #            "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
+  # #            format = "file"),
+  # # Make a local copy of the W:/ drive LiDAR file (this will get re-downloaded
+  # # if the W:/ drive copy is ever updated/modified)
+  # tar_target(uwr_lidar_gdb,
+  #            download_from_server(#server_path = uwr_lidar_gdb_path,
+  #                                 server_path = "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
+  #                                 local_path = "GIS/LiDAR products",
+  #                                 download = FALSE), # set to FALSE bc I just manually moved it over in the end
+  #            format = "file"),
+  # tar_target(elk_uwr, extract_uwr(pts = elk,
+  #                                 gdb = uwr_lidar_gdb,
+  #                                 layers = lidar_cols)),
+  # # Since the UWR layers might not be suitable for this analysis, let's
+  # # also extract data from a crown height model that was provided to us
+  # # by BCTS.
+  # tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
+  # tar_target(elk_chm, extract_chm(pts = elk,
+  #                                 path = chm_path)),
+  # ##### VRI attributes #####
+  # # TODO: delete this once VRI layer is reworked -> see 'HSA SETUP' section
+  # # Note we are using the improved VRI layer that was provided by Madrone.
+  # # tar_target(madrone_vri_gdb_path,
+  # #            "W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb",
+  # #            format = "file"),
+  # # tar_target(madrone_vri_gdb_path, "W:/wlap/nan/Workarea/Ecosystems_share/WHR_Models/2023/SEPT2023_v4/SEPT2023_v4_Elk Models and Spatial/Spatial/Operational_Data_6636.gdb"),
+  # # tar_target(madrone_vri_gdb, download_from_server(server_path = madrone_vri_gdb_path,
+  # #                                                  local_path = "GIS/VRI",
+  # #                                                  download = FALSE)), # set to FALSE bc I just manually moved it over in the end
+  # # tar_target(vri, read_vri(gdb = madrone_vri_gdb)),
+  # # #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
+  # # tar_target(elk_vri, extract_vri(pts = elk,
+  # #                                 vri = vri,
+  # #                                 cols = vri_cols)),
+  # # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
+  # #                                        edges = vri_edges))
+  # #### DEFINE AVAILABILITY ####
+  # ##### Availability MCPs - Seasonal #####
+  # # Rather than pull from the 95 percentile MCPs, known available habitat
+  # # should pull from 100% of the area covered by the GPS points. The area
+  # # we draw from for availability is just that - *available* space - and it
+  # # is *not* equivalent to a home range. So, draw MCPs around any points
+  # # that have passed our data QC filters.
+  # # Note target `study_area` is defined in 'HSA SETUP' above. `study_area` 
+  # # will be used to clip our RSF MCPs to land (i.e. ensure our RSF MCPs
+  # # all occur in areas elk can actually access)
+  # # Winter RSF MCP
+  # tar_target(winter_rsf_mcp, seasonal_mcp(elk = elk,
+  #                                     season = winter,
+  #                                     min_days = 0, # we want to include the full dataset, regardless of minimum N points
+  #                                     percent = 100) |> # 100% MCP - include all points
+  #              sf::st_union() |>
+  #              sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points. In theory, an elk could move half it's step length out, and then half it's step length back in within the 3 hour gap btwn fixes.
+  #              sf::st_intersection(study_area) |>
+  #              sf::st_write("temp/Pipeline outputs/MCP_RSF_Winter.shp",
+  #                           append = FALSE)),
+  # # Spring RSF MCP
+  # tar_target(spring_rsf_mcp, seasonal_mcp(elk = elk,
+  #                                         season = spring,
+  #                                         min_days = 0, # we want to include the full dataset, regardless of minimum N points
+  #                                         percent = 100) |> # 100% MCP - include all points
+  #              sf::st_union() |>
+  #              sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+  #              sf::st_intersection(study_area) |>
+  #              sf::st_write("temp/Pipeline outputs/MCP_RSF_Spring.shp",
+  #                           append = FALSE)),
+  # # Summer RSF MCP
+  # tar_target(summer_rsf_mcp, seasonal_mcp(elk = elk,
+  #                                         season = summer,
+  #                                         min_days = 0, # we want to include the full dataset, regardless of minimum N points
+  #                                         percent = 100) |> # 100% MCP - include all points
+  #              sf::st_union() |>
+  #              sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+  #              sf::st_intersection(study_area) |>
+  #              sf::st_write("temp/Pipeline outputs/MCP_RSF_Summer.shp",
+  #                           append = FALSE)),
+  # ##### Availability MCPs - SWP #####
+  # # The severe winter period avialability polygon is a special case
+  # # of the Winter polygons. It is the merged Winter MCPs of only elk
+  # # that experienced the SWP (i.e. were collared and we have tracking
+  # # for).
+  # # First subset to SWP elk
+  # # These are the elk IDs that specifically experienced the 2021
+  # # severe winter (i.e. cuts out any that also weren't collared
+  # # yet) 
+  # tar_target(swp_elk, elk |> 
+  #              sf::st_drop_geometry() |>
+  #              dplyr::filter(lubridate::date(dttm) %in% swp_dates) |>
+  #              dplyr::select(animal_id) |> 
+  #              dplyr::distinct() |> 
+  #              dplyr::pull()),
+  # # Severe Winter Period RSF MCP
+  # tar_target(swp_rsf_mcp, elk |>
+  #              dplyr::filter(animal_id %in% swp_elk) |>
+  #              seasonal_mcp(season = winter,
+  #                           min_days = 0,
+  #                           percent = 100) |> # 100% MCP - include all points
+  #              # Merge in two weekly MCPs from two individuals whose 
+  #              # Dec 14-Dec 31 data is not actually captured within the Winter MCP
+  #              dplyr::bind_rows(weekly_mcps |>
+  #                               dplyr::filter((animal_id == '20-1000' & isoyear_week == '2021.51')|
+  #                                             (animal_id == '20-0982' & isoyear_week == '2021.52'))
+  #                               ) |>
+  #              sf::st_union() |>
+  #              sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
+  #              sf::st_intersection(study_area) |>
+  #              sf::st_write("temp/Pipeline outputs/MCP_RSF_SWP.shp",
+  #                           append = FALSE)
+  #            ),
+  # #### RANDOM POINTS ####
+  # ##### Sample random pts #####
+  # # Sample random points within each of our availability MCPs to use in RSFs
+  # tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk)) |> 
+  #              sf::st_as_sf() |>
+  #              dplyr::mutate(idposition = dplyr::row_number())),
+  # tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk)) |> 
+  #              sf::st_as_sf() |>
+  #              dplyr::mutate(idposition = dplyr::row_number())),
+  # tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk)) |> 
+  #              sf::st_as_sf() |>
+  #              dplyr::mutate(idposition = dplyr::row_number())),
+  # tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |> 
+  #              sf::st_as_sf() |>
+  #              dplyr::mutate(idposition = dplyr::row_number())),
+  # #### RANDOM DATA EXTRACTION ####
+  # ##### DEM attributes #####
+  # tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
+  # tar_target(random_spring_dem, extract_dem(pts = random_spring, cded_path = cded)),
+  # tar_target(random_summer_dem, extract_dem(pts = random_summer, cded_path = cded)),
+  # tar_target(random_swp_dem, extract_dem(pts = random_swp, cded_path = cded)),
+  # ##### LiDAR attributes #####
+  # # UWR data
+  # tar_target(random_winter_uwr, extract_uwr(pts = random_winter,
+  #                                           gdb = uwr_lidar_gdb,
+  #                                           layers = lidar_cols)),
+  # tar_target(random_spring_uwr, extract_uwr(pts = random_spring,
+  #                                           gdb = uwr_lidar_gdb,
+  #                                           layers = lidar_cols)),
+  # tar_target(random_summer_uwr, extract_uwr(pts = random_summer,
+  #                                           gdb = uwr_lidar_gdb,
+  #                                           layers = lidar_cols)),
+  # tar_target(random_swp_uwr, extract_uwr(pts = random_swp,
+  #                                        gdb = uwr_lidar_gdb,
+  #                                        layers = lidar_cols)),
+  # # CHM data
+  # tar_target(random_winter_chm, extract_chm(pts = random_winter, 
+  #                                           path = chm_path)),
+  # tar_target(random_spring_chm, extract_chm(pts = random_spring, 
+  #                                           path = chm_path)),
+  # tar_target(random_summer_chm, extract_chm(pts = random_summer, 
+  #                                           path = chm_path)),
+  # tar_target(random_swp_chm, extract_chm(pts = random_swp, 
+  #                                        path = chm_path)),
+  # ##### VRI attributes #####
+  # tar_target(random_winter_vri, extract_vri(pts = random_winter,
+  #                                           vri = vri,
+  #                                           cols = vri_cols)),
+  # tar_target(random_spring_vri, extract_vri(pts = random_spring,
+  #                                           vri = vri,
+  #                                           cols = vri_cols)),
+  # tar_target(random_summer_vri, extract_vri(pts = random_summer,
+  #                                           vri = vri,
+  #                                           cols = vri_cols)),
+  # tar_target(random_swp_vri, extract_vri(pts = random_swp,
+  #                                           vri = vri,
+  #                                           cols = vri_cols))
 
 )
 
