@@ -444,16 +444,16 @@ list(
   # Originally created by Emma Armitage. The '04_2024_Depletions - rslt_depl_01_2025_final' 
   # layer was recast from multipolygon to polygon, then
   # clipped to the elk study area and saved as a GPKG. 
-  tar_target(deps_path, "GIS/Depletions/2025_01_Depletions.gpkg", format = "file"),
-  tar_target(deps, sf::st_read(deps_path) |>
+  tar_target(depletions_path, "GIS/Depletions/2025_01_Depletions.gpkg", format = "file"),
+  tar_target(depletions, sf::st_read(depletions_path) |>
                dplyr::filter(Depletion_Year < 2025)),
   ##### Load Change Detection #####
   # This dataset needs to be within the 'GIS/Change Detection' directory.
   # The change detection data was prepared by Sasha Nasanova at MoF. 
   # The directory contains a readme.txt file with more information.
   # `cd` for 'change detection'
-  tar_target(cd_path, "GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif", format = "file"),
-  tar_terra_rast(cd, terra::rast(cd_path))
+  tar_target(change_detection_path, "GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif", format = "file"),
+  tar_terra_rast(change_detection, terra::rast(change_detection_path)),
   
   #### DISTURBANCE LAYER ####
   # TODO: rearrange the order of the targets into an order
@@ -461,6 +461,9 @@ list(
   
   # Merge together VRI, Depletions, and S. Nasanova change detections
   # layer to generate a comprehensive 'disturbance' layer. 
+  tar_terra_rast(disturbance_lyr, calc_disturbance_lyr(vri = vri,
+                                                       depletions = depletions,
+                                                       change_detection = change_detection))
 
   # >>>> OUTDATED BELOW! <<<< ####
   # TODO: COMMENTED OUT EEEVERYTHING BELOW, RE-WORK IT ONCE THE 
