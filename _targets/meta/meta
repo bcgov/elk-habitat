@@ -1,5 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|d91087eee3b503b8|||||||||||||||
+.Random.seed|object|9ba5046caf5fe129|||||||||||||||
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
 all_seasons_dbbmm|stem|fa9da4a298b495da|04c92914fe89f26c|f50c748d3f7a2594|-436251714||t20426.0834475676s|88e4f072020fbc01|11317313|rds|local|vector|||0.03||
 all_seasons_mcp|stem|01d7357fb59a0e3e|49512c53edbb9f8e|72e8850b1cd041af|37521217||t20418.9299505108s|689d581227ae981b|96084|rds|local|vector|||0.02||
@@ -61,7 +61,7 @@ elk_per_month_plot|function|20740411dc9e6e24|||||||||||||||
 elk_per_year_month|stem|6dc99aebe342294a|7f857d14421b1f2e|cd9aab9a1383470c|692555464||t20248.8941788041s|d9080b1314af5574|528|rds|local|vector|||0.07||
 elk_per_year_month_plot|function|bcfd85732921d5e0|||||||||||||||
 elk_uwr|stem|b9c062eb8106c01f|c32f396d15e831f8|f918bf3eb0366273|-1088510592||t20420.0408638157s|a52bd8a0a05b65da|1397086|rds|local|vector|||80.39||
-elk_vri|stem|0609f4f5065a8457|fc1fc2b973c8b3d8|30d67c8630566811|30184935||t20420.039930533s|4165c2cb2542b48b|2807139|rds|local|vector|||28.21|attribute variables are assumed to be spatially constant throughout all geometries|
+elk_vri|stem|d8ad91a17cdbda5f|fc1fc2b973c8b3d8|8e24c47996bd96ce|30184935||t20440.9670036557s|94609b2b7f9a2740|2719695|rds|local|vector|||42.39|attribute variables are assumed to be spatially constant throughout all geometries|
 extract_aspect|function|c1824b5878c68dec|||||||||||||||
 extract_chm|function|44c511fee01f1c4c|||||||||||||||
 extract_dem|function|e091c890c97affa4|||||||||||||||
@@ -111,22 +111,22 @@ random_spring|stem|05c1e035dd1f2d9d|60f839f15fee0ecf|853c6f29630d391b|1803844473
 random_spring_chm|stem|7c6ca198d950c0f1|227a4762eb338f8d|b018238fdc7c21b1|-1235274593||t20434.1297567414s|98cfde5406c72d8e|347954|rds|local|vector|||9.29||
 random_spring_dem|stem|68f8bacc8a526b03|4688574c2c3a8ec4|8355c5d642b6ddff|-882559391||t20434.1303389178s|9ed8054a39875996|4085486|rds|local|vector|||48.85||
 random_spring_uwr|stem|619158970b20e3ea|78017863a23073a3|ac0f6b81183bed89|675732823||t20434.1296476861s|fc79c8f828bb1a69|2053408|rds|local|vector|||76.1||
-random_spring_vri|stem|0575ea8176a7c8f6|8e1ec0969bf782ac|3b8c32b04bfd1acd|36721359||t20434.1287603219s|be962bfd31fe6c42|3460085|rds|local|vector|||30.83|attribute variables are assumed to be spatially constant throughout all geometries|
+random_spring_vri|stem|74a3a6a085753c62|8e1ec0969bf782ac|808674c6e4edc0a4|36721359||t20440.9696988475s|1d3aed1d38766fce|3288430|rds|local|vector|||18.89|attribute variables are assumed to be spatially constant throughout all geometries|
 random_summer|stem|6e0ee5c6b9454cda|d16ff0ad5a5e6e9d|94bd9a610cbc73fe|-1628418462||t20434.1260209784s|271cbb1de706e215|7048349|rds|local|vector|||15.87||
 random_summer_chm|stem|10350854d833fd77|4692580dc1600dbe|ef52a7d40eb3074b|1021494091||t20434.1344607047s|0518dac54abdd162|300995|rds|local|vector|||11.16||
 random_summer_dem|stem|1653f48428f89a29|4d0db3ae2bfbfe93|ea1d4ff418d6e454|-1612840113||t20434.1339107245s|d8c56a82dd167bb2|4130517|rds|local|vector|||47.08||
 random_summer_uwr|stem|d642b85eb14478e2|9cc8f4f2f904184a|e8694c78fc2ea3d9|943586207||t20434.1333452036s|30ec43dca12b825a|2073359|rds|local|vector|||86.2||
-random_summer_vri|stem|beb83d386b497a18|fe739900fabd4e18|716c79ef67bcb098|-1766705154||t20434.1343292984s|0f1fc200f736163d|3343171|rds|local|vector|||34.19|attribute variables are assumed to be spatially constant throughout all geometries|
+random_summer_vri|stem|acd948e485c14a8f|fe739900fabd4e18|bfb7aa7269e5cc8f|-1766705154||t20440.9694605166s|fef97a1a7e425f6c|3269541|rds|local|vector|||24.39|attribute variables are assumed to be spatially constant throughout all geometries|
 random_swp|stem|ed4b19ff0149e326|5aaedbf618cc3975|5f96e9f7cf2d4841|-1905150981||t20434.1254314193s|de3f1d45bc6e787a|7039932|rds|local|vector|||22.8||
 random_swp_chm|stem|00a7302f6343bdbc|be6de38f54701914|8d9cc85edf4ba2ad|1253940723||t20434.1267626104s|8dda873c91ca847c|415355|rds|local|vector|||10.73||
 random_swp_dem|stem|ff86870dfa131d36|dd0b5d4b970828f3|95c780b6803e9647|-170673047||t20434.1271812988s|c114247845386679|4029606|rds|local|vector|||34.96||
 random_swp_uwr|stem|694fa43b1f724d6c|f0213aaf9f9833de|30dd02fbc80283f1|-1306453010||t20434.1266367513s|bc537bf03c9b3783|1877573|rds|local|vector|||52.74||
-random_swp_vri|stem|77e251878ce379d5|8511b0c3978f497e|723e713806c36472|-763469556||t20434.1283837739s|a70a697086226ba1|3192293|rds|local|vector|||38.18|attribute variables are assumed to be spatially constant throughout all geometries|
+random_swp_vri|stem|d77bb526a293ff04|8511b0c3978f497e|6588b1104acd0e85|-763469556||t20440.9691583031s|a704b64765f1d6be|3111687|rds|local|vector|||17.3|attribute variables are assumed to be spatially constant throughout all geometries|
 random_winter|stem|214aeb4c7c2ed09b|04e5546795cf1cde|da684851429e39d1|2030135424||t20434.1258258465s|41076e9f16949792|7051456|rds|local|vector|||16.51||
 random_winter_chm|stem|8353f37ab1986280|94219e5c68ec1ec1|45cb19eec7b4184a|-321507621||t20434.1317479168s|eb56f35b7a022347|384369|rds|local|vector|||8.13||
 random_winter_dem|stem|3f46167184fdf71f|015c997ac65bf8a7|afabf328774c1602|124403925||t20434.1323391543s|20326ddb04a47dbe|4075861|rds|local|vector|||49.71||
 random_winter_uwr|stem|5f0013b0ae76ae73|4da4378e39ed9355|651ffffa9fab7786|-1997755743||t20434.1316522478s|59dda32260614f6b|2031543|rds|local|vector|||75.5||
-random_winter_vri|stem|2ecb52b520ee1f91|64920334b8ef9710|ff39c7335b47f8d1|1761764807||t20434.1307705976s|967ef92e77c20ddf|3439933|rds|local|vector|||35.93|attribute variables are assumed to be spatially constant throughout all geometries|
+random_winter_vri|stem|7d3d005e6f50686f|64920334b8ef9710|856a666c508d8c63|1761764807||t20440.9689398554s|62d5f6978778a340|3275583|rds|local|vector|||18.26|attribute variables are assumed to be spatially constant throughout all geometries|
 rarify_pts|function|8e9017b7cb1d3c7f|||||||||||||||
 raw_collar_data|stem|eb3c504546a3d050|410c7e02d9631a28|364f011ab389ce8d|1516101767||t20054.7776223414s|bdc1cefddd21d59b|12056502|rds|local|vector|||500.53||
 read_vri|function|16df774cb8cb8e9c|||||||||||||||
@@ -163,7 +163,7 @@ unassigned_detections|stem|a216051b3f1068b6|6286e9ca467fe184|59ef7f677119210a|-1
 uwr_lidar_gdb|stem|d75c6248a3d67767|dc45d4d7d5da144c|86d3172805fa286a|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20134.1192011005s|d3256ba881f5d4b7|65536|file|local|vector|||0.36||
 uwr_lidar_gdb_path|stem|d75c6248a3d67767|794406ab5299b854|2c530c1562a7fbd1|2052183110|W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb|t20269.7701157308s|d3256ba881f5d4b7|65536|file|local|vector|||0.88||
 vri|stem|fef281952eb1b7dd|b244d74f11a53b66|0b5b3d85b533e778|-1341468610||t20435.0519788806s|6bc518392997cbe7|36589489|rds|local|vector|||249.19||
-vri_cols|object|0e6f8e2cd5a1e62d|||||||||||||||
+vri_cols|object|d54d5bdd03b4939d|||||||||||||||
 weekly_binning|function|957cca10ca8bb5f0|||||||||||||||
 weekly_dbbmm|function|6c7de243de43fbbe|||||||||||||||
 weekly_dbbmm_seasonal_summary|stem|f8d9daf30ba97b57|f49ea575bd1afc1f|1ad444a37fa709c5|35394069||t20425.2094927299s|9e4fbd1b8a0232ce|516|rds|local|vector|||0.09||
