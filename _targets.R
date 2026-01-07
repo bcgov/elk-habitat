@@ -364,7 +364,11 @@ list(
                dplyr::bind_rows()),
   ##### Cumulative home range #####
   tar_target(cumulative_winter_mcp, cumulative_shp(winter_mcp)),
+  tar_target(cumulative_spring_mcp, cumulative_shp(spring_mcp)),
+  tar_target(cumulative_summer_mcp, cumulative_shp(summer_mcp)),
   tar_target(cumulative_winter_dbbmm, cumulative_shp(winter_dbbmm)),
+  tar_target(cumulative_spring_dbbmm, cumulative_shp(spring_dbbmm)),
+  tar_target(cumulative_summer_dbbmm, cumulative_shp(summer_dbbmm)),
   #### STEP LENGTHS ####
   # Step lengths filtered to only include 3 hour timegaps
   # (Otherwise you might get large step lengths that are legit,
