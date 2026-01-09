@@ -370,6 +370,8 @@ list(
   tar_target(cumulative_spring_dbbmm, cumulative_shp(spring_dbbmm)),
   tar_target(cumulative_summer_dbbmm, cumulative_shp(summer_dbbmm)),
   #### STEP LENGTHS ####
+  ##### 3 hr #####
+  # Step length is calculated during the GPS cleanup `clean_collar_data()` step.
   # Step lengths filtered to only include 3 hour timegaps
   # (Otherwise you might get large step lengths that are legit,
   # but 6+ hours apart if fixes were dropped or filtered)
@@ -380,7 +382,6 @@ list(
                dplyr::select(idposition, animal_id, collar_id, dttm,
                              lat, long, doy, step, angle, NSD, mps, kph, 
                              season, severe_winter_yn)),
-  # Step length data is calculated during the GPS cleanup
   # Use the dataset that's filtered down to 3 hours for
   # the seasonal summaries
   tar_target(step_length_seasonal_summary, step_lengths_3hr |>
@@ -418,6 +419,33 @@ list(
                dplyr::select(step) |> 
                dplyr::pull() |> 
                quantile(0.99)),
+  
+  ##### Seasonal, weekly, daily #####
+  # These aren't step-lengths per se, but rather centroid-to-centroid
+  # distances between successive home range polygons at each temporal
+  # scale.
+  # DAILY (MCP only)
+  tar_target(daily_step, centroid_step(shp = daily_mcps,
+                                       group_by = "animal_id",
+                                       date_col = "date")),
+  # WEEKLY (MCP + dBBMM)
+  tar_target(weekly_step, centroid_step(shp = weekly_mcps,
+                                        group_by = "animal_id",
+                                        date_col = c("isoyear", "week")) |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(centroid_step(shp = weekly_dbbmms,
+                                              group_by = "animal_id",
+                                              date_col = c("isoyear", "week")) |>
+                                  dplyr::mutate(method = "dBBMM"))),
+  # SEASONAL (MCP + dBBMM)
+  tar_target(seasonal_step, centroid_step(shp = all_seasons_mcp,
+                                          group_by = c("animal_id", "season"),
+                                          date_col = c("year")) |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(centroid_step(shp = all_seasons_dbbmm,
+                                              group_by = c("animal_id", "season"),
+                                              date_col = c("year")) |>
+                                  dplyr::mutate(method = "dBBMM"))),
   
   # >> HABITAT SELECTION ANALYSIS ####
   #### HSA SETUP ####

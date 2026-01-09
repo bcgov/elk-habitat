@@ -1,5 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|67af3866a78daba0|||||||||||||||
+.Random.seed|object|7ae0779324e1a87a|||||||||||||||
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
 all_seasons_dbbmm|stem|88d27ca194fa3f5e|04c92914fe89f26c|0992adb1a3aac34b|-436251714||t20462.224001084s|452d3ff4abddf287|11313013|rds|local|vector|||0.48||
 all_seasons_mcp|stem|97a2f07ab48e6edb|49512c53edbb9f8e|faf8b235059ae28c|37521217||t20462.2243670288s|2d3b7eb0192eb44e|96075|rds|local|vector|||0.03||
@@ -11,6 +11,7 @@ calc_disturbance_lyr|function|e3e2941943689464|||||||||||||||
 capture_data|stem|12bdb83573be937b|e14ef5cd5be2470c|42d6a860cf84bb4c|1127347996||t20242.9196286274s|a31fe2a31585068b|12482|rds|local|vector|||0.36||
 capture_data_path|stem|21a819747fabe06a|70e4449647399076|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20250415.xlsx|t20239.0881285566s|a67621ae84340c38|112484|file|local|vector|||0.81||
 cded|stem|625beeba987df5d8|785e6cdb0578efdb|f052a50e47b964bf|-438085499|GIS/DEM/CDED_VRT.vrt|t20462.0903225171s|5a2fd5cba14367e1|21214|file|local|vector|||17.6||
+centroid_step|function|a458a84083a6b6a1|||||||||||||||
 change_detection|stem|59eed62643d503de|0d25a31590cdd78a|2113770581539609|760561000||t20438.7422643775s|7dd309b9980e383e|2359765|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||0.09||
 change_detection_path|stem|59eed62643d503de|e138b83babc38d85|2c530c1562a7fbd1|1573190667|GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif|t20194.9672916667s|7dd309b9980e383e|2359765|file|local|vector|||0||
 chm_path|stem|29e226684ac9a3ef|7678dac5a50beb30|2c530c1562a7fbd1|131809279|GIS/LiDAR products/crown_height.tif|t20183.0142095376s|f77f63eb8093eecb|67587177|file|local|vector|||0.47|package sf was built under R version 4.4.2. package ggplot2 was built under R version 4.4.2|
@@ -32,6 +33,7 @@ daily_mcp|function|b6550459ae91769e|||||||||||||||
 daily_mcp_seasonal_summary|stem|11410a91e9a3c442|c76a534c4bcf61a3|4aea33e483c824e3|-282887321||t20462.8421138069s|a3496bd4cf32175c|517|rds|local|vector|||0.04||
 daily_mcp_swp_summary|stem|16360a254e119920|b1b723ecf468bcbb|2d839d914c5d7016|-2092308185||t20462.8421161919s|3894ebe67ff7c23d|553|rds|local|vector|||0.17||
 daily_mcps|stem|6804a602dc3b31b7|540635566233b505|976fa01ae80584ec|958011176||t20462.0775443159s|58f54e94a62bfbf3|4686661|rds|local|vector|||1814.11||
+daily_step|stem|ed1b30459c7def8d|619bec30b6915b16|c25761b04650b181|-1932759320||t20462.8847714445s|0e0f350712bb35f7|958690|rds|local|vector|||1.85||
 dbbmm_all_szn_yearly_overlap|stem|c7ec7a21b091ad14|524694ad3e4966eb|619d3b5e067b97f8|1525540815||t20462.2274102487s|5d1b0a4f006d1230|4630|rds|local|vector|||0.01||
 dbbmm_seasonal_summary|stem|0388e81d0df5169b|953aea498725d956|ca09c50b16832fd1|1789842921||t20462.842149305s|26b105011ac1bbc9|471|rds|local|vector|||0.03||
 dBBMM_seasonal_ud|object|29e816842fabc47d|||||||||||||||
@@ -131,16 +133,17 @@ remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
 seasonal_dbbmm|function|098e6421db5fcde6|||||||||||||||
 seasonal_mcp|function|44e6e62e9bb4961a|||||||||||||||
 seasonal_overlap_summary|stem|7293431c3b639c3c|1fcfbc0c1dbcaf3a|4b575599499214c1|627036650||t20462.2348523177s|fabb4f375b2d7831|621|rds|local|vector|||0.61||
+seasonal_step|stem|c2963f522b1c831c|6099f658488172ca|803ff6107627c995|1503173458||t20462.8914268165s|c41f5ea1ba33e5a1|16471|rds|local|vector|||9.83||
 spring|object|6398ef5e90b44e6d|||||||||||||||
 spring_dbbmm|stem|8022e85e77b6e2d0|097b0d7b735f88b6|f36422da9aef33d9|1234634189||t20462.1079861945s|0739dacfae6942a5|3981905|rds|local|vector|||1416.11||
 spring_mcp|stem|d9b5ac2939914448|b8b92ce6deeb7d5b|f7d9c5c123ba65a1|2029814444||t20462.2189394291s|421a03d92d026844|34310|rds|local|vector|||12.67||
 spring_rsf_mcp|stem|2ac77a313304f0ea|0ad717f5eaec2935|fea70367a8b77989|436210894||t20462.2273475579s|ccb665af6635a976|91288|rds|local|vector|||5.6||
 st_edge_dist|function|67233d498ccee62c|||||||||||||||
+step_length|function|97a0717a017cb942|||||||||||||||
 step_length_buffer|stem|fd6b823d22681d44|5575f7cfb463632e|3eda3af80fa276f6|-1689872844||t20462.2237392372s|afe1c0564fcfafab|85|rds|local|vector|||0.02||
 step_length_seasonal_summary|stem|e2d4336145490678|179992cd659af689|3eda3af80fa276f6|-1064318883||t20462.2237435201s|c091eeb299dbae89|439|rds|local|vector|||0.11||
 step_length_swp_summary|stem|f82f1b183c861315|fe5abe52ea4151c2|3eda3af80fa276f6|-448053997||t20462.2237416092s|946b5dd32a603183|497|rds|local|vector|||0.18||
 step_lengths_3hr|stem|7d41287357478b5f|f2e0bf5e73fcb64c|a5d4e7d899c912c7|-1194693083||t20462.2074273258s|4874c1969ae4c8c5|16713677|rds|local|vector|||0.22||
-steplength|function|97a0717a017cb942|||||||||||||||
 study_area|stem|e3f2627bd89fafc9|87d14897a24c627d|0c148bfbfc550b2b|-822575283||t20462.2234653619s|854518022f744cb7|79662|rds|local|vector|||13.77||
 study_area_poly|function|836ec739084c174b|||||||||||||||
 summarize_area|function|40667966c3ac6c67|||||||||||||||
@@ -170,6 +173,7 @@ weekly_mcp|function|df86e293d7054eac|||||||||||||||
 weekly_mcp_seasonal_summary|stem|629a0ecb9a189f8d|c1b8781b3abb3eec|93e118fdf2534b2b|-1911070737||t20462.8421429707s|0051a85449b1d783|513|rds|local|vector|||0.07||
 weekly_mcp_swp_summary|stem|a86fc60fb28487e8|21c78168eb8e0959|bf5e7c75eb569fe6|-1290166597||t20462.8421416412s|c4562ec57f43f223|552|rds|local|vector|||0.06||
 weekly_mcps|stem|4ad482843e008ee5|5729369fdfbc5e26|8b3072d65eebdf8e|-1315591038||t20462.2225144573s|776655e8daee7cba|1157315|rds|local|vector|||298.53|Field names abbreviated for ESRI Shapefile driver|
+weekly_step|stem|de2275e7218e5be3|0b8d4593cdbddf54|9eb0a0a2c6574466|-2040952679||t20462.8913037047s|c815e73eddf2e9e3|288205|rds|local|vector|||5.35||
 weekly_window|object|4c06678fced12882|||||||||||||||
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|e4931d56ff4878d7|c81b66de12f68329|abdf7d91f8075885|-99852116||t20462.0900270548s|60cc34eb4d4e2357|3680336|rds|local|vector|||1077.74||
