@@ -20,10 +20,13 @@ load_collar_data <- function(collar_keys){
            mort_status = "idmortalitystatus",
            temp_C = "temperature") |>
     #dplyr::select(collar_id, dttm, lat, long, elev_m, fix_type, mort_status, temp_C, dop) |>
-    dplyr::mutate(dttm = lubridate::ymd_hms(dttm) |> lubridate::with_tz("Canada/Pacific"),
+    dplyr::mutate(dttm_utc = lubridate::ymd_hms(dttm), # UTC time as provided by Inventa
+                  dttm_pt = lubridate::ymd_hms(dttm) |> lubridate::with_tz("Canada/Pacific"), # Local time including daylight savings
+                  dttm = lubridate::ymd_hms(dttm) |> lubridate::with_tz("GMT+8"), # UTC-8 (ignores daylight savings)
                   year = lubridate::year(dttm),
                   month = lubridate::month(dttm), 
                   doy = lubridate::yday(dttm)) |>
+    dplyr::select(idposition, collar_id, dttm_utc, dttm_pt, dttm, year, month, doy, dplyr::everything()) |>
     dplyr::group_by(collar_id) |>
     dplyr::arrange(dttm, .by_group = TRUE) |>
     dplyr::ungroup() |>
