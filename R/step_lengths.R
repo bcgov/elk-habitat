@@ -2,7 +2,11 @@
 
 # We will just use the implementation from the `bayesmove` package for this.
 
-# TODO: delete step lengths btwn differing collar deployments (but same animal ID)
+# Step lengths are filtered down to only include those btwn 3 hour fixes
+# within the main targets pipeline ('step_lengths_3hr' target).
+
+# Large step lengths between large GPS time gaps might be legitimate, but
+# they skew summary statistics.
 
 steplength <- function(elk) {
   dat <- data.frame(elk$animal_id, elk$dttm, sf::st_coordinates(elk))

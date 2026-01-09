@@ -88,8 +88,8 @@ fix_rate <- function(elk) {
 
 # This function summarizes the area of any seasonal polygons,
 # incl. either MCP or dBBMM.
-summarize_area <- function(polygons, group_by = c("year", "season"), area_unit = "ha") {
-  out <- polygons |> 
+summarize_area <- function(shp, group_by = c("year", "season"), area_unit = "ha") {
+  out <- shp |> 
     sf::st_drop_geometry() |> 
     dplyr::mutate(area = units::set_units(area, value = area_unit, mode = "standard")) |>
     dplyr::group_by_at(group_by) |> 
