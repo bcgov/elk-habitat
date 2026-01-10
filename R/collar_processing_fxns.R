@@ -122,6 +122,7 @@ attribute_animal_id <- function(raw_collar_data, capture_data) {
 }
 
 # OUTDATED
+# Author: Angus Smith
 # attribute_animal_id <- function(collar_data, capture_data){
 #   
 #   capture_data <- capture_data |>
@@ -181,6 +182,7 @@ attribute_animal_id <- function(raw_collar_data, capture_data) {
 # }
 
 remove_imprecise_locations <- function(collar_data){
+  # Author: Angus Smith
   # 3 = 2D, 4 = 3D, 5 = 3D Validated
   
   # Per Vectronic FAQ:

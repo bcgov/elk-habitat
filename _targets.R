@@ -116,7 +116,7 @@ list(
   tar_target(full_collar_data, attribute_animal_id(raw_collar_data, capture_data)),
   tar_target(unassigned_detections, full_collar_data[is.na(full_collar_data$animal_id), ]),
   tar_target(collar_data, full_collar_data[!is.na(full_collar_data$animal_id), ]),
-  # Clean collar data AND filter to cutoff date
+  # Clean spikes from collar data
   tar_target(cleaned_collar_data, clean_collar_data(collar_data, rarify_pts = FALSE)), # full dataset, cleaned of any spikes, but NOT rarified and NOT filtered to study time period
   tar_target(flagged_pts, collar_data[!(collar_data$idposition %in% cleaned_collar_data$idposition), ]),
   # Make our main `elk` df for further analysis
