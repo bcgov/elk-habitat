@@ -3,7 +3,7 @@
 # Functions to pull collar data off Vectronix website, using
 # the supplied collar keys, then process and clean data.
 
-# AUTHORSHIP: Angus Smith @angus-smith
+# AUTHORSHIP WHERE NOTED: Angus Smith @angus-smith
 
 
 ## collar data cleaning
