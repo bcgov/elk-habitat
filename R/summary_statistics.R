@@ -88,8 +88,8 @@ fix_rate <- function(elk) {
 
 # This function summarizes the area of any seasonal polygons,
 # incl. either MCP or dBBMM.
-summarize_area <- function(polygons, group_by = c("year", "season"), area_unit = "ha") {
-  out <- polygons |> 
+summarize_area <- function(shp, group_by = c("year", "season"), area_unit = "ha") {
+  out <- shp |> 
     sf::st_drop_geometry() |> 
     dplyr::mutate(area = units::set_units(area, value = area_unit, mode = "standard")) |>
     dplyr::group_by_at(group_by) |> 
@@ -292,6 +292,9 @@ summarize_overlap <- function(overlap_df, group_by = "any_overlap", prct_1_col, 
   group_by <- c(group_by, "any_overlap")
   out <- overlap_df |>
     units::drop_units() |>
+    # Drop any records where there is no overlap because the polygon doesn't exist
+    # BUT allow overlap_area == 0
+    dplyr::filter(dplyr::if_all(dplyr::ends_with("_area") & !overlap_area, ~ . > 0)) |>
     dplyr::mutate(any_overlap = overlap_area > 0) |>
     dplyr::group_by_at(group_by) |>
     dplyr::summarise(N = dplyr::n(),
