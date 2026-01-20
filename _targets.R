@@ -410,16 +410,6 @@ list(
                                 sd_nsd = sd(NSD, na.rm = TRUE),
                                 median_nsd = median(NSD, na.rm = TRUE),
                                 N = dplyr::n())),
-  ##### 99 pctl step length #####
-  # The 99th pctl step length is the distance that 99% of the elk are 
-  # moving within the 3 hr gap between successive fixes. This will be
-  # used to buffer the RSF polygons down the line.
-  # TODO: filter to just winter period
-  tar_target(step_length_buffer, step_lengths_3hr |> 
-               dplyr::select(step) |> 
-               dplyr::pull() |> 
-               quantile(0.99)),
-  
   ##### Seasonal, weekly, daily #####
   # These aren't step-lengths per se, but rather centroid-to-centroid
   # distances between successive home range polygons at each temporal
@@ -446,6 +436,15 @@ list(
                                               group_by = c("animal_id", "season"),
                                               date_col = c("year")) |>
                                   dplyr::mutate(method = "dBBMM"))),
+  ##### 99 pctl step length #####
+  # The 99th pctl step length is the distance that 99% of the elk are 
+  # moving within the 3 hr gap between successive fixes. This will be
+  # used to buffer the RSF polygons down the line.
+  # TODO: filter to just winter period
+  tar_target(step_length_buffer, step_lengths_3hr |> 
+               dplyr::select(step) |> 
+               dplyr::pull() |> 
+               quantile(0.99)),
   
   # >> HABITAT SELECTION ANALYSIS ####
   #### HSA SETUP ####
