@@ -480,6 +480,17 @@ list(
   tar_terra_rast(change_detection, terra::rast(change_detection_path)),
   
   #### RASTER LAYERS ####
+  ##### Forest Age #####
+  # Canada-wide 30m resolution forest age dataset
+  # As described Maltman et al. (2023)
+  # https://www.sciencedirect.com/science/article/pii/S0034425723000809
+  # This target downloads the .tiff files, crops them to
+  # the study area, then saves the cropped .tiff to the
+  # "Forest Age" directory.
+  # This file takes about 10 mins to download on my 80 Mbps internet.
+  tar_terra_rast(forest_age, download_forest_age(url = "https://opendata.nfis.org/downloads/forest_change/CA_forest_age_2022.zip",
+                                                 aoi = study_area,
+                                                 save_tiff = TRUE)),
   ##### Disturbance #####
   # Merge together VRI, Depletions, and S. Nasanova change detections
   # layer to generate a comprehensive 'disturbance' layer. 
