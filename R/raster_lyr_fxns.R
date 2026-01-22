@@ -44,8 +44,8 @@ download_forest_age <- function(url, aoi, save_tiff = TRUE) {
     t <- terra::crop(t, aoi3978)
     t <- terra::mask(t, aoi3978)
     # Transform `t`
-    t <- terra::project(t, "epsg:3005")
-    t <- terra::crop(t, aoi)
+    #t <- terra::project(t, "epsg:3005")
+    #t <- terra::crop(t, aoi)
     
     # Save raster locally, if applicable
     if (save_tiff) {
