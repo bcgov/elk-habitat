@@ -70,9 +70,10 @@ download_forest_age <- function(url, aoi, save_tiff = TRUE) {
   
 }
 
-calc_disturbance_lyr <- function(vri, depletions, change_detection) {
+calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, change_detection) {
   ## Setup ##
   deps <- depletions
+  ret <- retention
   cd <- change_detection
   ## Prepare VRI ##
   # Create a disturbance date col
@@ -100,6 +101,47 @@ calc_disturbance_lyr <- function(vri, depletions, change_detection) {
   # Create col with just disturbance year
   vri$disturbance_year <- as.integer(lubridate::year(vri$disturbance_date))
   
+  ## Prepare retentions ##
+  # Pull out retention areas
+  ret <- ret[which(ret$SILV_RESERVE_CODE %in% c("G", "O", "R", "U", "W")),]
+  
+  # Project stand age to 2022 baseline, so all polygons are aged to 2022
+  # Forest Age is projected to 2022 so it will all match
+  ret$proj_age <- ret$I_SPECIES_AGE_1 + (2022 - ret$REFERENCE_YEAR)
+  
+  # Set up forest_age
+  # Per documentation, 255 is 'non-forest' area
+  # Replace 255 with NA
+  forest_age[forest_age > 151] <- NA
+  
+  # Exact extract MAX AGE for retention patches from forest_age
+  # A separate analysis showed max pixel per retention patch lines up
+  # best with existing retention patch ages, when available
+  ret$forest_age <- exactextractr::exact_extract(forest_age, ret, fun = "max")
+  
+  # Use provided age of retention (projected to 2022) if it's there, 
+  # otherwise for NULL retention areas assign the forest_age.
+  ret$age <- ifelse(is.na(ret$proj_age), ret$forest_age, ret$proj_age)
+  
+  # Finally, convert 'age' into a 'disturbance year'
+  ret$disturbance_year <- 2022 - ret$age
+  
+  ## Prepare forest_age ##
+  # 1) Convert forest 'age' to 'disturbance year'
+  # 2) reproject forest_age to the correct CRS -> we didn't do this in the
+  #     previous section so that we'd get more accurate pixel extraction
+  #     (more accurate to warp polygons then extract raster data than the
+  #     other way around.)
+  
+  # Modify from 'age' to 'disturbance year'
+  forest_age <- 2022 - forest_age
+  
+  # Re-project
+  # Use method = "near" when re-projecting forest age to new projection,
+  # otherwise you get inaccurate smoothing of age. We need to maintain those
+  # sharp boundaries delineating forest patches from cuts.
+  forest_age <- terra::project(forest_age, "epsg:3005", method = "near")
+  
   ## Prepare depletions ##
   # This one is simple. Just make a matching disturbance_year col.
   deps$disturbance_year <- deps$Depletion_Year
@@ -107,31 +149,33 @@ calc_disturbance_lyr <- function(vri, depletions, change_detection) {
   ## Rasterize ##
   # First check everything is the same CRS
   same_crs <- all(sf::st_crs(vri) == sf::st_crs(deps),
-                  sf::st_crs(deps) == sf::st_crs(cd))
+                  sf::st_crs(deps) == sf::st_crs(cd),
+                  sf::st_crs(ret) == sf::st_crs(cd),
+                  sf::st_crs(forest_age) == sf::st_crs(ret))
   
-  if (!same_crs) stop("Supplied VRI, depletions, and change detection have differing CRS.")
+  if (!same_crs) stop("Supplied VRI, depletions, retention and change detection have differing CRS.")
   
   # Rasterize VRI + deps
   # Drop NA disturbance year polygons
   vri <- vri[which(!is.na(vri$disturbance_year)), ]
   
-  # Figure out max extent that encompasses all 3 layers
-  bounds <- c(xmin = min(sf::st_bbox(vri)[1], sf::st_bbox(deps)[1], sf::st_bbox(cd)[1]),
-              ymin = min(sf::st_bbox(vri)[2], sf::st_bbox(deps)[2], sf::st_bbox(cd)[2]),
-              xmax = max(sf::st_bbox(vri)[3], sf::st_bbox(deps)[3], sf::st_bbox(cd)[3]),
-              ymax = max(sf::st_bbox(vri)[4], sf::st_bbox(deps)[4], sf::st_bbox(cd)[4]))
+  # Figure out max extent that encompasses all 5 layers
+  bounds <- c(xmin = min(sf::st_bbox(vri)[1], sf::st_bbox(deps)[1], sf::st_bbox(ret)[1], sf::st_bbox(cd)[1]),
+              ymin = min(sf::st_bbox(vri)[2], sf::st_bbox(deps)[2], sf::st_bbox(ret)[2], sf::st_bbox(cd)[2]),
+              xmax = max(sf::st_bbox(vri)[3], sf::st_bbox(deps)[3], sf::st_bbox(ret)[3], sf::st_bbox(cd)[3]),
+              ymax = max(sf::st_bbox(vri)[4], sf::st_bbox(deps)[4], sf::st_bbox(ret)[4], sf::st_bbox(cd)[4]))
   bounds <- bounds |>
     sf::st_bbox() |>
     sf::st_as_sfc() |>
     sf::st_as_sf(crs = sf::st_crs(vri)) |>
     raster::extent() # convert to `raster` pkg type extent object
 
-  # Create a raster template following the resolution & CRS of `cd`
+  # Create a raster template following the supplied resolution
   temp <- raster::raster(bounds, # the extent will be equal to the bounds calculated in `bounds`
-                         res = terra::res(cd),
-                         crs = terra::crs(cd))
+                         res = res, # the resolution will be the supplied resolution
+                         crs = terra::crs(vri)) # the CRS will be that of VRI (which is that of every other layer)
   
-  # Now rasterize the two sf polygon layers
+  # Now rasterize
   # VRI
   vri_dist_year <- fasterize::fasterize(vri, temp, field = "disturbance_year")
   vri_dist_year <- terra::rast(vri_dist_year)
@@ -140,18 +184,28 @@ calc_disturbance_lyr <- function(vri, depletions, change_detection) {
   deps_dist_year <- fasterize::fasterize(deps, temp, field = "disturbance_year")
   deps_dist_year <- terra::rast(deps_dist_year)
   
-  # Modify the extent to match the others
+  # ret
+  ret_dist_year <- fasterize::fasterize(ret, temp, field = "disturbance_year")
+  ret_dist_year <- terra::rast(ret_dist_year)
+  
+  # forest_age
+  forest_age <- terra::resample(forest_age, vri_dist_year)
+  names(forest_age) <- "disturbance_year"
+  
+  # cd
   cd <- terra::resample(cd, vri_dist_year)
   names(cd) <- "disturbance_year"
   
-  # Merge VRI, deps, cd
-  # Create our disturbance raster `d` 
-  # Order of data preference: between `vri` disturbance year and `deps`
-  # disturbance year, preferentially choose the `deps` year
+  # Create our disturbance raster `d` by layering our data together like
+  # a fabulous data cake
+  # First, between depletions or VRI disturbance year, choose depletions
   d <- terra::merge(deps_dist_year, vri_dist_year, first = TRUE)
-  # Between the `cd` disturbance year and `deps`/`vri`, preferentially choose
-  # the `cd` year.
+  # Next, between above and change detection, choose change detection
   d <- terra::merge(cd, d, first = TRUE)
+  # Next, if retention age is available, use that
+  d <- terra::merge(ret_dist_year, d, first = TRUE)
+  # Finally, merge in forest_age to fill any remaining NA areas
+  d <- terra::merge(d, forest_age, first = TRUE)
   
   # Return
   return(d)

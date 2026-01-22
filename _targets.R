@@ -453,6 +453,10 @@ list(
   ##### Download DEM #####
   # Queries CDED tiles overlapping our elk data using the `bcmaps` package
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
+  # Extract DEM resolution
+  tar_target(dem_res, terra::rast(cded) |> 
+               terra::project("epsg:3005") |> 
+               terra::res()),
   ##### Study Area #####
   # Create a polygon that is the shapefile of our overall study area on land
   # This will allow us to spatially limit our queries for big files
@@ -498,9 +502,14 @@ list(
   ##### Disturbance #####
   # Merge together VRI, Depletions, and S. Nasanova change detections
   # layer to generate a comprehensive 'disturbance' layer. 
-  tar_terra_rast(disturbance_lyr, calc_disturbance_lyr(vri = vri,
-                                                       depletions = depletions,
-                                                       change_detection = change_detection)),
+  tar_terra_rast(disturbance, calc_disturbance_lyr(res = dem_res,
+                                                   vri = vri,
+                                                   depletions = depletions,
+                                                   retention = results,
+                                                   forest_age = forest_age,
+                                                   change_detection = change_detection) |>
+                   terra::crop(study_area) |>
+                   terra::mask(study_area)),
   
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
