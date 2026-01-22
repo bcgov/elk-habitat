@@ -207,6 +207,73 @@ calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, ch
   # Finally, merge in forest_age to fill any remaining NA areas
   d <- terra::merge(d, forest_age, first = TRUE)
   
+  # Assign correct EPSG code
+  terra::crs(d) <- "epsg:3005"
+  
   # Return
   return(d)
 }
+
+
+# Extract disturbance layer data (base layer)
+extract_disturbance_year <- function(pts, id_col, disturbance) {
+  # Set up
+  d <- disturbance
+  # Subset pts to just ID column
+  pts <- pts[,id_col]
+  # Extract disturbance
+  out <- terra::extract(d, pts, ID = FALSE)
+  # Return out
+  out <- cbind(pts, out)
+  names(out)[2] <- "disturbance_year"
+  out <- sf::st_drop_geometry(out)
+  return(out)
+}
+
+# We can take advantage of slope algorithms to extract stand edges from
+# the disturbance layer.
+extract_stand_edge <- function(pts, id_col, stand_edge) {
+  # Subset pts to just ID column
+  pts <- pts[,id_col]
+  # Extract "slope"
+  out <- terra::extract(stand_edge, pts, ID = FALSE)
+  # Return out
+  out <- cbind(pts, out)
+  names(out)[2] <- "edginess" # for lack of a better term??
+  out <- sf::st_drop_geometry(out)
+  return(out)
+}
+
+extract_edge_dist <- function(pts, id_col, edge_dist) {
+  # Subset pts to just ID column
+  pts <- pts[,id_col]
+  # Extract distance to nearest edge ("slope" > 0)
+  out <- terra::extract(edge_dist, pts, ID = FALSE)
+  # Return out
+  out <- cbind(pts, out)
+  names(out)[2] <- "edge_dist_m"
+  out <- sf::st_drop_geometry(out)
+  return(out)
+}
+
+
+# Wrap up all 3
+extract_disturbance <- function(pts, 
+                                id_col = "idposition", 
+                                disturbance, 
+                                stand_edge, 
+                                edge_dist) {
+  message("Extracting disturbance year...")
+  dist_year <- extract_disturbance_year(pts, id_col, disturbance)
+  message("Extracting stand edges...")
+  edginess <- extract_stand_edge(pts, id_col, stand_edge)
+  message("Extracting distance to stand edge...")
+  edge_dist_m <- extract_edge_dist(pts, id_col, edge_dist)
+  
+  # Merge all 4
+  out <- merge(dist_year, edginess, all = TRUE)
+  out <- merge(out, edge_dist_m, all = TRUE)
+  
+  return(out)
+}
+

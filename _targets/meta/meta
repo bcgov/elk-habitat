@@ -1,5 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|5cb3b9927d28349c|||||||||||||||
+.Random.seed|object|09ff07b63db0554d|||||||||||||||
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
 all_seasons_dbbmm|stem|88d27ca194fa3f5e|04c92914fe89f26c|0992adb1a3aac34b|-436251714||t20462.224001084s|452d3ff4abddf287|11313013|rds|local|vector|||0.48||
 all_seasons_mcp|stem|97a2f07ab48e6edb|49512c53edbb9f8e|faf8b235059ae28c|37521217||t20462.2243670288s|2d3b7eb0192eb44e|96075|rds|local|vector|||0.03||
@@ -7,7 +7,7 @@ all_szn_yearly_overlap|stem|83e6704dd29dc0bd|0650ec91c3e3ba32|3565392d0b25e79e|-
 assign_daily_seasons|function|738918b74e6a16fe|||||||||||||||
 assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|9d65df7e940b435f|||||||||||||||
-calc_disturbance_lyr|function|3820d535a8077edc|||||||||||||||
+calc_disturbance_lyr|function|bc1b5cbfba22eb89|||||||||||||||
 capture_data|stem|12bdb83573be937b|e14ef5cd5be2470c|42d6a860cf84bb4c|1127347996||t20242.9196286274s|a31fe2a31585068b|12482|rds|local|vector|||0.36||
 capture_data_path|stem|21a819747fabe06a|70e4449647399076|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20250415.xlsx|t20239.0881285566s|a67621ae84340c38|112484|file|local|vector|||0.81||
 cded|stem|625beeba987df5d8|785e6cdb0578efdb|f052a50e47b964bf|-438085499|GIS/DEM/CDED_VRT.vrt|t20474.0573936768s|5a2fd5cba14367e1|21214|file|local|vector|||13.83||
@@ -49,15 +49,16 @@ depletions|stem|229dc25306eb90b4|13c5a2bff7faeeb0|db73d2e2ac84ab6b|1279129192||t
 depletions_path|stem|10e3699f62a4c54d|89bd4cca59c8a17d|2c530c1562a7fbd1|-705209131|GIS/Depletions/2025_01_Depletions.gpkg|t20435.0411358775s|80caededd3166cb6|29728768|file|local|vector|||3.38|package ggplot2 was built under R version 4.4.3|
 detection_efficiency|stem|42ded9c3f8e8aeff|8d8488432aca6501|528c9b111d35ec66|947972721||t20462.2189503641s|8cc2076f9c25a762|2412|rds|local|vector|||0.92||
 dets_per_elk|stem|097c8c7616011b76|cffc3ee6ced78c00|6e78151ec79a7d42|-360331643||t20462.2187920448s|af94fcb8e6165bbe|176|rds|local|vector|||0.05||
-disturbance|stem|36a28ba53c42cefc|40c6ab23950c055b|287cc04008c3a2d8|-428419592||t20475.7341885884s|0a782238d1b2dde2|22403209|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||61.28|Polygons transformed to raster CRS. To avoid onthefly coordinate transformation, ensure that st_crs returns the same result for both raster and polygon inputs.|
+disturbance|stem|53b624790ed62496|40c6ab23950c055b|2921da97391edad4|-428419592||t20475.7621094705s|705e1dc87f689f5d|22402897|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||49.38|Polygons transformed to raster CRS. To avoid onthefly coordinate transformation, ensure that st_crs returns the same result for both raster and polygon inputs.|
 disturbance_lyr|stem|9d5073c5a4f1a3aa|1e884bcb331f6d06|19079a8991669ba4|582554320||t20475.7164225001s|300d900f299e0173|24968147|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||65.72|Polygons transformed to raster CRS. To avoid onthefly coordinate transformation, ensure that st_crs returns the same result for both raster and polygon inputs.|
 download_forest_age|function|d49993b05371037a|||||||||||||||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
-edge_dist|stem|72fee8590bb63a91|39bf157b1fbd7d44|c5cfdd6fd3969b6f|-1443276582||t20475.7414377772s|6b45cada763fea33|38015330|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||13.2||
+edge_dist|stem|06832f6272686e10|39bf157b1fbd7d44|b2bb45404e043ae7|-1443276582||t20475.7622932714s|8b0e74e72a43e64a|38015022|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||12.22||
 elk|stem|a37bd08f2fe6ac25|828064bfaffe2696|03c3bd8f13e23194|-188372202||t20462.0467318097s|4bc1c5f03c4ff0e1|29134794|rds|local|vector|||850.58|Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.. GDAL Message 1 Value 103994407.081 of field NSD of feature 320 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104914962.474999994 of field NSD of feature 321 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104705113.225999996 of field NSD of feature 322 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105109748.726999998 of field NSD of feature 323 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105713927.145999998 of field NSD of feature 324 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 107216481.253000006 of field NSD of feature 325 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 100120932.984999999 of field NSD of feature 326 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 102755309.833000004 of field NSD of feature 327 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104171478.883000001 of field NSD of feature 328 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104128103.865999997 of field NSD of feature 329 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104960957.325000003 of field NSD of feature 330 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104754638.692000002 of field NSD of feature 331 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Va|
 elk_chm|stem|cb5c1452d36d9cfc|6eff3ea325a5d7f0|d9ba36228eaad12e|-323457739||t20462.2190565059s|a1433d3bdaa79658|1084278|rds|local|vector|||9.03||
 elk_dem|stem|36629a4360a2748a|aaeea8ee6f238e2f|78cd9d70f18d23e7|1885558796||t20462.2233051918s|72cc80bbc5fb6fb1|3783144|rds|local|vector|||38.18||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
+elk_disturbance|stem|62670f31e385213b|d332eb63f5fa1737|81e68655e7841a6c|-2144809891||t20475.7698125184s|13758a8cc0b3be2c|3118574|rds|local|vector|||17.5||
 elk_dotplot|stem|e8648844cafc056c|94d5abc6f5fa7398|36aae6ed0fbc38f4|-2021513789||t20462.2187899616s|b8707ce9b501ec2f|145838398|rds|local|vector|||0.07||
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
 elk_geom|stem|fd8e21c10fe42f26|4580d495b77f7e90|18d6a14613e3a8dc|-342589978||t20462.2087863962s|dd7be11fc10b9311|6551501|rds|local|vector|||0||
@@ -70,9 +71,14 @@ elk_vri|stem|d33fa8da93a72e51|fc1fc2b973c8b3d8|35ed1b36fb448067|30184935||t20462
 extract_aspect|function|c1824b5878c68dec|||||||||||||||
 extract_chm|function|44c511fee01f1c4c|||||||||||||||
 extract_dem|function|e091c890c97affa4|||||||||||||||
+extract_disturbance|function|c1f04a89ca77e98b|||||||||||||||
+extract_disturbance_base|function|053de28738c2123f|||||||||||||||
+extract_disturbance_year|function|2f8d995dfb6c33ab|||||||||||||||
+extract_edge_dist|function|f65254ea28131a37|||||||||||||||
 extract_elevation|function|b2ade2561728b9a1|||||||||||||||
 extract_roughness|function|2f400d5f99e57c24|||||||||||||||
 extract_slope|function|3325d33de0f74e0e|||||||||||||||
+extract_stand_edge|function|3edea8a43b9cc4fc|||||||||||||||
 extract_uwr|function|550f6d35719f844f|||||||||||||||
 extract_uwr_lyr|function|ad86d871a3ba0d42|||||||||||||||
 extract_vri|function|ba7489e87225610d|||||||||||||||
@@ -114,21 +120,25 @@ query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
 random_spring|stem|7abfb5dc5d42b87c|60f839f15fee0ecf|77aebbe7d7d5a958|1803844473||t20462.2284974118s|c7911d68274d2de8|7043529|rds|local|vector|||19.36||
 random_spring_chm|stem|f24a654095beca23|227a4762eb338f8d|e15a5e3a3eb5662c|-1235274593||t20462.2317657275s|a0f41889d19f0fbf|347977|rds|local|vector|||8.69||
 random_spring_dem|stem|0a800d21097865ea|4688574c2c3a8ec4|182504c986b6ec9f|-882559391||t20462.2322441927s|25a91456883ef9e7|4085101|rds|local|vector|||40.08||
+random_spring_disturbance|stem|64b2a093aebcb0a8|cabacd9b1ebbf8a0|5e79b0100724b965|1478326750||t20475.8065501089s|3cbf5d4be5273631|3547377|rds|local|vector|||15.66||
 random_spring_uwr|stem|b8e1421b8b44390c|78017863a23073a3|092d1e5c7aa09fd7|675732823||t20462.2332150228s|7f29b22b6457ee05|2054740|rds|local|vector|||65.31||
 random_spring_vri|stem|151ade8ac6465f22|8e1ec0969bf782ac|74dc58218cf2adb5|36721359||t20462.2324527142s|6444acc4baac0ae9|3287964|rds|local|vector|||16.92|attribute variables are assumed to be spatially constant throughout all geometries|
 random_summer|stem|7917030526370943|d16ff0ad5a5e6e9d|885b9566ed90ba32|-1628418462||t20462.2287279422s|b0f553a2718af773|7048693|rds|local|vector|||19.08||
 random_summer_chm|stem|53870550a8f2ce05|4692580dc1600dbe|ed8dd9ab51267a19|1021494091||t20462.2333012493s|079de66e685c3edf|301709|rds|local|vector|||7.33||
 random_summer_dem|stem|39c5cd73b8bed048|4d0db3ae2bfbfe93|4395168e34b9e353|-1612840113||t20462.2345862806s|da0112381371170e|4130772|rds|local|vector|||37.32||
+random_summer_disturbance|stem|d1bbe19e88820fbb|33c81fd3bb6c253a|ea99a9ad67baec1d|38029748||t20475.8061198088s|0733e599d42d033d|3633768|rds|local|vector|||26.16||
 random_summer_uwr|stem|0e644dca940098a7|9cc8f4f2f904184a|44bb7ea22cc8571c|943586207||t20462.2341404537s|81ff88f226a9ea69|2077849|rds|local|vector|||72.02||
 random_summer_vri|stem|76f0e26325aef5b8|fe739900fabd4e18|75af9152e6b4c550|-1766705154||t20462.234844667s|155e2ac8e660a34e|3271393|rds|local|vector|||21.33|attribute variables are assumed to be spatially constant throughout all geometries|
 random_swp|stem|83ca9833d9947e75|5aaedbf618cc3975|1525ec5e64c501fa|-1905150981||t20462.2282619358s|842801715cfae399|7040406|rds|local|vector|||23.86||
 random_swp_chm|stem|50af174eeedf2781|be6de38f54701914|a4e498c648095c93|1253940723||t20462.2314555947s|8956a868eb513f66|415397|rds|local|vector|||8.31||
 random_swp_dem|stem|74e507316e8e6b55|dd0b5d4b970828f3|0e3318ca95987732|-170673047||t20462.2307757465s|663fdbe6e65bb14b|4029778|rds|local|vector|||48.36||
+random_swp_disturbance|stem|1811a0d8c432c64c|e5a6b4019c42fac4|f5fd0933f89b0280|1397775027||t20475.8057895771s|2e6c4f0d3908f871|3551597|rds|local|vector|||28.62||
 random_swp_uwr|stem|c91ae1143b0b246e|f0213aaf9f9833de|00369d6528d6a4b1|-1306453010||t20462.2313578972s|af23f1b1588e96ec|1878351|rds|local|vector|||49.83||
 random_swp_vri|stem|a8451e975653defa|8511b0c3978f497e|5fb8dd18a4ba7c65|-763469556||t20462.2316636611s|9a57d9c259f30637|3111763|rds|local|vector|||17.03|attribute variables are assumed to be spatially constant throughout all geometries|
 random_winter|stem|489cf30482043034|04e5546795cf1cde|ca2ab1812a42e8f5|2030135424||t20462.227975842s|3ebcd96e17c683b0|7051487|rds|local|vector|||20.34||
 random_winter_chm|stem|123cda80aebb8f43|94219e5c68ec1ec1|c638fb921a1e78f0|-321507621||t20462.2292558777s|76e70a33d97a256c|381589|rds|local|vector|||8.48||
 random_winter_dem|stem|8d73b347c458fcf2|015c997ac65bf8a7|c9b6db5fc5d4f5df|124403925||t20462.2291560777s|3809a6d2a33c62b9|4077057|rds|local|vector|||35.76||
+random_winter_disturbance|stem|74cda4c79bca517e|ee85091145deb3d7|32bab33ca142fd7c|-100320334||t20475.8063444706s|e76051c0e83ab9da|3564573|rds|local|vector|||17.53||
 random_winter_uwr|stem|3a457e84f87c477b|4da4378e39ed9355|cf812de4a04bb5fc|-1997755743||t20462.2301982958s|a6620108cbadbdac|2016275|rds|local|vector|||60.81||
 random_winter_vri|stem|ef90b976df47d486|64920334b8ef9710|e73c6d76ab05b4bb|1761764807||t20462.2294887197s|e2b1f75205a17a82|3274921|rds|local|vector|||19.06|attribute variables are assumed to be spatially constant throughout all geometries|
 rarify_pts|function|8e9017b7cb1d3c7f|||||||||||||||
@@ -145,7 +155,7 @@ spring_dbbmm|stem|8022e85e77b6e2d0|097b0d7b735f88b6|f36422da9aef33d9|1234634189|
 spring_mcp|stem|d9b5ac2939914448|b8b92ce6deeb7d5b|f7d9c5c123ba65a1|2029814444||t20462.2189394291s|421a03d92d026844|34310|rds|local|vector|||12.67||
 spring_rsf_mcp|stem|2ac77a313304f0ea|0ad717f5eaec2935|fea70367a8b77989|436210894||t20462.2273475579s|ccb665af6635a976|91288|rds|local|vector|||5.6||
 st_edge_dist|function|67233d498ccee62c|||||||||||||||
-stand_edge|stem|7cdc2f12de765253|02e3631e8ba07072|2963fe5344f36049|-259846740||t20475.7412557665s|a06e19beefe2f96b|29506128|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||1.82||
+stand_edge|stem|85f7485872b15459|02e3631e8ba07072|3ebbfa7602011ef7|-259846740||t20475.7621353225s|07788c8de6f5b85e|29505820|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||0.91||
 step_length|function|97a0717a017cb942|||||||||||||||
 step_length_buffer|stem|fd6b823d22681d44|5575f7cfb463632e|3eda3af80fa276f6|-1689872844||t20462.2237392372s|afe1c0564fcfafab|85|rds|local|vector|||0.02||
 step_length_seasonal_summary|stem|e2d4336145490678|179992cd659af689|3eda3af80fa276f6|-1064318883||t20462.2237435201s|c091eeb299dbae89|439|rds|local|vector|||0.11||

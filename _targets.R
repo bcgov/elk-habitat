@@ -645,6 +645,13 @@ list(
                                   vri = vri,
                                   cols = vri_cols)),
   
+  ##### Disturbance attributes #####
+  tar_target(elk_disturbance, extract_disturbance(pts = elk,
+                                                  disturbance = disturbance,
+                                                  stand_edge = stand_edge,
+                                                  edge_dist = edge_dist)),
+  
+  
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####
   tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
@@ -686,7 +693,24 @@ list(
                                             cols = vri_cols)),
   tar_target(random_swp_vri, extract_vri(pts = random_swp,
                                             vri = vri,
-                                            cols = vri_cols))
+                                            cols = vri_cols)),
+  ##### Disturbance attributes #####
+  tar_target(random_winter_disturbance, extract_disturbance(pts = random_winter,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_spring_disturbance, extract_disturbance(pts = random_spring,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_summer_disturbance, extract_disturbance(pts = random_summer,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_swp_disturbance, extract_disturbance(pts = random_swp,
+                                                         disturbance = disturbance,
+                                                         stand_edge = stand_edge,
+                                                         edge_dist = edge_dist))
 
 )
 
