@@ -510,7 +510,12 @@ list(
                                                    change_detection = change_detection) |>
                    terra::crop(study_area) |>
                    terra::mask(study_area)),
-  
+  ##### Stand Edges #####
+  # We can take advantage of slope algorithms to extract stand edges from
+  # the disturbance layer.
+  tar_terra_rast(stand_edge, terra::terrain(disturbance, "slope")),
+  ##### Distance to Edge #####
+  tar_terra_rast(edge_dist, terra::gridDist(stand_edge)),
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat
