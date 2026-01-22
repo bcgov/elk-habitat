@@ -483,7 +483,6 @@ list(
   # This dataset needs to be within the 'GIS/Change Detection' directory.
   # The change detection data was prepared by Sasha Nasanova at MoF. 
   # The directory contains a readme.txt file with more information.
-  # `cd` for 'change detection'
   tar_target(change_detection_path, "GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif", format = "file"),
   tar_terra_rast(change_detection, terra::rast(change_detection_path)),
   
@@ -500,7 +499,7 @@ list(
                                                  aoi = study_area,
                                                  save_tiff = TRUE)),
   ##### Disturbance #####
-  # Merge together VRI, Depletions, and S. Nasanova change detections
+  # Merge together VRI, Depletions, Retention, Forest Age, and Change Detection
   # layer to generate a comprehensive 'disturbance' layer. 
   tar_terra_rast(disturbance, calc_disturbance_lyr(res = dem_res,
                                                    vri = vri,
@@ -516,6 +515,7 @@ list(
   tar_terra_rast(stand_edge, terra::terrain(disturbance, "slope")),
   ##### Distance to Edge #####
   tar_terra_rast(edge_dist, terra::gridDist(stand_edge)),
+  
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat
@@ -644,9 +644,6 @@ list(
   tar_target(elk_vri, extract_vri(pts = elk,
                                   vri = vri,
                                   cols = vri_cols)),
-  #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
-  # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
-  #                                        edges = vri_edges))
   
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####
