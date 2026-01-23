@@ -1,5 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|7ae0779324e1a87a|||||||||||||||
+.Random.seed|object|09ff07b63db0554d|||||||||||||||
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
 all_seasons_dbbmm|stem|88d27ca194fa3f5e|04c92914fe89f26c|0992adb1a3aac34b|-436251714||t20462.224001084s|452d3ff4abddf287|11313013|rds|local|vector|||0.48||
 all_seasons_mcp|stem|97a2f07ab48e6edb|49512c53edbb9f8e|faf8b235059ae28c|37521217||t20462.2243670288s|2d3b7eb0192eb44e|96075|rds|local|vector|||0.03||
@@ -7,10 +7,10 @@ all_szn_yearly_overlap|stem|83e6704dd29dc0bd|0650ec91c3e3ba32|3565392d0b25e79e|-
 assign_daily_seasons|function|738918b74e6a16fe|||||||||||||||
 assign_weekly_seasons|function|663c05c5ec7782cf|||||||||||||||
 attribute_animal_id|function|9d65df7e940b435f|||||||||||||||
-calc_disturbance_lyr|function|e3e2941943689464|||||||||||||||
+calc_disturbance_lyr|function|bc1b5cbfba22eb89|||||||||||||||
 capture_data|stem|12bdb83573be937b|e14ef5cd5be2470c|42d6a860cf84bb4c|1127347996||t20242.9196286274s|a31fe2a31585068b|12482|rds|local|vector|||0.36||
 capture_data_path|stem|21a819747fabe06a|70e4449647399076|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture_Updtd_20250415.xlsx|t20239.0881285566s|a67621ae84340c38|112484|file|local|vector|||0.81||
-cded|stem|625beeba987df5d8|785e6cdb0578efdb|f052a50e47b964bf|-438085499|GIS/DEM/CDED_VRT.vrt|t20462.0903225171s|5a2fd5cba14367e1|21214|file|local|vector|||17.6||
+cded|stem|625beeba987df5d8|785e6cdb0578efdb|f052a50e47b964bf|-438085499|GIS/DEM/CDED_VRT.vrt|t20474.0573936768s|5a2fd5cba14367e1|21214|file|local|vector|||13.83||
 centroid_step|function|a458a84083a6b6a1|||||||||||||||
 change_detection|stem|59eed62643d503de|0d25a31590cdd78a|2113770581539609|760561000||t20438.7422643775s|7dd309b9980e383e|2359765|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||0.09||
 change_detection_path|stem|59eed62643d503de|e138b83babc38d85|2c530c1562a7fbd1|1573190667|GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif|t20194.9672916667s|7dd309b9980e383e|2359765|file|local|vector|||0||
@@ -28,7 +28,7 @@ cumulative_summer_mcp|stem|aa3024ded230a973|69a6dcfb069c0be1|eb512f4b70926662|18
 cumulative_winter_dbbmm|stem|266a25c807324b30|3c07a4bec98c5840|a80df71d33636d48|-312512595||t20462.2228520672s|02e282694151ec53|4516449|rds|local|vector|||1.59||
 cumulative_winter_mcp|stem|080c98d9cc165c57|6ca1f2d3d6672f99|ceeab9d44545d0a9|1500740159||t20462.2238675591s|db17a3bf362e12f9|27935|rds|local|vector|||0.76||
 cutoff_date|object|9ae2787af414062a|||||||||||||||
-daily_dets_plots|stem|3e7cd9e521e7fe7e|471b22bf3dd17154|18d6a14613e3a8dc|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20462.2084694822s|cf738e27c7d04685|2724904|file|local|vector|||90.15||
+daily_dets_plots|stem|3e7cd9e521e7fe7e|471b22bf3dd17154|18d6a14613e3a8dc|-13188253|reports/elk_dets_per_day.pdf*reports/elk_dets_per_day.Rmd|t20473.9756102311s|cf738e27c7d04685|2724904|file|local|vector|||90.15||
 daily_mcp|function|b6550459ae91769e|||||||||||||||
 daily_mcp_seasonal_summary|stem|11410a91e9a3c442|c76a534c4bcf61a3|4aea33e483c824e3|-282887321||t20462.8421138069s|a3496bd4cf32175c|517|rds|local|vector|||0.04||
 daily_mcp_swp_summary|stem|16360a254e119920|b1b723ecf468bcbb|2d839d914c5d7016|-2092308185||t20462.8421161919s|3894ebe67ff7c23d|553|rds|local|vector|||0.17||
@@ -44,16 +44,21 @@ dbbmm_winter_agg_overlap|stem|89cdc0c2220179ed|a775d7b4475df247|65f02066ac69aa0f
 dbbmm_winter_spring_overlap|stem|7873bcc49f23a941|b930075dc00053b3|d9f4dd06eb74ad89|-1789060891||t20462.2236151963s|221c77bececb24c5|2669|rds|local|vector|||12.89||
 dbbmm_winter_yearly_overlap|stem|b1697c5d6ab8d96b|3a8acfeaffe76901|4c34270642fd0e18|2111524819||t20462.222826217s|707f2bf1ae2bed8e|1557|rds|local|vector|||6.94||
 dbbmm_wso_summary|stem|084a445aae09adb2|ae36d9ecb25d1dc8|b78624364ee7439a|-516662678||t20462.227148117s|4778a4e877266c92|485|rds|local|vector|||0.09||
+dem_res|stem|82e8045d035c70b3|f0cd024efe664501|702e7cb8a6934a03|-284907922||t20475.7132552863s|86c36464e2e2a367|58|rds|local|vector|||67.2||
 depletions|stem|229dc25306eb90b4|13c5a2bff7faeeb0|db73d2e2ac84ab6b|1279129192||t20438.7422514586s|e6783f11bc7e03b6|12208809|rds|local|vector|||2.34||
 depletions_path|stem|10e3699f62a4c54d|89bd4cca59c8a17d|2c530c1562a7fbd1|-705209131|GIS/Depletions/2025_01_Depletions.gpkg|t20435.0411358775s|80caededd3166cb6|29728768|file|local|vector|||3.38|package ggplot2 was built under R version 4.4.3|
 detection_efficiency|stem|42ded9c3f8e8aeff|8d8488432aca6501|528c9b111d35ec66|947972721||t20462.2189503641s|8cc2076f9c25a762|2412|rds|local|vector|||0.92||
 dets_per_elk|stem|097c8c7616011b76|cffc3ee6ced78c00|6e78151ec79a7d42|-360331643||t20462.2187920448s|af94fcb8e6165bbe|176|rds|local|vector|||0.05||
-disturbance_lyr|stem|48f9394b1cbaa92b|c3aa809324393b8e|cbaf93f3c13e8ac2|582554320||t20462.2274980749s|97050ef6ad34571c|7932214|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||5.97||
+disturbance|stem|53b624790ed62496|40c6ab23950c055b|2921da97391edad4|-428419592||t20475.7621094705s|705e1dc87f689f5d|22402897|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||49.38|Polygons transformed to raster CRS. To avoid onthefly coordinate transformation, ensure that st_crs returns the same result for both raster and polygon inputs.|
+disturbance_lyr|stem|9d5073c5a4f1a3aa|1e884bcb331f6d06|19079a8991669ba4|582554320||t20475.7164225001s|300d900f299e0173|24968147|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||65.72|Polygons transformed to raster CRS. To avoid onthefly coordinate transformation, ensure that st_crs returns the same result for both raster and polygon inputs.|
+download_forest_age|function|d49993b05371037a|||||||||||||||
 download_from_server|function|59f25d37f0fbd513|||||||||||||||
+edge_dist|stem|06832f6272686e10|39bf157b1fbd7d44|b2bb45404e043ae7|-1443276582||t20475.7622932714s|8b0e74e72a43e64a|38015022|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||12.22||
 elk|stem|a37bd08f2fe6ac25|828064bfaffe2696|03c3bd8f13e23194|-188372202||t20462.0467318097s|4bc1c5f03c4ff0e1|29134794|rds|local|vector|||850.58|Field names abbreviated for ESRI Shapefile driver. GDAL Message 6 Field dttm create as date field, though DateTime requested.. GDAL Message 1 Value 103994407.081 of field NSD of feature 320 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104914962.474999994 of field NSD of feature 321 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104705113.225999996 of field NSD of feature 322 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105109748.726999998 of field NSD of feature 323 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 105713927.145999998 of field NSD of feature 324 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 107216481.253000006 of field NSD of feature 325 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 100120932.984999999 of field NSD of feature 326 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 102755309.833000004 of field NSD of feature 327 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104171478.883000001 of field NSD of feature 328 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104128103.865999997 of field NSD of feature 329 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104960957.325000003 of field NSD of feature 330 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Value 104754638.692000002 of field NSD of feature 331 not successfully written. Possibly due to too larger number with respect to field width. GDAL Message 1 Va|
 elk_chm|stem|cb5c1452d36d9cfc|6eff3ea325a5d7f0|d9ba36228eaad12e|-323457739||t20462.2190565059s|a1433d3bdaa79658|1084278|rds|local|vector|||9.03||
 elk_dem|stem|36629a4360a2748a|aaeea8ee6f238e2f|78cd9d70f18d23e7|1885558796||t20462.2233051918s|72cc80bbc5fb6fb1|3783144|rds|local|vector|||38.18||
 elk_dets_hist|function|a496a21bbf49b8dc|||||||||||||||
+elk_disturbance|stem|62670f31e385213b|d332eb63f5fa1737|81e68655e7841a6c|-2144809891||t20475.7698125184s|13758a8cc0b3be2c|3118574|rds|local|vector|||17.5||
 elk_dotplot|stem|e8648844cafc056c|94d5abc6f5fa7398|36aae6ed0fbc38f4|-2021513789||t20462.2187899616s|b8707ce9b501ec2f|145838398|rds|local|vector|||0.07||
 elk_fix_hist|function|b6a5bc4295baa22d|||||||||||||||
 elk_geom|stem|fd8e21c10fe42f26|4580d495b77f7e90|18d6a14613e3a8dc|-342589978||t20462.2087863962s|dd7be11fc10b9311|6551501|rds|local|vector|||0||
@@ -66,9 +71,14 @@ elk_vri|stem|d33fa8da93a72e51|fc1fc2b973c8b3d8|35ed1b36fb448067|30184935||t20462
 extract_aspect|function|c1824b5878c68dec|||||||||||||||
 extract_chm|function|44c511fee01f1c4c|||||||||||||||
 extract_dem|function|e091c890c97affa4|||||||||||||||
+extract_disturbance|function|c1f04a89ca77e98b|||||||||||||||
+extract_disturbance_base|function|053de28738c2123f|||||||||||||||
+extract_disturbance_year|function|2f8d995dfb6c33ab|||||||||||||||
+extract_edge_dist|function|f65254ea28131a37|||||||||||||||
 extract_elevation|function|b2ade2561728b9a1|||||||||||||||
 extract_roughness|function|2f400d5f99e57c24|||||||||||||||
 extract_slope|function|3325d33de0f74e0e|||||||||||||||
+extract_stand_edge|function|3edea8a43b9cc4fc|||||||||||||||
 extract_uwr|function|550f6d35719f844f|||||||||||||||
 extract_uwr_lyr|function|ad86d871a3ba0d42|||||||||||||||
 extract_vri|function|ba7489e87225610d|||||||||||||||
@@ -78,6 +88,7 @@ find_center|function|738ee6d69ce867bc|||||||||||||||
 find_centre|function|738ee6d69ce867bc|||||||||||||||
 fix_rate|function|2197936bd65279fe|||||||||||||||
 flagged_pts|stem|838524cd34798aa2|06dab63f5aa25ddc|8897d3fd532096d5|1665965602||t20462.2226443305s|14edbf41534f8b8c|76041|rds|local|vector|||0.11||
+forest_age|stem|1ba68afccba3375a|013be0334c7ecede|072a02d64dff331c|2025303678||t20474.8943557677s|4cb22e18fb5edaf5|9069274|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||692.13||
 full_collar_data|stem|fb8aad23aac33f1b|fcaac25f0f6c862d|8a39709f47971e4a|1289326002||t20462.036759723s|394265352cca0c13|13871793|rds|local|vector|||9.57|package RSQLite was built under R version 4.4.3|
 individual_dbbmm|function|3495f8b948f0a5cb|||||||||||||||
 individual_mcp|function|390e0ed3e3283042|||||||||||||||
@@ -99,7 +110,7 @@ n_dets_per_elk|function|08bd3cc58671e6df|||||||||||||||
 n_elk_per_month|function|740bde44b553e278|||||||||||||||
 n_elk_per_year_month|function|74c304c23b6873ff|||||||||||||||
 non_swp_elk|object|2c07bcfc1260c6a8|||||||||||||||
-nsd_plots|stem|b5e8c7f3b9e47f85|64378a330b9398ad|18d6a14613e3a8dc|-869005253|reports/elk_nsd.pdf*reports/elk_nsd.Rmd|t20462.2098157127s|f8f3751036122030|21201542|file|local|vector|||89.19||
+nsd_plots|stem|b5e8c7f3b9e47f85|64378a330b9398ad|18d6a14613e3a8dc|-869005253|reports/elk_nsd.pdf*reports/elk_nsd.Rmd|t20473.9756129602s|f8f3751036122030|21201542|file|local|vector|||89.19||
 p_dets_per_elk|stem|135fe3102aa0f099|ef744c8c91fd6ab6|350711fb758536c2|784997253||t20462.0901178309s|424379e1c3dc06d5|29244542|rds|local|vector|||0.19||
 p_efficiency|stem|b5181e99aae1bd70|dc663c41ca62b40a|db08805a428a3242|-1905756578||t20462.2243685153s|f9642cafa5230cc5|113791|rds|local|vector|||0.01||
 p_elk_per_month|stem|51d8e9b18caa16d4|fb1b1ddd4d188b87|b77d21158b5c9c49|2139122293||t20462.2226417185s|94a3bb99b0624e4c|29313550|rds|local|vector|||0.14||
@@ -109,27 +120,32 @@ query_cded|function|eb1dc5b4a2dc71c9|||||||||||||||
 random_spring|stem|7abfb5dc5d42b87c|60f839f15fee0ecf|77aebbe7d7d5a958|1803844473||t20462.2284974118s|c7911d68274d2de8|7043529|rds|local|vector|||19.36||
 random_spring_chm|stem|f24a654095beca23|227a4762eb338f8d|e15a5e3a3eb5662c|-1235274593||t20462.2317657275s|a0f41889d19f0fbf|347977|rds|local|vector|||8.69||
 random_spring_dem|stem|0a800d21097865ea|4688574c2c3a8ec4|182504c986b6ec9f|-882559391||t20462.2322441927s|25a91456883ef9e7|4085101|rds|local|vector|||40.08||
+random_spring_disturbance|stem|64b2a093aebcb0a8|cabacd9b1ebbf8a0|5e79b0100724b965|1478326750||t20475.8065501089s|3cbf5d4be5273631|3547377|rds|local|vector|||15.66||
 random_spring_uwr|stem|b8e1421b8b44390c|78017863a23073a3|092d1e5c7aa09fd7|675732823||t20462.2332150228s|7f29b22b6457ee05|2054740|rds|local|vector|||65.31||
 random_spring_vri|stem|151ade8ac6465f22|8e1ec0969bf782ac|74dc58218cf2adb5|36721359||t20462.2324527142s|6444acc4baac0ae9|3287964|rds|local|vector|||16.92|attribute variables are assumed to be spatially constant throughout all geometries|
 random_summer|stem|7917030526370943|d16ff0ad5a5e6e9d|885b9566ed90ba32|-1628418462||t20462.2287279422s|b0f553a2718af773|7048693|rds|local|vector|||19.08||
 random_summer_chm|stem|53870550a8f2ce05|4692580dc1600dbe|ed8dd9ab51267a19|1021494091||t20462.2333012493s|079de66e685c3edf|301709|rds|local|vector|||7.33||
 random_summer_dem|stem|39c5cd73b8bed048|4d0db3ae2bfbfe93|4395168e34b9e353|-1612840113||t20462.2345862806s|da0112381371170e|4130772|rds|local|vector|||37.32||
+random_summer_disturbance|stem|d1bbe19e88820fbb|33c81fd3bb6c253a|ea99a9ad67baec1d|38029748||t20475.8061198088s|0733e599d42d033d|3633768|rds|local|vector|||26.16||
 random_summer_uwr|stem|0e644dca940098a7|9cc8f4f2f904184a|44bb7ea22cc8571c|943586207||t20462.2341404537s|81ff88f226a9ea69|2077849|rds|local|vector|||72.02||
 random_summer_vri|stem|76f0e26325aef5b8|fe739900fabd4e18|75af9152e6b4c550|-1766705154||t20462.234844667s|155e2ac8e660a34e|3271393|rds|local|vector|||21.33|attribute variables are assumed to be spatially constant throughout all geometries|
 random_swp|stem|83ca9833d9947e75|5aaedbf618cc3975|1525ec5e64c501fa|-1905150981||t20462.2282619358s|842801715cfae399|7040406|rds|local|vector|||23.86||
 random_swp_chm|stem|50af174eeedf2781|be6de38f54701914|a4e498c648095c93|1253940723||t20462.2314555947s|8956a868eb513f66|415397|rds|local|vector|||8.31||
 random_swp_dem|stem|74e507316e8e6b55|dd0b5d4b970828f3|0e3318ca95987732|-170673047||t20462.2307757465s|663fdbe6e65bb14b|4029778|rds|local|vector|||48.36||
+random_swp_disturbance|stem|1811a0d8c432c64c|e5a6b4019c42fac4|f5fd0933f89b0280|1397775027||t20475.8057895771s|2e6c4f0d3908f871|3551597|rds|local|vector|||28.62||
 random_swp_uwr|stem|c91ae1143b0b246e|f0213aaf9f9833de|00369d6528d6a4b1|-1306453010||t20462.2313578972s|af23f1b1588e96ec|1878351|rds|local|vector|||49.83||
 random_swp_vri|stem|a8451e975653defa|8511b0c3978f497e|5fb8dd18a4ba7c65|-763469556||t20462.2316636611s|9a57d9c259f30637|3111763|rds|local|vector|||17.03|attribute variables are assumed to be spatially constant throughout all geometries|
 random_winter|stem|489cf30482043034|04e5546795cf1cde|ca2ab1812a42e8f5|2030135424||t20462.227975842s|3ebcd96e17c683b0|7051487|rds|local|vector|||20.34||
 random_winter_chm|stem|123cda80aebb8f43|94219e5c68ec1ec1|c638fb921a1e78f0|-321507621||t20462.2292558777s|76e70a33d97a256c|381589|rds|local|vector|||8.48||
 random_winter_dem|stem|8d73b347c458fcf2|015c997ac65bf8a7|c9b6db5fc5d4f5df|124403925||t20462.2291560777s|3809a6d2a33c62b9|4077057|rds|local|vector|||35.76||
+random_winter_disturbance|stem|74cda4c79bca517e|ee85091145deb3d7|32bab33ca142fd7c|-100320334||t20475.8063444706s|e76051c0e83ab9da|3564573|rds|local|vector|||17.53||
 random_winter_uwr|stem|3a457e84f87c477b|4da4378e39ed9355|cf812de4a04bb5fc|-1997755743||t20462.2301982958s|a6620108cbadbdac|2016275|rds|local|vector|||60.81||
 random_winter_vri|stem|ef90b976df47d486|64920334b8ef9710|e73c6d76ab05b4bb|1761764807||t20462.2294887197s|e2b1f75205a17a82|3274921|rds|local|vector|||19.06|attribute variables are assumed to be spatially constant throughout all geometries|
 rarify_pts|function|8e9017b7cb1d3c7f|||||||||||||||
 raw_collar_data|stem|4842130e8b6bb58a|410c7e02d9631a28|635c37598515445a|1516101767||t20462.0365987075s|936183c21adaee69|18707063|rds|local|vector|||203.07|There were 4 warnings in dplyrmutate.The first warning wasℹ In argument dttm  lubridatewith_tzlubridateymd_hmsdttm, GMT8.Caused by warning in with_tz.default Unrecognized time zone GMT8ℹ Run dplyrlast_dplyr_warnings to see the 3 remaining warnings.|
 read_vri|function|16df774cb8cb8e9c|||||||||||||||
 remove_imprecise_locations|function|27a83e4a2b6f6e0f|||||||||||||||
+results|stem|b093d54e75585eba|e595e8357626d714|e02778705a9094b9|-322906963||t20474.8179760552s|88636230f407d8f4|33123825|rds|local|vector|||88.86||
 seasonal_dbbmm|function|098e6421db5fcde6|||||||||||||||
 seasonal_mcp|function|44e6e62e9bb4961a|||||||||||||||
 seasonal_overlap_summary|stem|7293431c3b639c3c|1fcfbc0c1dbcaf3a|4b575599499214c1|627036650||t20462.2348523177s|fabb4f375b2d7831|621|rds|local|vector|||0.61||
@@ -139,6 +155,7 @@ spring_dbbmm|stem|8022e85e77b6e2d0|097b0d7b735f88b6|f36422da9aef33d9|1234634189|
 spring_mcp|stem|d9b5ac2939914448|b8b92ce6deeb7d5b|f7d9c5c123ba65a1|2029814444||t20462.2189394291s|421a03d92d026844|34310|rds|local|vector|||12.67||
 spring_rsf_mcp|stem|2ac77a313304f0ea|0ad717f5eaec2935|fea70367a8b77989|436210894||t20462.2273475579s|ccb665af6635a976|91288|rds|local|vector|||5.6||
 st_edge_dist|function|67233d498ccee62c|||||||||||||||
+stand_edge|stem|85f7485872b15459|02e3631e8ba07072|3ebbfa7602011ef7|-259846740||t20475.7621353225s|07788c8de6f5b85e|29505820|format_custom&read=ZnVuY3Rpb24gKHBhdGgpIAp0ZXJyYTo6cmFzdChwYXRoKQ&write=ZnVuY3Rpb24gKG9iamVjdCwgcGF0aCkgCnsKICAgIGRvLmNhbGwodGVycmE6OndyaXRlUmFzdGVyLCBjKGxpc3Qob2JqZWN0LCBmaWxlbmFtZSA9IHBhdGgsIAogICAgICAgIGZpbGV0eXBlID0gIkdUaWZmIiwgb3ZlcndyaXRlID0gVFJVRSwgZ2RhbCA9IE5VTEwpLCBsaXN0KCkpKQp9&marshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp3cmFwKG9iamVjdCk&unmarshal=ZnVuY3Rpb24gKG9iamVjdCkgCnRlcnJhOjp1bndyYXAob2JqZWN0KQ&convert=&copy=&repository=|local|list|||0.91||
 step_length|function|97a0717a017cb942|||||||||||||||
 step_length_buffer|stem|fd6b823d22681d44|5575f7cfb463632e|3eda3af80fa276f6|-1689872844||t20462.2237392372s|afe1c0564fcfafab|85|rds|local|vector|||0.02||
 step_length_seasonal_summary|stem|e2d4336145490678|179992cd659af689|3eda3af80fa276f6|-1064318883||t20462.2237435201s|c091eeb299dbae89|439|rds|local|vector|||0.11||

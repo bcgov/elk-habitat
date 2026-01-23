@@ -16,26 +16,6 @@ read_vri <- function(gdb, layer = "VEG_COMP_LYR_R1_POLY_CC_RES") {
   return(vri)
 }
 
-extract_vri_edges <- function(pts, vri) {
-  # TODO: running out of memory to do this on the whole dataset.
-  # Need to think of a more clever way of doing this.
-  # Either subset down to only overlapping polygons, or intersect
-  # with a mcp that contains all points, then run this thing
-  # OR calc distance to non-union'd `out` and choose the
-  # minimum value for each one
-  # Subset VRI polygons to just the ones overlapping pts
-  # GPS points - i.e. thin out the dataset
-  # e.g. sf::st_distance(pts, vri)
-  t <- sf::st_within(pts, vri, sparse = TRUE)
-  t <- unlist(t)
-  vri <- vri[t, ]
-  #  Convert to linestring
-  out <- sf::st_cast(vri, "MULTILINESTRING")
-  out <- sf::st_geometry(out)
-  out <- sf::st_union(out) # make it all one feature
-  return(out)
-}
-
 
 
 extract_vri <- function(pts, id_col = "idposition",
@@ -81,23 +61,3 @@ extract_vri <- function(pts, id_col = "idposition",
   return(ixn)
 }
 
-# TODO: if we end up using the edge dist fxn, remove id_col
-st_edge_dist <- function(feature, id_col = "idposition", edges) {
-  # Data health checks
-  stopifnot("`feature` must be a sf class geometry." = inherits(feature, "sf"))
-  stopifnot("`feature` must be a sf class POINT geometry." = sf::st_geometry_type(feature) %in% 'POINT')
-  stopifnot("`edges` must be a sf class geometry." = inherits(edges, "sf"))
-  stopifnot("`edges` must be a sf class MULTILINESTRING or LINESTRING geometry." = any(sf::st_geometry_type(edges) %in% c('MULTILINESTRING', 'LINESTRING')))
-  stopifnot("Your edges layer and feature layer are a different CRS." = sf::st_crs(edges) == sf::st_crs(feature))
-  
-  # Pare down
-  feature <- feature[,id_col]
-  
-  # Extract distances
-  out <- sf::st_distance(feature, edges)
-  out <- out[,1]
-  
-  out <- cbind(sf::st_drop_geometry(feature[,id_col]), out)
-  
-  return(out)
-}

@@ -410,16 +410,6 @@ list(
                                 sd_nsd = sd(NSD, na.rm = TRUE),
                                 median_nsd = median(NSD, na.rm = TRUE),
                                 N = dplyr::n())),
-  ##### 99 pctl step length #####
-  # The 99th pctl step length is the distance that 99% of the elk are 
-  # moving within the 3 hr gap between successive fixes. This will be
-  # used to buffer the RSF polygons down the line.
-  # TODO: filter to just winter period
-  tar_target(step_length_buffer, step_lengths_3hr |> 
-               dplyr::select(step) |> 
-               dplyr::pull() |> 
-               quantile(0.99)),
-  
   ##### Seasonal, weekly, daily #####
   # These aren't step-lengths per se, but rather centroid-to-centroid
   # distances between successive home range polygons at each temporal
@@ -446,6 +436,15 @@ list(
                                               group_by = c("animal_id", "season"),
                                               date_col = c("year")) |>
                                   dplyr::mutate(method = "dBBMM"))),
+  ##### 99 pctl step length #####
+  # The 99th pctl step length is the distance that 99% of the elk are 
+  # moving within the 3 hr gap between successive fixes. This will be
+  # used to buffer the RSF polygons down the line.
+  # TODO: filter to just winter period
+  tar_target(step_length_buffer, step_lengths_3hr |> 
+               dplyr::select(step) |> 
+               dplyr::pull() |> 
+               quantile(0.99)),
   
   # >> HABITAT SELECTION ANALYSIS ####
   #### HSA SETUP ####
@@ -454,12 +453,20 @@ list(
   ##### Download DEM #####
   # Queries CDED tiles overlapping our elk data using the `bcmaps` package
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
+  # Extract DEM resolution
+  tar_target(dem_res, terra::rast(cded) |> 
+               terra::project("epsg:3005") |> 
+               terra::res()),
   ##### Study Area #####
   # Create a polygon that is the shapefile of our overall study area on land
   # This will allow us to spatially limit our queries for big files
   tar_target(study_area, study_area_poly(elk, cded_path = cded)),
   ##### Download VRI #####
   tar_target(vri, bcdata::bcdc_query_geodata("2ebb35d8-c82f-4a17-9c96-612ac3532d55") |>
+               dplyr::filter(bcdata::INTERSECTS(study_area)) |>
+               dplyr::collect()),
+  ##### Download RESULTS #####
+  tar_target(results, bcdata::bcdc_query_geodata("56ac43a7-724a-4f01-b193-d5f9a16ef0a8") |>
                dplyr::filter(bcdata::INTERSECTS(study_area)) |>
                dplyr::collect()),
   ##### Load Depletions #####
@@ -476,17 +483,38 @@ list(
   # This dataset needs to be within the 'GIS/Change Detection' directory.
   # The change detection data was prepared by Sasha Nasanova at MoF. 
   # The directory contains a readme.txt file with more information.
-  # `cd` for 'change detection'
   tar_target(change_detection_path, "GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif", format = "file"),
   tar_terra_rast(change_detection, terra::rast(change_detection_path)),
   
   #### RASTER LAYERS ####
+  ##### Forest Age #####
+  # Canada-wide 30m resolution forest age dataset
+  # As described Maltman et al. (2023)
+  # https://www.sciencedirect.com/science/article/pii/S0034425723000809
+  # This target downloads the .tiff files, crops them to
+  # the study area, then saves the cropped .tiff to the
+  # "Forest Age" directory.
+  # This file takes about 10 mins to download on my 80 Mbps internet.
+  tar_terra_rast(forest_age, download_forest_age(url = "https://opendata.nfis.org/downloads/forest_change/CA_forest_age_2022.zip",
+                                                 aoi = study_area,
+                                                 save_tiff = TRUE)),
   ##### Disturbance #####
-  # Merge together VRI, Depletions, and S. Nasanova change detections
+  # Merge together VRI, Depletions, Retention, Forest Age, and Change Detection
   # layer to generate a comprehensive 'disturbance' layer. 
-  tar_terra_rast(disturbance_lyr, calc_disturbance_lyr(vri = vri,
-                                                       depletions = depletions,
-                                                       change_detection = change_detection)),
+  tar_terra_rast(disturbance, calc_disturbance_lyr(res = dem_res,
+                                                   vri = vri,
+                                                   depletions = depletions,
+                                                   retention = results,
+                                                   forest_age = forest_age,
+                                                   change_detection = change_detection) |>
+                   terra::crop(study_area) |>
+                   terra::mask(study_area)),
+  ##### Stand Edges #####
+  # We can take advantage of slope algorithms to extract stand edges from
+  # the disturbance layer.
+  tar_terra_rast(stand_edge, terra::terrain(disturbance, "slope")),
+  ##### Distance to Edge #####
+  tar_terra_rast(edge_dist, terra::gridDist(stand_edge)),
   
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
@@ -616,9 +644,13 @@ list(
   tar_target(elk_vri, extract_vri(pts = elk,
                                   vri = vri,
                                   cols = vri_cols)),
-  #tar_target(vri_edges, extract_vri_edges(elk = elk, vri = vri)), # fails: not enough memory
-  # tar_target(elk_edge_dist, st_edge_dist(feature = elk,
-  #                                        edges = vri_edges))
+  
+  ##### Disturbance attributes #####
+  tar_target(elk_disturbance, extract_disturbance(pts = elk,
+                                                  disturbance = disturbance,
+                                                  stand_edge = stand_edge,
+                                                  edge_dist = edge_dist)),
+  
   
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####
@@ -661,7 +693,24 @@ list(
                                             cols = vri_cols)),
   tar_target(random_swp_vri, extract_vri(pts = random_swp,
                                             vri = vri,
-                                            cols = vri_cols))
+                                            cols = vri_cols)),
+  ##### Disturbance attributes #####
+  tar_target(random_winter_disturbance, extract_disturbance(pts = random_winter,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_spring_disturbance, extract_disturbance(pts = random_spring,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_summer_disturbance, extract_disturbance(pts = random_summer,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_swp_disturbance, extract_disturbance(pts = random_swp,
+                                                         disturbance = disturbance,
+                                                         stand_edge = stand_edge,
+                                                         edge_dist = edge_dist))
 
 )
 
