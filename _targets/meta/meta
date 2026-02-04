@@ -1,5 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|0f4bc0173808cc9e|||||||||||||||
+.Random.seed|object|1231ab75c16e0276|||||||||||||||
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
 all_seasons_dbbmm|stem|88d27ca194fa3f5e|04c92914fe89f26c|0992adb1a3aac34b|-436251714||t20462.224001084s|452d3ff4abddf287|11313013|rds|local|vector|||0.48||
 all_seasons_mcp|stem|97a2f07ab48e6edb|49512c53edbb9f8e|faf8b235059ae28c|37521217||t20462.2243670288s|2d3b7eb0192eb44e|96075|rds|local|vector|||0.03||
@@ -37,7 +37,9 @@ daily_step|stem|ed1b30459c7def8d|619bec30b6915b16|c25761b04650b181|-1932759320||
 dbbmm_all_szn_yearly_overlap|stem|c7ec7a21b091ad14|524694ad3e4966eb|619d3b5e067b97f8|1525540815||t20462.2274102487s|5d1b0a4f006d1230|4630|rds|local|vector|||0.01||
 dbbmm_seasonal_summary|stem|0388e81d0df5169b|953aea498725d956|ca09c50b16832fd1|1789842921||t20462.842149305s|26b105011ac1bbc9|471|rds|local|vector|||0.03||
 dBBMM_seasonal_ud|object|29e816842fabc47d|||||||||||||||
+dbbmm_spring_agg_overlap|stem|301ce208c281ba29|2a9e29188c0802d8|411b3392bb155b6a|962387022||t20488.9442129256s|57f4001de7573d55|857|rds|local|vector|||7.58||
 dbbmm_spring_yearly_overlap|stem|732e8b0f241718a2|39a9b295d50aa699|9df58f09b9e6a19c|-2038073459||t20462.2237293974s|2b1dacaddfd565d6|2188|rds|local|vector|||8.03||
+dbbmm_summer_agg_overlap|stem|1b59196140131c76|894d868c078845cf|a9cb4f1121ef3640|1961110594||t20488.944379823s|d1299caaee1f7d59|828|rds|local|vector|||8.15||
 dbbmm_summer_yearly_overlap|stem|87728fe7bb8aa38d|22432e9590bfe93c|6c153f59bd3a71e1|408432813||t20462.224086964s|27ba72e2314156e9|2065|rds|local|vector|||7.36||
 dBBMM_weekly_ud|object|29e816842fabc47d|||||||||||||||
 dbbmm_winter_agg_overlap|stem|89cdc0c2220179ed|a775d7b4475df247|65f02066ac69aa0f|-1889499879||t20462.2227453332s|e5707f85ef7e5662|741|rds|local|vector|||8.01||
@@ -99,7 +101,9 @@ logger_dotplot|function|5b0e74c36ed11f20|||||||||||||||
 mcp_all_szn_yearly_overlap|stem|dd1826a09cfe25be|dba2504ba289b49b|f481ed7a268ea9e7|1853652501||t20462.2274144728s|ca2dc85c85b9ad1d|4716|rds|local|vector|||0.05||
 MCP_pctl|object|f43fe2c999030d30|||||||||||||||
 mcp_seasonal_summary|stem|a2bb7aeaae58eec9|41c36d11592ebd28|ae782bd3002803b1|-939293508||t20462.8421504535s|ba8390797232be64|474|rds|local|vector|||0.05||
+mcp_spring_agg_overlap|stem|bed0e8831ae04ce0|d472fe4133cfe28c|50aba782f24cd0ed|-751977107||t20488.9441224657s|9577c9aef2dc7c98|852|rds|local|vector|||6.67||
 mcp_spring_yearly_overlap|stem|558acdb1952d399e|36e1a77fe1c04832|7a3dd098e3b1cdc3|410806255||t20462.2243656466s|aa807e58cf2fbc6e|2192|rds|local|vector|||10.56||
+mcp_summer_agg_overlap|stem|8cee537c196dcf7f|fcb2c674dd32d04e|397adcafc534f3a4|386441108||t20488.9442829557s|3048ba20aff44b78|842|rds|local|vector|||5.9||
 mcp_summer_yearly_overlap|stem|193acefa3e4273ce|ceb332a84eacf958|9c862c35441bd731|-1442130744||t20462.2239592421s|57179fe5eb5ae75d|2090|rds|local|vector|||6.72||
 mcp_winter_agg_overlap|stem|83738a9a8274d94a|5b3509fe4df069fc|88f176b548599d3b|-1594817376||t20462.223857975s|1ef8cf0ba99a05dd|744|rds|local|vector|||4||
 mcp_winter_spring_overlap|stem|fff9c334568575d6|22eb826872ff85ea|a586b3be9a364798|-1809842540||t20462.2242310028s|d0b588304c5fb565|2727|rds|local|vector|||12.39||

@@ -338,6 +338,7 @@ list(
   # for the pooled seasonal areas. Using two methods:
   # 1) max overlap area / union of all areas
   # 2) GOI metric described in Ferrarini et al. (2021)
+  ## WINTER ##
   tar_target(mcp_winter_agg_overlap, lapply(unique(winter_mcp$animal_id),
                                             function(x){
                                               shp <- winter_mcp[winter_mcp$animal_id == x, ]
@@ -353,6 +354,56 @@ list(
   tar_target(dbbmm_winter_agg_overlap, lapply(unique(winter_dbbmm$animal_id),
                                               function(x){
                                                 shp <- winter_dbbmm[winter_dbbmm$animal_id == x, ]
+                                                n <- nrow(shp)
+                                                out <- aggregate_overlap(shp)
+                                                out$animal_id <- x
+                                                out$N <- n
+                                                out$method <- "dBBMM"
+                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                                return(out)
+                                              }) |>
+               dplyr::bind_rows()),
+  ## SPRING ##
+  tar_target(mcp_spring_agg_overlap, lapply(unique(spring_mcp$animal_id),
+                                            function(x){
+                                              shp <- spring_mcp[spring_mcp$animal_id == x, ]
+                                              n <- nrow(shp)
+                                              out <- aggregate_overlap(shp)
+                                              out$animal_id <- x
+                                              out$N <- n
+                                              out$method <- "MCP"
+                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                              return(out)
+                                            }) |>
+               dplyr::bind_rows()),
+  tar_target(dbbmm_spring_agg_overlap, lapply(unique(spring_dbbmm$animal_id),
+                                              function(x){
+                                                shp <- spring_dbbmm[spring_dbbmm$animal_id == x, ]
+                                                n <- nrow(shp)
+                                                out <- aggregate_overlap(shp)
+                                                out$animal_id <- x
+                                                out$N <- n
+                                                out$method <- "dBBMM"
+                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                                return(out)
+                                              }) |>
+               dplyr::bind_rows()),
+  ## SUMMER ##
+  tar_target(mcp_summer_agg_overlap, lapply(unique(summer_mcp$animal_id),
+                                            function(x){
+                                              shp <- summer_mcp[summer_mcp$animal_id == x, ]
+                                              n <- nrow(shp)
+                                              out <- aggregate_overlap(shp)
+                                              out$animal_id <- x
+                                              out$N <- n
+                                              out$method <- "MCP"
+                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                              return(out)
+                                            }) |>
+               dplyr::bind_rows()),
+  tar_target(dbbmm_summer_agg_overlap, lapply(unique(summer_dbbmm$animal_id),
+                                              function(x){
+                                                shp <- summer_dbbmm[summer_dbbmm$animal_id == x, ]
                                                 n <- nrow(shp)
                                                 out <- aggregate_overlap(shp)
                                                 out$animal_id <- x
