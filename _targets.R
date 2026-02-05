@@ -437,13 +437,26 @@ list(
   # the seasonal summaries
   tar_target(step_length_seasonal_summary, step_lengths_3hr |>
                dplyr::group_by(season) |>
-               dplyr::summarise(mean_step = mean(step, na.rm = TRUE),
-                                sd_step = sd(step, na.rm = TRUE),
-                                median_step = median(step, na.rm = TRUE),
-                                mean_nsd = mean(NSD, na.rm = TRUE),
-                                sd_nsd = sd(NSD, na.rm = TRUE),
-                                median_nsd = median(NSD, na.rm = TRUE),
-                                N = dplyr::n())),
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(step, na.rm = TRUE),
+                                q25 = quantile(step, 0.25, na.rm = TRUE),
+                                median = median(step, na.rm = TRUE),
+                                q75 = quantile(step, 0.75, na.rm = TRUE),
+                                q99 = quantile(step, 0.99, na.rm = TRUE),
+                                max = max(step, na.rm = TRUE),
+                                mean = mean(step, na.rm = TRUE),
+                                sd = sd(step, na.rm = TRUE))),
+  tar_target(nsd_seasonal_summary, step_lengths_3hr |>
+               dplyr::group_by(season) |>
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(NSD, na.rm = TRUE),
+                                q25 = quantile(NSD, 0.25, na.rm = TRUE),
+                                median = median(NSD, na.rm = TRUE),
+                                q75 = quantile(NSD, 0.75, na.rm = TRUE),
+                                q99 = quantile(NSD, 0.99, na.rm = TRUE),
+                                max = max(NSD, na.rm = TRUE),
+                                mean = mean(NSD, na.rm = TRUE),
+                                sd = sd(NSD, na.rm = TRUE))),
   # Step lengths for the SWP days only
   # 2021-2022 is the severe year
   tar_target(step_length_swp_summary, step_lengths_3hr |>
@@ -454,13 +467,32 @@ list(
                                                    year)) |>
                dplyr::mutate(season = paste0(year - 1, "-", year)) |>
                dplyr::group_by(season) |>
-               dplyr::summarise(mean_step = mean(step, na.rm = TRUE),
-                                sd_step = sd(step, na.rm = TRUE),
-                                median_step = median(step, na.rm = TRUE),
-                                mean_nsd = mean(NSD, na.rm = TRUE),
-                                sd_nsd = sd(NSD, na.rm = TRUE),
-                                median_nsd = median(NSD, na.rm = TRUE),
-                                N = dplyr::n())),
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(step, na.rm = TRUE),
+                                q25 = quantile(step, 0.25, na.rm = TRUE),
+                                median = median(step, na.rm = TRUE),
+                                q75 = quantile(step, 0.75, na.rm = TRUE),
+                                q99 = quantile(step, 0.99, na.rm = TRUE),
+                                max = max(step, na.rm = TRUE),
+                                mean = mean(step, na.rm = TRUE),
+                                sd = sd(step, na.rm = TRUE))),
+  tar_target(nsd_swp_summary, step_lengths_3hr |>
+               dplyr::filter(severe_winter_yn == TRUE) |>
+               dplyr::mutate(year = lubridate::year(dttm)) |>
+               dplyr::mutate(year = dplyr::if_else(lubridate::month(dttm) == 12,
+                                                   year + 1, 
+                                                   year)) |>
+               dplyr::mutate(season = paste0(year - 1, "-", year)) |>
+               dplyr::group_by(season) |>
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(NSD, na.rm = TRUE),
+                                q25 = quantile(NSD, 0.25, na.rm = TRUE),
+                                median = median(NSD, na.rm = TRUE),
+                                q75 = quantile(NSD, 0.75, na.rm = TRUE),
+                                q99 = quantile(NSD, 0.99, na.rm = TRUE),
+                                max = max(NSD, na.rm = TRUE),
+                                mean = mean(NSD, na.rm = TRUE),
+                                sd = sd(NSD, na.rm = TRUE))),
   ##### Seasonal, weekly, daily #####
   # These aren't step-lengths per se, but rather centroid-to-centroid
   # distances between successive home range polygons at each temporal
@@ -487,6 +519,7 @@ list(
                                               group_by = c("animal_id", "season"),
                                               date_col = c("year")) |>
                                   dplyr::mutate(method = "dBBMM"))),
+  # TODO: SWP steps 
   ##### 99 pctl step length #####
   # The 99th pctl step length is the distance that 99% of the elk are 
   # moving within the 3 hr gap between successive fixes. This will be
