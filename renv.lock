@@ -642,14 +642,14 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "3.6.3",
+      "Version": "3.6.5",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "utils"
       ],
-      "Hash": "b21916dd77a27642b447374a5d30ecf3"
+      "Hash": "16850760556401a2eeb27d39bd11c9cb"
     },
     "clipr": {
       "Package": "clipr",
@@ -767,13 +767,13 @@
     },
     "cpp11": {
       "Package": "cpp11",
-      "Version": "0.5.0",
+      "Version": "0.5.3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R"
       ],
-      "Hash": "91570bba75d0c9d3f1040c835cee8fba"
+      "Hash": "af5958631ca49510aff96d0f5c0bbb76"
     },
     "crayon": {
       "Package": "crayon",
@@ -963,6 +963,20 @@
       ],
       "Hash": "3fd29944b231036ad67c3edb32e02201"
     },
+    "exactextractr": {
+      "Package": "exactextractr",
+      "Version": "0.10.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "methods",
+        "raster",
+        "sf"
+      ],
+      "Hash": "e21685e51bdd9f323d5f3da13b3d7f62"
+    },
     "fansi": {
       "Package": "fansi",
       "Version": "1.0.6",
@@ -1044,10 +1058,11 @@
     },
     "future": {
       "Package": "future",
-      "Version": "1.34.0",
+      "Version": "1.69.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
+        "R",
         "digest",
         "globals",
         "listenv",
@@ -1055,7 +1070,7 @@
         "parallelly",
         "utils"
       ],
-      "Hash": "475771e3edb711591476be387c9a8c2e"
+      "Hash": "ddd903a23d4fd2fe030d509520119ad1"
     },
     "gdalraster": {
       "Package": "gdalraster",
@@ -1236,14 +1251,14 @@
     },
     "globals": {
       "Package": "globals",
-      "Version": "0.16.3",
+      "Version": "0.18.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "codetools"
       ],
-      "Hash": "2580567908cafd4f187c1e5a91e98b7f"
+      "Hash": "0e0c37bd3108b8835c99eaa4d83cf6f5"
     },
     "glue": {
       "Package": "glue",
@@ -1925,7 +1940,7 @@
     },
     "parallelly": {
       "Package": "parallelly",
-      "Version": "1.41.0",
+      "Version": "1.46.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1933,7 +1948,7 @@
         "tools",
         "utils"
       ],
-      "Hash": "f5ae11e8e15ee84950752e7b01c55295"
+      "Hash": "f4d2d1926bcb9a9384193bd7fea39fe3"
     },
     "pbapply": {
       "Package": "pbapply",
@@ -2320,14 +2335,14 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "1.1.4",
+      "Version": "1.1.7",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "utils"
       ],
-      "Hash": "3eec01f8b1dee337674b2e34ab1f9bc1"
+      "Hash": "34c0d101f4613098abc538b82e0d86c5"
     },
     "rmarkdown": {
       "Package": "rmarkdown",
@@ -2351,21 +2366,6 @@
         "yaml"
       ],
       "Hash": "df99277f63d01c34e95e3d2f06a79736"
-    },
-    "rnaturalearth": {
-      "Package": "rnaturalearth",
-      "Version": "1.0.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "httr",
-        "jsonlite",
-        "sf",
-        "terra",
-        "utils"
-      ],
-      "Hash": "741166cab0fe76d8a5670d3ee459a2a4"
     },
     "rstatix": {
       "Package": "rstatix",
@@ -2825,14 +2825,14 @@
     },
     "tzdb": {
       "Package": "tzdb",
-      "Version": "0.4.0",
+      "Version": "0.5.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "cpp11"
       ],
-      "Hash": "f561504ec2897f4d46f0c7657e488ae1"
+      "Hash": "09e3961e87b7bafa4a9340bbb34aeda8"
     },
     "units": {
       "Package": "units",

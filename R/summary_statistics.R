@@ -93,10 +93,15 @@ summarize_area <- function(shp, group_by = c("year", "season"), area_unit = "ha"
     sf::st_drop_geometry() |> 
     dplyr::mutate(area = units::set_units(area, value = area_unit, mode = "standard")) |>
     dplyr::group_by_at(group_by) |> 
-    dplyr::summarize(mean_area = mean(area),
-                     sd = sd(area),
+    dplyr::summarize(N = dplyr::n(),
+                     min = min(area),
+                     q25 = quantile(area, 0.25),
                      median = median(area),
-                     N = dplyr::n(),
+                     q75 = quantile(area, 0.75),
+                     q99 = quantile(area, 0.99),
+                     max = max(area),
+                     mean = mean(area),
+                     sd = sd(area),
                      .groups = "keep")
   return(out)
 }
