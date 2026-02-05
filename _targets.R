@@ -1,7 +1,36 @@
-#### DESCRIPTION ####
-# TODO
+# HEAD --------------------------------------------------------------------
 
-#### LICENSE ####
+# This is the 'mothership' script of this R repository. From here, you
+# track all your data inputs, manage the data workflow (the 'pipeline'),
+# and create all your outputs. This pipeline is built using the {targets}
+# package: https://books.ropensci.org/targets/
+
+# Note this repository DOES NOT contain all the raw data files
+# needed to successfully reproduce the data pipeline on another machine.
+# You will need to contact Sarah Popov (sarah.popov@gov.bc.ca) to receive
+# all the raw data (large GIS files, GPS collar keys, etc.) to run this
+# successfully on your machine.
+
+# BASIC USAGE
+# Assuming you have set up all the raw data files and directories, ...
+# 1) Run `renv::restore()` to install all necessary R packages the pipeline
+#     depends on.
+# 2) Load the {targets} library. Run `tar_make()` to run the pipeline.
+#     NOTE the full pipeline takes 5-6 hours to run if running from scratch.
+#     You can comment out sections of the pipeline that you are not
+#     interested in recreating if you wish to skip the creation of them,
+#     assuming nothing downstream of the pipeline depends upon it.
+#     I recommend commenting out all dBBMM home range targets to save time
+#     if you do not need those data products. 
+#     TIP: you can run `tar_visnetwork()` to see how various targets depend
+#     upon each other.
+# 3) Once you have created all your targets, you are ready to play with
+#     the data outputs. In a separate R script, you can run 
+#     `tar_load(<target name>)` to quickly load up the target in your R
+#     session and manipulate it from there. For a quick example, see the
+#     "hr_overlap_plots.R" script in this repo.
+
+# LICENSE -----------------------------------------------------------------
 
 # Copyright 2026 Province of British Columbia
 # 
@@ -17,6 +46,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+# GLOSSARY ----------------------------------------------------------------
+
+# dBBMM - Dynamic Brownian Bridge Movement Model
+# DEM - Digital Elevation Model (CDED dataset used here; see https://www2.gov.bc.ca/gov/content/data/geographic-data-services/topographic-data/elevation)
+# fxn - function
+# HR - home range
+# MCP - Minimum Convex Polygon
+# NSD - Net Squared Displacement
+# pctl - percentile
+# RESULTS - Reporting Silviculture Updates and Land Status Tracking System (https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results)
+# RSF - Resource Selection Function
+# SWP - Severe Winter Period (Dec 18, 2021 - Jan 14, 2022)
+# szn - season
+# ud - utilization distribution
+# VRI - Vegetation Resource Inventory (https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/forest-inventory/data-management-and-access/vri-data-standards)
+# wso - Winter-Spring overlap
+
+# SETUP -------------------------------------------------------------------
 
 # Load packages required to define the pipeline:
 library(targets)
@@ -120,7 +168,9 @@ vri_cols <- c("INTERPRETATION_DATE",
               "SPECIES_CD_2", 
               "SPECIES_CD_3")
 
-#### PIPELINE ####
+
+# PIPELINE ----------------------------------------------------------------
+
 list(
   #### COLLARS SETUP ####
   # Pull and track all collar keys files
