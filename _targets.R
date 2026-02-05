@@ -501,6 +501,25 @@ list(
   tar_target(daily_step, centroid_step(shp = daily_mcps,
                                        group_by = "animal_id",
                                        date_col = "date")),
+  # SWP DAILY
+  tar_target(daily_swp_step, daily_step |>
+               dplyr::mutate(doy = lubridate::yday(date)) |>
+               dplyr::filter(doy %in% swp_days) |>
+               dplyr::mutate(year = lubridate::year(date)) |>
+               dplyr::mutate(year = dplyr::if_else(lubridate::month(date) == 12,
+                                                   year + 1, 
+                                                   year)) |>
+               dplyr::mutate(season = paste0(year - 1, "-", year)) |>
+               dplyr::group_by(season) |>
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(centroid_dist, na.rm = TRUE),
+                                q25 = quantile(centroid_dist, 0.25, na.rm = TRUE),
+                                median = median(centroid_dist, na.rm = TRUE),
+                                q75 = quantile(centroid_dist, 0.75, na.rm = TRUE),
+                                q99 = quantile(centroid_dist, 0.99, na.rm = TRUE),
+                                max = max(centroid_dist, na.rm = TRUE),
+                                mean = mean(centroid_dist, na.rm = TRUE),
+                                sd = sd(centroid_dist, na.rm = TRUE))),
   # WEEKLY (MCP + dBBMM)
   tar_target(weekly_step, centroid_step(shp = weekly_mcps,
                                         group_by = "animal_id",
@@ -510,6 +529,25 @@ list(
                                               group_by = "animal_id",
                                               date_col = c("isoyear", "week")) |>
                                   dplyr::mutate(method = "dBBMM"))),
+  # SWP WEEKLY
+  tar_target(weekly_swp_step, weekly_step |>
+               dplyr::filter(week %in% swp_weeks) |>
+               dplyr::mutate(year = isoyear) |>
+               dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
+               dplyr::mutate(season = paste0(year, "-", year+1)) |>
+               dplyr::group_by(season, method) |>
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(centroid_dist, na.rm = TRUE),
+                                q25 = quantile(centroid_dist, 0.25, na.rm = TRUE),
+                                median = median(centroid_dist, na.rm = TRUE),
+                                q75 = quantile(centroid_dist, 0.75, na.rm = TRUE),
+                                q99 = quantile(centroid_dist, 0.99, na.rm = TRUE),
+                                max = max(centroid_dist, na.rm = TRUE),
+                                mean = mean(centroid_dist, na.rm = TRUE),
+                                sd = sd(centroid_dist, na.rm = TRUE)) |>
+               tidyr::pivot_wider(names_from = method,
+                                  values_from = c(min:sd)) |>
+               dplyr::select(season, N, dplyr::ends_with("_MCP"), dplyr::everything())),
   # SEASONAL (MCP + dBBMM)
   tar_target(seasonal_step, centroid_step(shp = all_seasons_mcp,
                                           group_by = c("animal_id", "season"),
@@ -519,7 +557,7 @@ list(
                                               group_by = c("animal_id", "season"),
                                               date_col = c("year")) |>
                                   dplyr::mutate(method = "dBBMM"))),
-  # TODO: SWP steps 
+
   ##### 99 pctl step length #####
   # The 99th pctl step length is the distance that 99% of the elk are 
   # moving within the 3 hr gap between successive fixes. This will be

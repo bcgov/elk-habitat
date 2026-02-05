@@ -1,5 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|d94594d3f05c3c42|||||||||||||||
+.Random.seed|object|01f76749b6fff60c|||||||||||||||
 aggregate_overlap|function|515d3e1f8b162692|||||||||||||||
 all_seasons_dbbmm|stem|88d27ca194fa3f5e|04c92914fe89f26c|0992adb1a3aac34b|-436251714||t20462.224001084s|452d3ff4abddf287|11313013|rds|local|vector|||0.48||
 all_seasons_mcp|stem|97a2f07ab48e6edb|49512c53edbb9f8e|faf8b235059ae28c|37521217||t20462.2243670288s|2d3b7eb0192eb44e|96075|rds|local|vector|||0.03||
@@ -34,6 +34,7 @@ daily_mcp_seasonal_summary|stem|86d7eeaf6a993af7|c76a534c4bcf61a3|60e9283e737f9d
 daily_mcp_swp_summary|stem|ef2f8481382718f8|b1b723ecf468bcbb|353a5d41a5208f11|-2092308185||t20489.0524734248s|bd11c51ac5b97228|832|rds|local|vector|||0.84||
 daily_mcps|stem|6804a602dc3b31b7|540635566233b505|976fa01ae80584ec|958011176||t20462.0775443159s|58f54e94a62bfbf3|4686661|rds|local|vector|||1814.11||
 daily_step|stem|ed1b30459c7def8d|619bec30b6915b16|c25761b04650b181|-1932759320||t20462.8847714445s|0e0f350712bb35f7|958690|rds|local|vector|||1.85||
+daily_swp_step|stem|7d6c7dd2a146a7d2|e8130e70301c5a3f|9209e18037ec9c81|-428699038||t20489.7079622118s|69ad9763a553bcd5|714|rds|local|vector|||0.74||
 dbbmm_all_szn_yearly_overlap|stem|c7ec7a21b091ad14|524694ad3e4966eb|619d3b5e067b97f8|1525540815||t20462.2274102487s|5d1b0a4f006d1230|4630|rds|local|vector|||0.01||
 dbbmm_seasonal_summary|stem|b5d90832c2a7a308|953aea498725d956|78c1ebdb87876f50|1789842921||t20489.0524903645s|fb35935f6c8b3800|667|rds|local|vector|||0.11||
 dBBMM_seasonal_ud|object|29e816842fabc47d|||||||||||||||
@@ -193,6 +194,7 @@ weekly_mcp_seasonal_summary|stem|00ebf3fa7bb76638|c1b8781b3abb3eec|8f58d81629cc1
 weekly_mcp_swp_summary|stem|14edc3e72f761501|21c78168eb8e0959|11a7c07fc967aef9|-1290166597||t20489.0524440812s|bd11c51ac5b97228|832|rds|local|vector|||0.31||
 weekly_mcps|stem|4ad482843e008ee5|5729369fdfbc5e26|8b3072d65eebdf8e|-1315591038||t20462.2225144573s|776655e8daee7cba|1157315|rds|local|vector|||298.53|Field names abbreviated for ESRI Shapefile driver|
 weekly_step|stem|de2275e7218e5be3|0b8d4593cdbddf54|9eb0a0a2c6574466|-2040952679||t20462.8913037047s|c815e73eddf2e9e3|288205|rds|local|vector|||5.35||
+weekly_swp_step|stem|4499709c63570f9d|e2adce6d758b54e6|b6219165adbf4a9b|900213106||t20489.7222042706s|3d110c9e6e04c71f|1210|rds|local|vector|||0.68||
 weekly_window|object|4c06678fced12882|||||||||||||||
 winter|object|326711d79cc870d3|||||||||||||||
 winter_dbbmm|stem|e4931d56ff4878d7|c81b66de12f68329|abdf7d91f8075885|-99852116||t20462.0900270548s|60cc34eb4d4e2357|3680336|rds|local|vector|||1077.74||
