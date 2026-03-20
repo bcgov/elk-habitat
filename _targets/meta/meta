@@ -4,7 +4,6 @@ raw_collar_data|stem|87c539efbcdb0564|410c7e02d9631a28|635c37598515445a|15161017
 full_collar_data|stem|4f47aad4a041ab21|fcaac25f0f6c862d|82630e414591cb71|1289326002||t20530.0295807954s|s14105476b|14105476|rds|local|vector|||6.37||
 collar_data|stem|66f009d1c51f84d8|712f93e9cbbedd9c|5e821cf47ad7c194|245132817||t20530.0297401218s|s14877954b|14877954|rds|local|vector|||0.33||
 unassigned_detections|stem|f6681a0c47cf92af|6286e9ca467fe184|5e821cf47ad7c194|-1280430989||t20530.0297681083s|s556992b|556992|rds|local|vector|||0.3||
-daily_step|stem||619bec30b6915b16|58c1fd5829e70be7|-1932759320||t20530.0344725038s||0|rds|local|vector|||1.14||object 'daily_mcps' not found
 chm_path|stem|29e226684ac9a3ef|7678dac5a50beb30|2c530c1562a7fbd1|131809279|GIS/LiDAR products/crown_height.tif|t20183.0142095376s|s67587177b|67587177|file|local|vector|||1||
 change_detection_path|stem|59eed62643d503de|e138b83babc38d85|2c530c1562a7fbd1|1573190667|GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif|t20194.9672916667s|s2359765b|2359765|file|local|vector|||0||
 uwr_lidar_gdb|stem|d75c6248a3d67767|dc45d4d7d5da144c|86d3172805fa286a|-424160703|GIS/LiDAR products/uwr_intermediate_north_island.gdb|t20116.7344940264s|s132341376b|132341376|file|local|vector|||0||
@@ -81,6 +80,11 @@ random_spring_uwr|stem|591db9193aa97567|78017863a23073a3|facf2d85cf1d624e|675732
 edginess|stem|5df230fca80da8f4|02e3631e8ba07072|1b41373d87f0f662|-2005672672||t20530.8944002654s|s33667750b|33667750|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||1.86||
 stand_edge|stem|84384aebf4f762d5|079ad147380c04d7|63c3eb3dfe7a87a1|-259846740||t20530.8944991771s|s4996350b|4996350|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||2.03||
 edge_dist|stem|a9c4a6af3ff3f895|649e6c3a120fcf89|39b43626ef157ec1|-1443276582||t20530.8946374576s|s33159956b|33159956|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||4.2||
+random_summer_disturbance|stem|65263d1ec83c2704|33c81fd3bb6c253a|e70cb6d42f11340a|38029748||t20530.9037251891s|s35155255b|35155255|rds|local|vector|||298.31||
+random_winter_disturbance|stem|7374228f01d37fd2|ee85091145deb3d7|c05d61e63a97ca4c|-100320334||t20530.907692871s|s34971281b|34971281|rds|local|vector|||323.28||
+elk_disturbance|stem|d2090f6deb3bae96|d332eb63f5fa1737|67a9a5d5f18731bb|-2144809891||t20530.9082500408s|s2958868b|2958868|rds|local|vector|||43.72||
+random_swp_disturbance|stem|0afa299b8f584818|e5a6b4019c42fac4|a06142ea8550cc3c|1397775027||t20530.9085280376s|s3491553b|3491553|rds|local|vector|||21.39||
+random_spring_disturbance|stem|995224c596dff666|cabacd9b1ebbf8a0|53563409d954b6f7|1478326750||t20530.9129946956s|s34959678b|34959678|rds|local|vector|||364.73||
 read_vri|function|16df774cb8cb8e9c
 extract_vri|function|ba7489e87225610d
 MCP_pctl|object|f43fe2c999030d30
@@ -95,7 +99,7 @@ non_swp_elk|object|2c07bcfc1260c6a8
 individual_dbbmm|function|3495f8b948f0a5cb
 elk_per_month_plot|function|20740411dc9e6e24
 assign_daily_seasons|function|738918b74e6a16fe
-.Random.seed|object|8849820de19ecf01
+.Random.seed|object|b7c3a7507b39bed7
 centroid_step|function|a458a84083a6b6a1
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -155,8 +159,46 @@ weekly_dbbmm|function|6c7de243de43fbbe
 daily_mcp|function|b6550459ae91769e
 seasonal_mcp|function|44e6e62e9bb4961a
 weekly_mcp|function|df86e293d7054eac
-random_summer_disturbance|stem|65263d1ec83c2704|33c81fd3bb6c253a|e70cb6d42f11340a|38029748||t20530.9037251891s|s35155255b|35155255|rds|local|vector|||298.31||
-random_winter_disturbance|stem|7374228f01d37fd2|ee85091145deb3d7|c05d61e63a97ca4c|-100320334||t20530.907692871s|s34971281b|34971281|rds|local|vector|||323.28||
-elk_disturbance|stem|d2090f6deb3bae96|d332eb63f5fa1737|67a9a5d5f18731bb|-2144809891||t20530.9082500408s|s2958868b|2958868|rds|local|vector|||43.72||
-random_swp_disturbance|stem|0afa299b8f584818|e5a6b4019c42fac4|a06142ea8550cc3c|1397775027||t20530.9085280376s|s3491553b|3491553|rds|local|vector|||21.39||
-random_spring_disturbance|stem|995224c596dff666|cabacd9b1ebbf8a0|53563409d954b6f7|1478326750||t20530.9129946956s|s34959678b|34959678|rds|local|vector|||364.73||
+spring_dbbmm|stem|d15d4b44967df5a5|097b0d7b735f88b6|64740bb495b1af28|1234634189||t20531.9684742241s|s5350016b|5350016|rds|local|vector|||1497.09||
+winter_dbbmm|stem|62caef7e5babb03c|c81b66de12f68329|c5cb4b212f2de7ff|-99852116||t20531.9828400394s|s4148750b|4148750|rds|local|vector|||1237.46||
+weekly_dbbmms|stem|d04f094267612eb6|9a847b72c4b2b51d|2a4688f0a5ad7c8c|-2101101675||t20532.1166369871s|s82470813b|82470813|rds|local|vector|||11548.59|Field names abbreviated for ESRI Shapefile driver|
+summer_dbbmm|stem|9dbb14aaf2a259bc|8b5a0c6a15234658|1b8540b10f3382f4|320407742||t20532.1298556113s|s4930001b|4930001|rds|local|vector|||1139.58||
+daily_mcps|stem|a294f562618364dc|540635566233b505|6c4b872b30988319|958011176||t20532.1499429196s|s5831563b|5831563|rds|local|vector|||1732.72||
+dbbmm_spring_yearly_overlap|stem|810e8433b8f79e06|39a9b295d50aa699|7767271d817d8d95|-2038073459||t20532.1501266013s|s2977b|2977|rds|local|vector|||15.69||
+cumulative_spring_dbbmm|stem|77cd722233f89527|4dcf947e0cf6eb5d|65aaebc7f87197e1|634065267||t20532.1501577561s|s6685291b|6685291|rds|local|vector|||1.71||
+dbbmm_spring_agg_overlap|stem|7dc4ca7120deb144|2a9e29188c0802d8|d8cd3aa20cbfe0a1|962387022||t20532.1502527447s|s996b|996|rds|local|vector|||8.05||
+cumulative_winter_dbbmm|stem|6867f77631a4733c|3c07a4bec98c5840|42e33111abdee5df|-312512595||t20532.1502756193s|s5396759b|5396759|rds|local|vector|||1.12||
+dbbmm_winter_spring_overlap|stem|4c98fe0bf4ce4ae2|b930075dc00053b3|9584184a8d0884e4|-1789060891||t20532.1504463766s|s3485b|3485|rds|local|vector|||14.62||
+dbbmm_winter_yearly_overlap|stem|141b2d5366ff68b0|3a8acfeaffe76901|86433b6ab0f81cb1|2111524819||t20532.1505258621s|s1857b|1857|rds|local|vector|||6.75||
+dbbmm_winter_agg_overlap|stem|7381c5ce74df48a3|a775d7b4475df247|f09af26ad7278cc3|-1889499879||t20532.1505896278s|s806b|806|rds|local|vector|||5.38||
+weekly_dbbmm_swp_summary|stem|5bde5200e5b33e68|4114bd9eda70e5ea|bb47ef76d73ea64f|-1052199150||t20532.150609335s|s986b|986|rds|local|vector|||0.47||
+weekly_dbbmm_seasonal_summary|stem|58c4ee3562f68a7a|f49ea575bd1afc1f|777d3b2841b8167c|35394069||t20532.1506230696s|s752b|752|rds|local|vector|||0.05||
+weekly_step|stem|5041b1186aceed51|0b8d4593cdbddf54|d411d9c449a450ba|-2040952679||t20532.1506686966s|s363585b|363585|rds|local|vector|||2.64||
+cumulative_summer_mcp|stem|cbc2751b66f0ae7c|69a6dcfb069c0be1|ee7f63b1804590eb|1884310216||t20532.1506892893s|s41005b|41005|rds|local|vector|||1.62||
+mcp_summer_yearly_overlap|stem|8859fc430e8dca8f|ceb332a84eacf958|22acafe83fcf797d|-1442130744||t20532.1508017438s|s2810b|2810|rds|local|vector|||9.65||
+mcp_summer_agg_overlap|stem|61913f52e157c638|fcb2c674dd32d04e|c9012c198cd3bbf2|386441108||t20532.1508575956s|s958b|958|rds|local|vector|||4.75||
+dbbmm_summer_yearly_overlap|stem|116926d8f14527ca|22432e9590bfe93c|8a1889a6ab568c5c|408432813||t20532.1509744938s|s2769b|2769|rds|local|vector|||9.97||
+cumulative_summer_dbbmm|stem|bc0d5f0354435602|0a214dc30e5e4caf|7dba7b57446d0c78|269363091||t20532.150997134s|s5649893b|5649893|rds|local|vector|||1.19||
+all_seasons_dbbmm|stem|bf94f4c3fa7022f8|04c92914fe89f26c|1a7003daa3db3560|-436251714||t20532.1510210445s|s14425944b|14425944|rds|local|vector|||0.03||
+dbbmm_summer_agg_overlap|stem|5c0eed203fe1462e|894d868c078845cf|128f93f9f0123a85|1961110594||t20532.1511167996s|s964b|964|rds|local|vector|||8.12||
+mcp_spring_agg_overlap|stem|0e1bff3c72b69098|d472fe4133cfe28c|d801a20aeee61cc1|-751977107||t20532.1511725418s|s989b|989|rds|local|vector|||4.73||
+mcp_spring_yearly_overlap|stem|e8b0dbcb8f71fd39|36e1a77fe1c04832|a474de107d9fd324|410806255||t20532.1513131594s|s3012b|3012|rds|local|vector|||12.08||
+cumulative_spring_mcp|stem|1b615bb02f32f23a|d3872b10e1f532b0|077838b8777a8ea8|-1965600801||t20532.1513265452s|s42181b|42181|rds|local|vector|||1.08||
+mcp_winter_spring_overlap|stem|84cebb5d65789be7|22eb826872ff85ea|acc50d1aac677e3f|-1809842540||t20532.1514869295s|s3552b|3552|rds|local|vector|||13.78||
+mcp_winter_agg_overlap|stem|8d996bde20a0bded|5b3509fe4df069fc|ea5658376127da2e|-1594817376||t20532.151532528s|s811b|811|rds|local|vector|||3.87||
+mcp_winter_yearly_overlap|stem|d1262d34a924cdad|7582a03bec5b992d|c654c6083380001d|-1053605382||t20532.1516018823s|s1897b|1897|rds|local|vector|||5.92||
+cumulative_winter_mcp|stem|b23399051e472e84|6ca1f2d3d6672f99|fdc1467550bab557|1500740159||t20532.1516124215s|s31479b|31479|rds|local|vector|||0.81||
+daily_mcp_swp_summary|stem|177928e5e50b5138|b1b723ecf468bcbb|5c4e0538fa45ef44|-2092308185||t20532.1516226995s|s992b|992|rds|local|vector|||0.39||
+daily_step|stem|3740f14746a907a3|619bec30b6915b16|4512727c66a8ef6b|-1932759320||t20532.1516555278s|s1191488b|1191488|rds|local|vector|||2.18||
+daily_mcp_seasonal_summary|stem|cb46f36258357ebf|c76a534c4bcf61a3|9fc5de3445545290|-282887321||t20532.1516605065s|s752b|752|rds|local|vector|||0.07||
+dbbmm_wso_summary|stem|e4b1a98fd4ef1e29|ae36d9ecb25d1dc8|9ec24f5508a244ad|-516662678||t20532.1516670507s|s575b|575|rds|local|vector|||0.5||
+weekly_swp_step|stem|c5a29e4e3c090717|e2adce6d758b54e6|1820aadb93751abf|900213106||t20532.151672984s|s1491b|1491|rds|local|vector|||0.37||
+dbbmm_all_szn_yearly_overlap|stem|42723c0b36f22362|524694ad3e4966eb|2b247ca14f209bc1|1525540815||t20532.151674093s|s6416b|6416|rds|local|vector|||0.01||
+dbbmm_seasonal_summary|stem|e5e3c8c2975e739e|953aea498725d956|038d47cc075c6261|1789842921||t20532.1516787723s|s667b|667|rds|local|vector|||0.07||
+mcp_wso_summary|stem|38283acd3f24fbfd|b9903ea67aedd227|f263fa70e584461e|532120343||t20532.1516821048s|s597b|597|rds|local|vector|||0.21||
+seasonal_step|stem|1d6ec7e6b069f8df|6099f658488172ca|aac909124a845ef5|1503173458||t20532.1517513217s|s21967b|21967|rds|local|vector|||5.7||
+mcp_all_szn_yearly_overlap|stem|6afab6e205abcfb0|dba2504ba289b49b|f8db768de92615a3|1853652501||t20532.1517523604s|s6525b|6525|rds|local|vector|||0||
+daily_swp_step|stem|d2f9cf689719cb55|e8130e70301c5a3f|e814a58e62bab9f1|-428699038||t20532.1517545661s|s869b|869|rds|local|vector|||0.09||
+all_szn_yearly_overlap|stem|a63261543c4a8091|0650ec91c3e3ba32|33c1dc614663a14b|-1713324419||t20532.1517554062s|s11630b|11630|rds|local|vector|||0||
+seasonal_overlap_summary|stem|5294847d02d8c9ae|1fcfbc0c1dbcaf3a|35980777306aeb17|627036650||t20532.1517600233s|s651b|651|rds|local|vector|||0.31||
+yearly_seasonal_overlap_summary|stem|ab170e7975cd924d|0c48be53267369b6|35980777306aeb17|-1519448991||t20532.1517645233s|s1623b|1623|rds|local|vector|||0.31||

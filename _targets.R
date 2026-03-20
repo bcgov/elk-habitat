@@ -242,37 +242,37 @@ list(
   tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp)),
   tar_target(mcp_seasonal_summary, summarize_area(all_seasons_mcp, group_by = "season")),
   # TODO: summary plots of MCP areas (currently stored in `dBBMM_MCP_summary_plots.R`)
-  # ##### Dynamic Brownian Bridge Movement Models #####
-  # tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
-  #                                         season = winter,
-  #                                         min_days = 0.9,
-  #                                         margin = szn_margin, # 9 points ~= about ~1 day margin
-  #                                         window.size = szn_window, # 57 points / 8 points per day = window size of ~7 days long
-  #                                         location.error = 11.5, # GPS error in meters. Vectronic documentation indicates GPS error is on average 8-15m.
-  #                                         ud_percent = dBBMM_seasonal_ud) |>
-  #              sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Winter_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
-  #                           append = FALSE)),
-  # tar_target(spring_dbbmm, seasonal_dbbmm(elk = elk,
-  #                                         season = spring,
-  #                                         min_days = 0.9,
-  #                                         margin = szn_margin,
-  #                                         window.size = szn_window,
-  #                                         location.error = 11.5,
-  #                                         ud_percent = dBBMM_seasonal_ud) |>
-  #              sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Spring_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
-  #                           append = FALSE)),
-  # tar_target(summer_dbbmm, seasonal_dbbmm(elk = elk,
-  #                                         season = summer,
-  #                                         min_days = 0.9,
-  #                                         margin = szn_margin,
-  #                                         window.size = szn_window,
-  #                                         location.error = 11.5,
-  #                                         ud_percent = dBBMM_seasonal_ud) |>
-  #              sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Summer_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
-  #                           append = FALSE)),
-  # tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
-  # tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm, group_by = "season")),
-  # # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
+  ##### Dynamic Brownian Bridge Movement Models #####
+  tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
+                                          season = winter,
+                                          min_days = 0.9,
+                                          margin = szn_margin, # 9 points ~= about ~1 day margin
+                                          window.size = szn_window, # 57 points / 8 points per day = window size of ~7 days long
+                                          location.error = 11.5, # GPS error in meters. Vectronic documentation indicates GPS error is on average 8-15m.
+                                          ud_percent = dBBMM_seasonal_ud) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Winter_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
+                            append = FALSE)),
+  tar_target(spring_dbbmm, seasonal_dbbmm(elk = elk,
+                                          season = spring,
+                                          min_days = 0.9,
+                                          margin = szn_margin,
+                                          window.size = szn_window,
+                                          location.error = 11.5,
+                                          ud_percent = dBBMM_seasonal_ud) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Spring_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
+                            append = FALSE)),
+  tar_target(summer_dbbmm, seasonal_dbbmm(elk = elk,
+                                          season = summer,
+                                          min_days = 0.9,
+                                          margin = szn_margin,
+                                          window.size = szn_window,
+                                          location.error = 11.5,
+                                          ud_percent = dBBMM_seasonal_ud) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Summer_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
+                            append = FALSE)),
+  tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
+  tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm, group_by = "season")),
+  # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   #### WEEKLY HOME RANGE ESTIMATES ####
   ##### MCP #####
   tar_target(weekly_mcps, weekly_mcp(elk = elk,
@@ -296,192 +296,192 @@ list(
                dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
                dplyr::mutate(year = paste0(year, "-", year+1)) |>
                summarize_area(group_by = "year")),
-  # ##### dBBMM #####
-  # tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
-  #                                        min_days = 1,
-  #                                        min_dets_per_day = 6,
-  #                                        window.size = weekly_window, # 21 hours
-  #                                        margin = weekly_margin, # 9 hours
-  #                                        location.error = 11.5,
-  #                                        ud_percent = dBBMM_weekly_ud) |>
-  #              assign_weekly_seasons(seasons = list("winter" = winter, # defined toward the top of this document
-  #                                                   "spring" = spring, # defined toward the top of this document
-  #                                                   "summer" = summer) # defined toward the top of this document
-  #              ) |>
-  #              sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Weekly_window", weekly_window, "_margin", weekly_margin, "_", (dBBMM_weekly_ud * 100), "ud.shp"),
-  #                           append = FALSE)),
-  # tar_target(weekly_dbbmm_seasonal_summary, weekly_dbbmms |>
-  #              summarize_area(group_by = c("season"))),
-  # ###### Severe Winter Period dBBMMs ######
-  # tar_target(weekly_dbbmm_swp_summary, weekly_dbbmms |>
-  #              dplyr::filter(!animal_id %in% non_swp_elk) |>
-  #              dplyr::filter(week %in% swp_weeks) |>
-  #              dplyr::mutate(year = isoyear) |>
-  #              dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
-  #              dplyr::mutate(year = paste0(year, "-", year+1)) |>
-  #              summarize_area(group_by = "year")),
-  # #### DAILY HOME RANGE ESTIMATES ####
-  # ##### MCP #####
-  # # Only doing MCPs for weekly estimates. dBBMM window/margin params are too
-  # # sensitive to lower sample sizes for daily home range estimates.
-  # tar_target(daily_mcps, daily_mcp(elk = elk,
-  #                                   min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
-  #                                   percent = 1) |> # 100% MCP - no outliers in daily MCPs if all 8 points passed the data cleaning step!
-  #              assign_daily_seasons(seasons = list("winter" = winter, # defined toward the top of this document
-  #                                                  "spring" = spring, # defined toward the top of this document
-  #                                                  "summer" = summer), # defined toward the top of this document
-  #                                   date_col = "date") |>
-  #              sf::st_write(paste0("temp/Pipeline outputs/MCP_Daily_", 100, "pctl.shp"),
-  #                           append = FALSE)),
-  # tar_target(daily_mcp_seasonal_summary, daily_mcps |>
-  #              summarize_area(group_by = c("season"))),
-  # ###### Severe Winter Period daily MCPs ######
-  # tar_target(daily_mcp_swp_summary, daily_mcps |>
-  #              dplyr::mutate(doy = lubridate::yday(date)) |>
-  #              dplyr::filter(!animal_id %in% non_swp_elk) |>
-  #              dplyr::filter(doy %in% swp_days) |>
-  #              dplyr::mutate(year = dplyr::if_else(doy < 15, year-1, year)) |>
-  #              dplyr::mutate(year = paste0(year, "-", year+1)) |>
-  #              summarize_area(group_by = "year")),
-  # #### SEASONAL HOME RANGE OVERLAP ####
-  # ##### Winter to Spring #####
-  # tar_target(mcp_winter_spring_overlap, prct_overlap(shp_1 = winter_mcp,
-  #                                                    shp_2 = spring_mcp,
-  #                                                    shp_1_name = "winter",
-  #                                                    shp_2_name = "spring")),
-  # tar_target(dbbmm_winter_spring_overlap, prct_overlap(shp_1 = winter_dbbmm,
-  #                                                      shp_2 = spring_dbbmm,
-  #                                                      shp_1_name = "winter",
-  #                                                      shp_2_name = "spring")),
-  # # Winter to Spring summary stats
-  # tar_target(mcp_wso_summary, summarize_overlap(mcp_winter_spring_overlap,
-  #                                               group_by = "year",
-  #                                               prct_1_col = "prct_winter_within_spring",
-  #                                               prct_2_col = "prct_spring_within_winter")),
-  # tar_target(dbbmm_wso_summary, summarize_overlap(dbbmm_winter_spring_overlap,
-  #                                               group_by = "year",
-  #                                               prct_1_col = "prct_winter_within_spring",
-  #                                               prct_2_col = "prct_spring_within_winter")),
-  # #### YEARLY SEASONAL SITE FIDELITY ####
-  # ##### Year-to-year overlap within a season #####
-  # ###### MCP ######
-  # tar_target(mcp_winter_yearly_overlap, yearly_prct_overlap(shp = winter_mcp)),
-  # tar_target(mcp_spring_yearly_overlap, yearly_prct_overlap(shp = spring_mcp)),
-  # tar_target(mcp_summer_yearly_overlap, yearly_prct_overlap(shp = summer_mcp)),
-  # tar_target(mcp_all_szn_yearly_overlap, merge_dfs(df_list = list("Winter" = mcp_winter_yearly_overlap,
-  #                                                                 "Spring" = mcp_spring_yearly_overlap,
-  #                                                                 "Summer" = mcp_summer_yearly_overlap)) |>
-  #              dplyr::mutate(method = "MCP") |>
-  #              dplyr::select(season, method, dplyr::everything())),
-  # ###### dBBMM ######
-  # tar_target(dbbmm_winter_yearly_overlap, yearly_prct_overlap(shp = winter_dbbmm)),
-  # tar_target(dbbmm_spring_yearly_overlap, yearly_prct_overlap(shp = spring_dbbmm)),
-  # tar_target(dbbmm_summer_yearly_overlap, yearly_prct_overlap(shp = summer_dbbmm)),
-  # tar_target(dbbmm_all_szn_yearly_overlap, merge_dfs(df_list = list("Winter" = dbbmm_winter_yearly_overlap,
-  #                                                                   "Spring" = dbbmm_spring_yearly_overlap,
-  #                                                                   "Summer" = dbbmm_summer_yearly_overlap)) |>
-  #              dplyr::mutate(method = "dBBMM") |>
-  #              dplyr::select(season, method, dplyr::everything())),
-  # ###### Year-to-year overlap summary stats ######
-  # # Merge all seasonal yearly overlap dfs into a single df
-  # tar_target(all_szn_yearly_overlap, dplyr::bind_rows(mcp_all_szn_yearly_overlap, dbbmm_all_szn_yearly_overlap)),
-  # # Summarize by season & year
-  # tar_target(yearly_seasonal_overlap_summary, summarize_overlap(all_szn_yearly_overlap,
-  #                                                               group_by = c("season", "method", "year_to_year"),
-  #                                                               prct_1_col = "prct_year_1_within_year_2",
-  #                                                               prct_2_col = "prct_year_2_within_year_1")),
-  # # Summarize by just season (i.e. average across all years)
-  # tar_target(seasonal_overlap_summary, summarize_overlap(all_szn_yearly_overlap,
-  #                                                        group_by = c("season", "method"),
-  #                                                        prct_1_col = "prct_year_1_within_year_2",
-  #                                                        prct_2_col = "prct_year_2_within_year_1")),
-  # ##### Aggregate seasonal overlap #####
-  # # Pool all winter MCPs (e.g.), calculate max overlap metrics
-  # # for the pooled seasonal areas. Using two methods:
-  # # 1) max overlap area / union of all areas
-  # # 2) GOI metric described in Ferrarini et al. (2021)
-  # ## WINTER ##
-  # tar_target(mcp_winter_agg_overlap, lapply(unique(winter_mcp$animal_id),
-  #                                           function(x){
-  #                                             shp <- winter_mcp[winter_mcp$animal_id == x, ]
-  #                                             n <- nrow(shp)
-  #                                             out <- aggregate_overlap(shp)
-  #                                             out$animal_id <- x
-  #                                             out$N <- n
-  #                                             out$method <- "MCP"
-  #                                             out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-  #                                             return(out)
-  #                                           }) |>
-  #              dplyr::bind_rows()),
-  # tar_target(dbbmm_winter_agg_overlap, lapply(unique(winter_dbbmm$animal_id),
-  #                                             function(x){
-  #                                               shp <- winter_dbbmm[winter_dbbmm$animal_id == x, ]
-  #                                               n <- nrow(shp)
-  #                                               out <- aggregate_overlap(shp)
-  #                                               out$animal_id <- x
-  #                                               out$N <- n
-  #                                               out$method <- "dBBMM"
-  #                                               out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-  #                                               return(out)
-  #                                             }) |>
-  #              dplyr::bind_rows()),
-  # ## SPRING ##
-  # tar_target(mcp_spring_agg_overlap, lapply(unique(spring_mcp$animal_id),
-  #                                           function(x){
-  #                                             shp <- spring_mcp[spring_mcp$animal_id == x, ]
-  #                                             n <- nrow(shp)
-  #                                             out <- aggregate_overlap(shp)
-  #                                             out$animal_id <- x
-  #                                             out$N <- n
-  #                                             out$method <- "MCP"
-  #                                             out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-  #                                             return(out)
-  #                                           }) |>
-  #              dplyr::bind_rows()),
-  # tar_target(dbbmm_spring_agg_overlap, lapply(unique(spring_dbbmm$animal_id),
-  #                                             function(x){
-  #                                               shp <- spring_dbbmm[spring_dbbmm$animal_id == x, ]
-  #                                               n <- nrow(shp)
-  #                                               out <- aggregate_overlap(shp)
-  #                                               out$animal_id <- x
-  #                                               out$N <- n
-  #                                               out$method <- "dBBMM"
-  #                                               out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-  #                                               return(out)
-  #                                             }) |>
-  #              dplyr::bind_rows()),
-  # ## SUMMER ##
-  # tar_target(mcp_summer_agg_overlap, lapply(unique(summer_mcp$animal_id),
-  #                                           function(x){
-  #                                             shp <- summer_mcp[summer_mcp$animal_id == x, ]
-  #                                             n <- nrow(shp)
-  #                                             out <- aggregate_overlap(shp)
-  #                                             out$animal_id <- x
-  #                                             out$N <- n
-  #                                             out$method <- "MCP"
-  #                                             out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-  #                                             return(out)
-  #                                           }) |>
-  #              dplyr::bind_rows()),
-  # tar_target(dbbmm_summer_agg_overlap, lapply(unique(summer_dbbmm$animal_id),
-  #                                             function(x){
-  #                                               shp <- summer_dbbmm[summer_dbbmm$animal_id == x, ]
-  #                                               n <- nrow(shp)
-  #                                               out <- aggregate_overlap(shp)
-  #                                               out$animal_id <- x
-  #                                               out$N <- n
-  #                                               out$method <- "dBBMM"
-  #                                               out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-  #                                               return(out)
-  #                                             }) |>
-  #              dplyr::bind_rows()),
-  # ##### Cumulative home range #####
-  # tar_target(cumulative_winter_mcp, cumulative_shp(winter_mcp)),
-  # tar_target(cumulative_spring_mcp, cumulative_shp(spring_mcp)),
-  # tar_target(cumulative_summer_mcp, cumulative_shp(summer_mcp)),
-  # tar_target(cumulative_winter_dbbmm, cumulative_shp(winter_dbbmm)),
-  # tar_target(cumulative_spring_dbbmm, cumulative_shp(spring_dbbmm)),
-  # tar_target(cumulative_summer_dbbmm, cumulative_shp(summer_dbbmm)),
+  ##### dBBMM #####
+  tar_target(weekly_dbbmms, weekly_dbbmm(elk = elk,
+                                         min_days = 1,
+                                         min_dets_per_day = 6,
+                                         window.size = weekly_window, # 21 hours
+                                         margin = weekly_margin, # 9 hours
+                                         location.error = 11.5,
+                                         ud_percent = dBBMM_weekly_ud) |>
+               assign_weekly_seasons(seasons = list("winter" = winter, # defined toward the top of this document
+                                                    "spring" = spring, # defined toward the top of this document
+                                                    "summer" = summer) # defined toward the top of this document
+               ) |>
+               sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Weekly_window", weekly_window, "_margin", weekly_margin, "_", (dBBMM_weekly_ud * 100), "ud.shp"),
+                            append = FALSE)),
+  tar_target(weekly_dbbmm_seasonal_summary, weekly_dbbmms |>
+               summarize_area(group_by = c("season"))),
+  ###### Severe Winter Period dBBMMs ######
+  tar_target(weekly_dbbmm_swp_summary, weekly_dbbmms |>
+               dplyr::filter(!animal_id %in% non_swp_elk) |>
+               dplyr::filter(week %in% swp_weeks) |>
+               dplyr::mutate(year = isoyear) |>
+               dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
+               dplyr::mutate(year = paste0(year, "-", year+1)) |>
+               summarize_area(group_by = "year")),
+  #### DAILY HOME RANGE ESTIMATES ####
+  ##### MCP #####
+  # Only doing MCPs for weekly estimates. dBBMM window/margin params are too
+  # sensitive to lower sample sizes for daily home range estimates.
+  tar_target(daily_mcps, daily_mcp(elk = elk,
+                                    min_dets_per_day = 8, # Minimum 8 detections per day (100% fix rate)
+                                    percent = 1) |> # 100% MCP - no outliers in daily MCPs if all 8 points passed the data cleaning step!
+               assign_daily_seasons(seasons = list("winter" = winter, # defined toward the top of this document
+                                                   "spring" = spring, # defined toward the top of this document
+                                                   "summer" = summer), # defined toward the top of this document
+                                    date_col = "date") |>
+               sf::st_write(paste0("temp/Pipeline outputs/MCP_Daily_", 100, "pctl.shp"),
+                            append = FALSE)),
+  tar_target(daily_mcp_seasonal_summary, daily_mcps |>
+               summarize_area(group_by = c("season"))),
+  ###### Severe Winter Period daily MCPs ######
+  tar_target(daily_mcp_swp_summary, daily_mcps |>
+               dplyr::mutate(doy = lubridate::yday(date)) |>
+               dplyr::filter(!animal_id %in% non_swp_elk) |>
+               dplyr::filter(doy %in% swp_days) |>
+               dplyr::mutate(year = dplyr::if_else(doy < 15, year-1, year)) |>
+               dplyr::mutate(year = paste0(year, "-", year+1)) |>
+               summarize_area(group_by = "year")),
+  #### SEASONAL HOME RANGE OVERLAP ####
+  ##### Winter to Spring #####
+  tar_target(mcp_winter_spring_overlap, prct_overlap(shp_1 = winter_mcp,
+                                                     shp_2 = spring_mcp,
+                                                     shp_1_name = "winter",
+                                                     shp_2_name = "spring")),
+  tar_target(dbbmm_winter_spring_overlap, prct_overlap(shp_1 = winter_dbbmm,
+                                                       shp_2 = spring_dbbmm,
+                                                       shp_1_name = "winter",
+                                                       shp_2_name = "spring")),
+  # Winter to Spring summary stats
+  tar_target(mcp_wso_summary, summarize_overlap(mcp_winter_spring_overlap,
+                                                group_by = "year",
+                                                prct_1_col = "prct_winter_within_spring",
+                                                prct_2_col = "prct_spring_within_winter")),
+  tar_target(dbbmm_wso_summary, summarize_overlap(dbbmm_winter_spring_overlap,
+                                                group_by = "year",
+                                                prct_1_col = "prct_winter_within_spring",
+                                                prct_2_col = "prct_spring_within_winter")),
+  #### YEARLY SEASONAL SITE FIDELITY ####
+  ##### Year-to-year overlap within a season #####
+  ###### MCP ######
+  tar_target(mcp_winter_yearly_overlap, yearly_prct_overlap(shp = winter_mcp)),
+  tar_target(mcp_spring_yearly_overlap, yearly_prct_overlap(shp = spring_mcp)),
+  tar_target(mcp_summer_yearly_overlap, yearly_prct_overlap(shp = summer_mcp)),
+  tar_target(mcp_all_szn_yearly_overlap, merge_dfs(df_list = list("Winter" = mcp_winter_yearly_overlap,
+                                                                  "Spring" = mcp_spring_yearly_overlap,
+                                                                  "Summer" = mcp_summer_yearly_overlap)) |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::select(season, method, dplyr::everything())),
+  ###### dBBMM ######
+  tar_target(dbbmm_winter_yearly_overlap, yearly_prct_overlap(shp = winter_dbbmm)),
+  tar_target(dbbmm_spring_yearly_overlap, yearly_prct_overlap(shp = spring_dbbmm)),
+  tar_target(dbbmm_summer_yearly_overlap, yearly_prct_overlap(shp = summer_dbbmm)),
+  tar_target(dbbmm_all_szn_yearly_overlap, merge_dfs(df_list = list("Winter" = dbbmm_winter_yearly_overlap,
+                                                                    "Spring" = dbbmm_spring_yearly_overlap,
+                                                                    "Summer" = dbbmm_summer_yearly_overlap)) |>
+               dplyr::mutate(method = "dBBMM") |>
+               dplyr::select(season, method, dplyr::everything())),
+  ###### Year-to-year overlap summary stats ######
+  # Merge all seasonal yearly overlap dfs into a single df
+  tar_target(all_szn_yearly_overlap, dplyr::bind_rows(mcp_all_szn_yearly_overlap, dbbmm_all_szn_yearly_overlap)),
+  # Summarize by season & year
+  tar_target(yearly_seasonal_overlap_summary, summarize_overlap(all_szn_yearly_overlap,
+                                                                group_by = c("season", "method", "year_to_year"),
+                                                                prct_1_col = "prct_year_1_within_year_2",
+                                                                prct_2_col = "prct_year_2_within_year_1")),
+  # Summarize by just season (i.e. average across all years)
+  tar_target(seasonal_overlap_summary, summarize_overlap(all_szn_yearly_overlap,
+                                                         group_by = c("season", "method"),
+                                                         prct_1_col = "prct_year_1_within_year_2",
+                                                         prct_2_col = "prct_year_2_within_year_1")),
+  ##### Aggregate seasonal overlap #####
+  # Pool all winter MCPs (e.g.), calculate max overlap metrics
+  # for the pooled seasonal areas. Using two methods:
+  # 1) max overlap area / union of all areas
+  # 2) GOI metric described in Ferrarini et al. (2021)
+  ## WINTER ##
+  tar_target(mcp_winter_agg_overlap, lapply(unique(winter_mcp$animal_id),
+                                            function(x){
+                                              shp <- winter_mcp[winter_mcp$animal_id == x, ]
+                                              n <- nrow(shp)
+                                              out <- aggregate_overlap(shp)
+                                              out$animal_id <- x
+                                              out$N <- n
+                                              out$method <- "MCP"
+                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                              return(out)
+                                            }) |>
+               dplyr::bind_rows()),
+  tar_target(dbbmm_winter_agg_overlap, lapply(unique(winter_dbbmm$animal_id),
+                                              function(x){
+                                                shp <- winter_dbbmm[winter_dbbmm$animal_id == x, ]
+                                                n <- nrow(shp)
+                                                out <- aggregate_overlap(shp)
+                                                out$animal_id <- x
+                                                out$N <- n
+                                                out$method <- "dBBMM"
+                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                                return(out)
+                                              }) |>
+               dplyr::bind_rows()),
+  ## SPRING ##
+  tar_target(mcp_spring_agg_overlap, lapply(unique(spring_mcp$animal_id),
+                                            function(x){
+                                              shp <- spring_mcp[spring_mcp$animal_id == x, ]
+                                              n <- nrow(shp)
+                                              out <- aggregate_overlap(shp)
+                                              out$animal_id <- x
+                                              out$N <- n
+                                              out$method <- "MCP"
+                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                              return(out)
+                                            }) |>
+               dplyr::bind_rows()),
+  tar_target(dbbmm_spring_agg_overlap, lapply(unique(spring_dbbmm$animal_id),
+                                              function(x){
+                                                shp <- spring_dbbmm[spring_dbbmm$animal_id == x, ]
+                                                n <- nrow(shp)
+                                                out <- aggregate_overlap(shp)
+                                                out$animal_id <- x
+                                                out$N <- n
+                                                out$method <- "dBBMM"
+                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                                return(out)
+                                              }) |>
+               dplyr::bind_rows()),
+  ## SUMMER ##
+  tar_target(mcp_summer_agg_overlap, lapply(unique(summer_mcp$animal_id),
+                                            function(x){
+                                              shp <- summer_mcp[summer_mcp$animal_id == x, ]
+                                              n <- nrow(shp)
+                                              out <- aggregate_overlap(shp)
+                                              out$animal_id <- x
+                                              out$N <- n
+                                              out$method <- "MCP"
+                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                              return(out)
+                                            }) |>
+               dplyr::bind_rows()),
+  tar_target(dbbmm_summer_agg_overlap, lapply(unique(summer_dbbmm$animal_id),
+                                              function(x){
+                                                shp <- summer_dbbmm[summer_dbbmm$animal_id == x, ]
+                                                n <- nrow(shp)
+                                                out <- aggregate_overlap(shp)
+                                                out$animal_id <- x
+                                                out$N <- n
+                                                out$method <- "dBBMM"
+                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
+                                                return(out)
+                                              }) |>
+               dplyr::bind_rows()),
+  ##### Cumulative home range #####
+  tar_target(cumulative_winter_mcp, cumulative_shp(winter_mcp)),
+  tar_target(cumulative_spring_mcp, cumulative_shp(spring_mcp)),
+  tar_target(cumulative_summer_mcp, cumulative_shp(summer_mcp)),
+  tar_target(cumulative_winter_dbbmm, cumulative_shp(winter_dbbmm)),
+  tar_target(cumulative_spring_dbbmm, cumulative_shp(spring_dbbmm)),
+  tar_target(cumulative_summer_dbbmm, cumulative_shp(summer_dbbmm)),
   #### STEP LENGTHS ####
   ##### 3 hr #####
   # Step length is calculated during the GPS cleanup `clean_collar_data()` step.
@@ -555,70 +555,70 @@ list(
                                 max = max(NSD, na.rm = TRUE),
                                 mean = mean(NSD, na.rm = TRUE),
                                 sd = sd(NSD, na.rm = TRUE))),
-  # ##### Seasonal, weekly, daily #####
-  # # These aren't step-lengths per se, but rather centroid-to-centroid
-  # # distances between successive home range polygons at each temporal
-  # # scale.
-  # # DAILY (MCP only)
-  # tar_target(daily_step, centroid_step(shp = daily_mcps,
-  #                                      group_by = "animal_id",
-  #                                      date_col = "date")),
-  # # SWP DAILY
-  # tar_target(daily_swp_step, daily_step |>
-  #              dplyr::mutate(doy = lubridate::yday(date)) |>
-  #              dplyr::filter(doy %in% swp_days) |>
-  #              dplyr::mutate(year = lubridate::year(date)) |>
-  #              dplyr::mutate(year = dplyr::if_else(lubridate::month(date) == 12,
-  #                                                  year + 1,
-  #                                                  year)) |>
-  #              dplyr::mutate(season = paste0(year - 1, "-", year)) |>
-  #              dplyr::group_by(season) |>
-  #              dplyr::summarise(N = dplyr::n(),
-  #                               min = min(centroid_dist, na.rm = TRUE),
-  #                               q25 = quantile(centroid_dist, 0.25, na.rm = TRUE),
-  #                               median = median(centroid_dist, na.rm = TRUE),
-  #                               q75 = quantile(centroid_dist, 0.75, na.rm = TRUE),
-  #                               q99 = quantile(centroid_dist, 0.99, na.rm = TRUE),
-  #                               max = max(centroid_dist, na.rm = TRUE),
-  #                               mean = mean(centroid_dist, na.rm = TRUE),
-  #                               sd = sd(centroid_dist, na.rm = TRUE))),
-  # # WEEKLY (MCP + dBBMM)
-  # tar_target(weekly_step, centroid_step(shp = weekly_mcps,
-  #                                       group_by = "animal_id",
-  #                                       date_col = c("isoyear", "week")) |>
-  #              dplyr::mutate(method = "MCP") |>
-  #              dplyr::bind_rows(centroid_step(shp = weekly_dbbmms,
-  #                                             group_by = "animal_id",
-  #                                             date_col = c("isoyear", "week")) |>
-  #                                 dplyr::mutate(method = "dBBMM"))),
-  # # SWP WEEKLY
-  # tar_target(weekly_swp_step, weekly_step |>
-  #              dplyr::filter(week %in% swp_weeks) |>
-  #              dplyr::mutate(year = isoyear) |>
-  #              dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
-  #              dplyr::mutate(season = paste0(year, "-", year+1)) |>
-  #              dplyr::group_by(season, method) |>
-  #              dplyr::summarise(N = dplyr::n(),
-  #                               min = min(centroid_dist, na.rm = TRUE),
-  #                               q25 = quantile(centroid_dist, 0.25, na.rm = TRUE),
-  #                               median = median(centroid_dist, na.rm = TRUE),
-  #                               q75 = quantile(centroid_dist, 0.75, na.rm = TRUE),
-  #                               q99 = quantile(centroid_dist, 0.99, na.rm = TRUE),
-  #                               max = max(centroid_dist, na.rm = TRUE),
-  #                               mean = mean(centroid_dist, na.rm = TRUE),
-  #                               sd = sd(centroid_dist, na.rm = TRUE)) |>
-  #              tidyr::pivot_wider(names_from = method,
-  #                                 values_from = c(min:sd)) |>
-  #              dplyr::select(season, N, dplyr::ends_with("_MCP"), dplyr::everything())),
-  # # SEASONAL (MCP + dBBMM)
-  # tar_target(seasonal_step, centroid_step(shp = all_seasons_mcp,
-  #                                         group_by = c("animal_id", "season"),
-  #                                         date_col = c("year")) |>
-  #              dplyr::mutate(method = "MCP") |>
-  #              dplyr::bind_rows(centroid_step(shp = all_seasons_dbbmm,
-  #                                             group_by = c("animal_id", "season"),
-  #                                             date_col = c("year")) |>
-  #                                 dplyr::mutate(method = "dBBMM"))),
+  ##### Seasonal, weekly, daily #####
+  # These aren't step-lengths per se, but rather centroid-to-centroid
+  # distances between successive home range polygons at each temporal
+  # scale.
+  # DAILY (MCP only)
+  tar_target(daily_step, centroid_step(shp = daily_mcps,
+                                       group_by = "animal_id",
+                                       date_col = "date")),
+  # SWP DAILY
+  tar_target(daily_swp_step, daily_step |>
+               dplyr::mutate(doy = lubridate::yday(date)) |>
+               dplyr::filter(doy %in% swp_days) |>
+               dplyr::mutate(year = lubridate::year(date)) |>
+               dplyr::mutate(year = dplyr::if_else(lubridate::month(date) == 12,
+                                                   year + 1,
+                                                   year)) |>
+               dplyr::mutate(season = paste0(year - 1, "-", year)) |>
+               dplyr::group_by(season) |>
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(centroid_dist, na.rm = TRUE),
+                                q25 = quantile(centroid_dist, 0.25, na.rm = TRUE),
+                                median = median(centroid_dist, na.rm = TRUE),
+                                q75 = quantile(centroid_dist, 0.75, na.rm = TRUE),
+                                q99 = quantile(centroid_dist, 0.99, na.rm = TRUE),
+                                max = max(centroid_dist, na.rm = TRUE),
+                                mean = mean(centroid_dist, na.rm = TRUE),
+                                sd = sd(centroid_dist, na.rm = TRUE))),
+  # WEEKLY (MCP + dBBMM)
+  tar_target(weekly_step, centroid_step(shp = weekly_mcps,
+                                        group_by = "animal_id",
+                                        date_col = c("isoyear", "week")) |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(centroid_step(shp = weekly_dbbmms,
+                                              group_by = "animal_id",
+                                              date_col = c("isoyear", "week")) |>
+                                  dplyr::mutate(method = "dBBMM"))),
+  # SWP WEEKLY
+  tar_target(weekly_swp_step, weekly_step |>
+               dplyr::filter(week %in% swp_weeks) |>
+               dplyr::mutate(year = isoyear) |>
+               dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
+               dplyr::mutate(season = paste0(year, "-", year+1)) |>
+               dplyr::group_by(season, method) |>
+               dplyr::summarise(N = dplyr::n(),
+                                min = min(centroid_dist, na.rm = TRUE),
+                                q25 = quantile(centroid_dist, 0.25, na.rm = TRUE),
+                                median = median(centroid_dist, na.rm = TRUE),
+                                q75 = quantile(centroid_dist, 0.75, na.rm = TRUE),
+                                q99 = quantile(centroid_dist, 0.99, na.rm = TRUE),
+                                max = max(centroid_dist, na.rm = TRUE),
+                                mean = mean(centroid_dist, na.rm = TRUE),
+                                sd = sd(centroid_dist, na.rm = TRUE)) |>
+               tidyr::pivot_wider(names_from = method,
+                                  values_from = c(min:sd)) |>
+               dplyr::select(season, N, dplyr::ends_with("_MCP"), dplyr::everything())),
+  # SEASONAL (MCP + dBBMM)
+  tar_target(seasonal_step, centroid_step(shp = all_seasons_mcp,
+                                          group_by = c("animal_id", "season"),
+                                          date_col = c("year")) |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(centroid_step(shp = all_seasons_dbbmm,
+                                              group_by = c("animal_id", "season"),
+                                              date_col = c("year")) |>
+                                  dplyr::mutate(method = "dBBMM"))),
 
   ##### 99 pctl step length #####
   # The 99th pctl step length is the distance that 99% of the elk are
