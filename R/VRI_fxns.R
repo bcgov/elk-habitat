@@ -16,22 +16,8 @@
 
 # VRI fxns
 
-# Functions to extract the VRI data from the geodatabase file,
-# clean it up, extract attributes from the VRI, and extract
-# polygon edges from the VRI.
-
-read_vri <- function(gdb, layer = "VEG_COMP_LYR_R1_POLY_CC_RES") {
-  vri <- sf::st_read(gdb, layer = layer)
-  # Fix the buggy polygons
-  vri <- sf::st_cast(vri, "MULTIPOLYGON")
-  vri <- sf::st_make_valid(vri)
-  # Remove ocean polygons
-  vri <- vri[which(vri$BEST_AGE_CL_STS != -1), ]
-  # Recalculate shape area
-  vri$Shape_Area <- sf::st_area(vri)
-  return(vri)
-}
-
+# Fxn to extract point data from supplied cols
+# The VRI itself is directly pulled from the BCDC in the main pipeline.
 
 
 extract_vri <- function(pts, id_col = "idposition",
