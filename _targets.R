@@ -87,10 +87,6 @@ winter <- c("01-01", "03-31") # month-day format
 spring <- c("04-01", "05-15") # month-day format
 summer <- c("07-01", "08-31") # month-day format
 
-# Set max date for the study overall - we only want to use detections
-# up to March 31 2024.
-cutoff_date <- "2024-04-01"
-
 # Two elk did not experience severe winter conditions, per Mario's
 # work looking at snow depth data on cameras deployed across the
 # study region. Remove these two elk from the severe winter
@@ -177,7 +173,7 @@ list(
   # Download off Vectronix website
   tar_target(raw_collar_data, load_collar_data(collar_keys)),
   # Pull and track capture data file
-  tar_target(capture_data_path, "data/DATABASE_Elk Capture_Updtd_20250415.xlsx", format = "file"),
+  tar_target(capture_data_path, "data/DATABASE_Elk Capture.xlsx", format = "file"),
   tar_target(capture_data, load_capture_data(capture_data_path)),
   # Assign capture ID to collar data
   tar_target(full_collar_data, attribute_animal_id(raw_collar_data, capture_data)),
@@ -189,7 +185,6 @@ list(
   # Make our main `elk` df for further analysis
   tar_target(elk, collar_data |> # USE JUST `collar_data`!! We're rarifying this one
                clean_collar_data(rarify_pts = TRUE) |> # then it's going to recalc the velocity/angles etc. -> so that'll be different btwn `elk` and `cleaned_collar_data` dfs
-               dplyr::filter(dttm < cutoff_date) |>
                assign_daily_seasons(seasons = list("winter" = winter, # defined toward the top of this document
                                                    "spring" = spring, # defined toward the top of this document
                                                    "summer" = summer), # defined toward the top of this document
@@ -498,7 +493,7 @@ list(
                dplyr::filter(dt > 10700 & dt < 10900) |> # filter to only include gaps of 3 hours
                dplyr::mutate(severe_winter_yn = lubridate::yday(dttm) %in% swp_days) |>
                dplyr::select(idposition, animal_id, collar_id, dttm,
-                             lat, long, doy, step, angle, NSD, mps, kph, 
+                             lat, long, doy, step, angle, NSD, mps, kph,
                              season, severe_winter_yn)),
   # Use the dataset that's filtered down to 3 hours for
   # the seasonal summaries
@@ -530,7 +525,7 @@ list(
                dplyr::filter(severe_winter_yn == TRUE) |>
                dplyr::mutate(year = lubridate::year(dttm)) |>
                dplyr::mutate(year = dplyr::if_else(lubridate::month(dttm) == 12,
-                                                   year + 1, 
+                                                   year + 1,
                                                    year)) |>
                dplyr::mutate(season = paste0(year - 1, "-", year)) |>
                dplyr::group_by(season) |>
@@ -547,7 +542,7 @@ list(
                dplyr::filter(severe_winter_yn == TRUE) |>
                dplyr::mutate(year = lubridate::year(dttm)) |>
                dplyr::mutate(year = dplyr::if_else(lubridate::month(dttm) == 12,
-                                                   year + 1, 
+                                                   year + 1,
                                                    year)) |>
                dplyr::mutate(season = paste0(year - 1, "-", year)) |>
                dplyr::group_by(season) |>
@@ -574,7 +569,7 @@ list(
                dplyr::filter(doy %in% swp_days) |>
                dplyr::mutate(year = lubridate::year(date)) |>
                dplyr::mutate(year = dplyr::if_else(lubridate::month(date) == 12,
-                                                   year + 1, 
+                                                   year + 1,
                                                    year)) |>
                dplyr::mutate(season = paste0(year - 1, "-", year)) |>
                dplyr::group_by(season) |>
@@ -626,25 +621,25 @@ list(
                                   dplyr::mutate(method = "dBBMM"))),
 
   ##### 99 pctl step length #####
-  # The 99th pctl step length is the distance that 99% of the elk are 
+  # The 99th pctl step length is the distance that 99% of the elk are
   # moving within the 3 hr gap between successive fixes. This will be
   # used to buffer the RSF polygons down the line.
   # TODO: filter to just winter period
-  tar_target(step_length_buffer, step_lengths_3hr |> 
-               dplyr::select(step) |> 
-               dplyr::pull() |> 
+  tar_target(step_length_buffer, step_lengths_3hr |>
+               dplyr::select(step) |>
+               dplyr::pull() |>
                quantile(0.99)),
-  
+
   # >> HABITAT SELECTION ANALYSIS ####
   #### HSA SETUP ####
   # Here, we will download the main input datasets that
-  # will go into the HSA. 
+  # will go into the HSA.
   ##### Download DEM #####
   # Queries CDED tiles overlapping our elk data using the `bcmaps` package
   tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
   # Extract DEM resolution
-  tar_target(dem_res, terra::rast(cded) |> 
-               terra::project("epsg:3005") |> 
+  tar_target(dem_res, terra::rast(cded) |>
+               terra::project("epsg:3005") |>
                terra::res()),
   ##### Study Area #####
   # Create a polygon that is the shapefile of our overall study area on land
@@ -662,19 +657,19 @@ list(
   # This dataset needs to be within the 'GIS/Depletions' directory.
   # The depletions data is originally from:
   # W:\wlap\nan\Workarea\Ecosystems_share\Depletions\2025\04_2025_Depletions.gdb
-  # Originally created by Emma Armitage. The '04_2024_Depletions - rslt_depl_01_2025_final' 
+  # Originally created by Emma Armitage. The '04_2024_Depletions - rslt_depl_01_2025_final'
   # layer was recast from multipolygon to polygon, then
-  # clipped to the elk study area and saved as a GPKG. 
+  # clipped to the elk study area and saved as a GPKG.
   tar_target(depletions_path, "GIS/Depletions/2025_01_Depletions.gpkg", format = "file"),
   tar_target(depletions, sf::st_read(depletions_path) |>
                dplyr::filter(Depletion_Year < 2025)),
   ##### Load Change Detection #####
   # This dataset needs to be within the 'GIS/Change Detection' directory.
-  # The change detection data was prepared by Sasha Nasanova at MoF. 
+  # The change detection data was prepared by Sasha Nasanova at MoF.
   # The directory contains a readme.txt file with more information.
   tar_target(change_detection_path, "GIS/Change Detection/elk_20180701_20240630_tBreak_out.tif", format = "file"),
   tar_terra_rast(change_detection, terra::rast(change_detection_path)),
-  
+
   #### RASTER LAYERS ####
   ##### Forest Age #####
   # Canada-wide 30m resolution forest age dataset
@@ -686,10 +681,10 @@ list(
   # This file takes about 10 mins to download on my 80 Mbps internet.
   tar_terra_rast(forest_age, download_forest_age(url = "https://opendata.nfis.org/downloads/forest_change/CA_forest_age_2022.zip",
                                                  aoi = study_area,
-                                                 save_tiff = TRUE)),
+                                                 save_tiff = FALSE)),
   ##### Disturbance #####
   # Merge together VRI, Depletions, Retention, Forest Age, and Change Detection
-  # layer to generate a comprehensive 'disturbance' layer. 
+  # layer to generate a comprehensive 'disturbance' layer.
   tar_terra_rast(disturbance, calc_disturbance_lyr(res = dem_res,
                                                    vri = vri,
                                                    depletions = depletions,
@@ -701,10 +696,12 @@ list(
   ##### Stand Edges #####
   # We can take advantage of slope algorithms to extract stand edges from
   # the disturbance layer.
-  tar_terra_rast(stand_edge, terra::terrain(disturbance, "slope")),
+  tar_terra_rast(edginess, terra::terrain(disturbance, "slope")), # continuous variable from 0-90, w higher number = harder edge
+  # Categorize anything with an edge hardness value >= 60 as a 'hard edge'
+  tar_terra_rast(stand_edge, terra::ifel(edginess >= 60, 1, 0)),
   ##### Distance to Edge #####
-  tar_terra_rast(edge_dist, terra::gridDist(stand_edge)),
-  
+  tar_terra_rast(edge_dist, terra::distance(stand_edge, target = 0, exclude = NA)),
+
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat
@@ -780,13 +777,13 @@ list(
   ),
   ##### Generate Random Pts #####
   # Sample random points within each of our availability MCPs to use in RSFs
-  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk)) |>
+  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk) * 10) |>
                sf::st_as_sf() |>
                dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk)) |>
+  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk) * 10) |>
                sf::st_as_sf() |>
                dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk)) |>
+  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk) * 10) |>
                sf::st_as_sf() |>
                dplyr::mutate(idposition = dplyr::row_number())),
   tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |>
@@ -795,11 +792,8 @@ list(
 
   #### ELK DATA EXTRACTION ####
   ##### DEM attributes #####
-  # Download the BC CDED 30km DEM tiles, then for each elk GPS point,
-  # extract elevation, slope grade (%), slope aspect (degrees), and
+  # Extract elevation, slope grade (%), slope aspect (degrees), and
   # roughness.
-  # target `cded` is declared in 'HSA SETUP' above.
-  #tar_target(cded, query_cded(elk = elk, output_dir = "GIS/DEM"), format = "file"),
   tar_target(elk_dem, extract_dem(pts = elk, cded_path = cded)),
   ##### LiDAR attributes #####
   # Pull the LiDAR-derived data products off the W:/ drive onto local
@@ -833,14 +827,14 @@ list(
   tar_target(elk_vri, extract_vri(pts = elk,
                                   vri = vri,
                                   cols = vri_cols)),
-  
+
   ##### Disturbance attributes #####
   tar_target(elk_disturbance, extract_disturbance(pts = elk,
                                                   disturbance = disturbance,
                                                   stand_edge = stand_edge,
                                                   edge_dist = edge_dist)),
-  
-  
+
+
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####
   tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),

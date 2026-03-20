@@ -26,8 +26,10 @@ download_forest_age <- function(url, aoi, save_tiff = TRUE) {
   
   # Download the file to the temporary path
   tryCatch({
-    # Takes about 6-7 mins on my internet. Set a timeout of 15 mins here
-    options(timeout = 900)
+    # Takes about 10-20 mins on my internet. Set a timeout of 30 mins here
+    # Edit 2026-03-18: Having some serious issues w downloading this thing.
+    # Set the timeout to a stupid 3 hours.
+    options(timeout = 10800)
     download.file(url, 
                   destfile = file.path(tmp, basename), 
                   mode = "wb",
