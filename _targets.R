@@ -630,8 +630,8 @@ list(
                dplyr::pull() |>
                quantile(0.99)),
 
-  # >> HABITAT SELECTION ANALYSIS ####
-  #### HSA SETUP ####
+  # >> HABITAT SELECTION ANALYSIS SETUP ####
+  #### LOAD BASE LAYERS ####
   # Here, we will download the main input datasets that
   # will go into the HSA.
   ##### Download DEM #####
@@ -894,6 +894,14 @@ list(
                                                          disturbance = disturbance,
                                                          stand_edge = stand_edge,
                                                          edge_dist = edge_dist))
+  
+  #### MERGE DATA LAYERS ####
+  # Finally, merge the various layers together into single 
+  # dataframes, containing both presences and random pseudoabsences,
+  # that can be fed directly into the models down 
+  # the road.
+  
+  # >> RSF MODELS ####
 
 )
 
