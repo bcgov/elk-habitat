@@ -900,6 +900,11 @@ list(
   # dataframes, containing both presences and random pseudoabsences,
   # that can be fed directly into the models down 
   # the road.
+  # Default parameters:
+  #   - Minimum sample size of at least 100 detections per animal_id to make it into the model
+  #   - 10 pseudoabsences for every presence point
+  #   - Pseudoabsences weighted 5000 to 1 presence (see Muff et al. 2020 on weighting)
+  #   - For tree species factors, there must be at least 1k data point per spp, otherwise the spp is lumped as "Other"
   ## Severe Winter Period ##
   tar_target(swp_mod_dat, prepare_mod_dat(presence_pts = elk |> 
                                             dplyr::filter(lubridate::date(dttm) %in% swp_dates,
