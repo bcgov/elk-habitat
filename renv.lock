@@ -347,6 +347,59 @@
       "NeedsCompilation": "no",
       "Repository": "CRAN"
     },
+    "PerformanceAnalytics": {
+      "Package": "PerformanceAnalytics",
+      "Version": "2.0.8",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Econometric Tools for Performance and Risk Analysis",
+      "Authors@R": "c( person(given=c(\"Brian\",\"G.\"),family=\"Peterson\",role=c(\"cre\",\"aut\",\"cph\"), email=\"brian@braverock.com\") , person(given=\"Peter\",family=\"Carl\",role=c(\"aut\",\"cph\"), email=\"peter@braverock.com\") , person(given=\"Kris\",family=\"Boudt\",role=c(\"ctb\",\"cph\")) , person(given=\"Ross\",family=\"Bennett\",role=\"ctb\") , person(given=\"Joshua\",family=\"Ulrich\",role=\"ctb\") , person(given=\"Eric\",family=\"Zivot\",role=\"ctb\") , person(given=\"Dries\",family=\"Cornilly\",role=\"ctb\") , person(given=\"Eric\",family=\"Hung\",role=\"ctb\") , person(given=\"Matthieu\",family=\"Lestel\",role=\"ctb\") , person(given=\"Kyle\",family=\"Balkissoon\",role=\"ctb\")   , person(given=\"Diethelm\",family=\"Wuertz\",role=\"ctb\")   , person(given=c(\"Anthony\",\"Alexander\"),family=\"Christidis\",role=\"ctb\")   , person(given=\"R. Douglas\",family=\"Martin\",role=\"ctb\")   , person(given=c(\"Zeheng\", \"Zenith\"),family=\"Zhou\",role=\"ctb\")   , person(given=c(\"Justin\", \"M.\"),family=\"Shea\",role=\"ctb\") , person(given=\"Dhairya\",family=\"Jain\",role=\"ctb\") )",
+      "Date": "2024-12-04",
+      "Description": "Collection of econometric functions for performance and risk  analysis. In addition to standard risk and performance metrics, this  package aims to aid practitioners and researchers in utilizing the latest research in analysis of non-normal return streams.  In general, it is most  tested on return (rather than price) data on a regular scale, but most  functions will work with irregular return data as well, and increasing numbers of functions will work with P&L or price data where possible.",
+      "Imports": [
+        "methods",
+        "quadprog",
+        "zoo"
+      ],
+      "Depends": [
+        "R (>= 3.5.0)",
+        "xts (>= 0.10.0)"
+      ],
+      "Suggests": [
+        "dygraphs",
+        "Hmisc",
+        "MASS",
+        "quantmod",
+        "gamlss",
+        "gamlss.dist",
+        "robustbase",
+        "quantreg",
+        "tinytest",
+        "ggplot2",
+        "RColorBrewer",
+        "googleVis",
+        "plotly",
+        "gridExtra",
+        "ggpubr",
+        "nloptr",
+        "rgenoud",
+        "RPESE",
+        "RobStatTM",
+        "fit.models",
+        "R.rsp"
+      ],
+      "VignetteBuilder": "R.rsp",
+      "License": "GPL-2 | GPL-3",
+      "Encoding": "UTF-8",
+      "LazyData": "true",
+      "URL": "https://github.com/braverock/PerformanceAnalytics",
+      "Copyright": "(c) 2004-2022",
+      "RoxygenNote": "7.3.2",
+      "NeedsCompilation": "yes",
+      "Author": "Brian G. Peterson [cre, aut, cph], Peter Carl [aut, cph], Kris Boudt [ctb, cph], Ross Bennett [ctb], Joshua Ulrich [ctb], Eric Zivot [ctb], Dries Cornilly [ctb], Eric Hung [ctb], Matthieu Lestel [ctb], Kyle Balkissoon [ctb], Diethelm Wuertz [ctb], Anthony Alexander Christidis [ctb], R. Douglas Martin [ctb], Zeheng Zenith Zhou [ctb], Justin M. Shea [ctb], Dhairya Jain [ctb]",
+      "Maintainer": "Brian G. Peterson <brian@braverock.com>",
+      "Repository": "CRAN"
+    },
     "R.methodsS3": {
       "Package": "R.methodsS3",
       "Version": "1.8.2",
@@ -6105,6 +6158,23 @@
       "NeedsCompilation": "yes",
       "Author": "Hadley Wickham [aut, cre] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Lionel Henry [aut], Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
+      "Repository": "CRAN"
+    },
+    "quadprog": {
+      "Package": "quadprog",
+      "Version": "1.5-8",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Functions to Solve Quadratic Programming Problems",
+      "Date": "2019-11-20",
+      "Author": "S original by Berwin A. Turlach <Berwin.Turlach@gmail.com>  R port by Andreas Weingessel <Andreas.Weingessel@ci.tuwien.ac.at> Fortran contributions from Cleve Moler (dposl/LINPACK and (a modified version of) dpodi/LINPACK)",
+      "Maintainer": "Berwin A. Turlach <Berwin.Turlach@gmail.com>",
+      "Description": "This package contains routines and documentation for solving quadratic programming problems.",
+      "Depends": [
+        "R (>= 3.1.0)"
+      ],
+      "License": "GPL (>= 2)",
+      "NeedsCompilation": "yes",
       "Repository": "CRAN"
     },
     "quantreg": {
