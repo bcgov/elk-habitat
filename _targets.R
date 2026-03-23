@@ -893,13 +893,51 @@ list(
   tar_target(random_swp_disturbance, extract_disturbance(pts = random_swp,
                                                          disturbance = disturbance,
                                                          stand_edge = stand_edge,
-                                                         edge_dist = edge_dist))
+                                                         edge_dist = edge_dist)),
   
-  #### MERGE DATA LAYERS ####
+  #### PREPARE MODEL DAT ####
   # Finally, merge the various layers together into single 
   # dataframes, containing both presences and random pseudoabsences,
   # that can be fed directly into the models down 
   # the road.
+  ## Severe Winter Period ##
+  tar_target(swp_mod_dat, prepare_mod_dat(presence_pts = elk |> 
+                                            dplyr::filter(lubridate::date(dttm) %in% swp_dates,
+                                                          !(animal_id %in% non_swp_elk)),
+                                          presence_dat = list(elk_dem,
+                                                              elk_vri,
+                                                              elk_disturbance),
+                                          pseudoabsence_pts = random_swp,
+                                          pseudoabsence_dat = list(random_swp_dem,
+                                                                   random_swp_vri,
+                                                                   random_swp_disturbance))),
+  ## Winter ##
+  tar_target(winter_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Winter"), ],
+                                             presence_dat = list(elk_dem,
+                                                                 elk_vri,
+                                                                 elk_disturbance),
+                                             pseudoabsence_pts = random_winter,
+                                             pseudoabsence_dat = list(random_winter_dem,
+                                                                      random_winter_vri,
+                                                                      random_winter_disturbance))),
+  ## Spring ##
+  tar_target(spring_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Spring"), ],
+                                             presence_dat = list(elk_dem,
+                                                                 elk_vri,
+                                                                 elk_disturbance),
+                                             pseudoabsence_pts = random_spring,
+                                             pseudoabsence_dat = list(random_spring_dem,
+                                                                      random_spring_vri,
+                                                                      random_spring_disturbance))),
+  ## Summer ##
+  tar_target(summer_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Summer"), ],
+                                             presence_dat = list(elk_dem,
+                                                                 elk_vri,
+                                                                 elk_disturbance),
+                                             pseudoabsence_pts = random_summer,
+                                             pseudoabsence_dat = list(random_summer_dem,
+                                                                      random_summer_vri,
+                                                                      random_summer_disturbance)))
   
   # >> RSF MODELS ####
 

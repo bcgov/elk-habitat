@@ -113,43 +113,67 @@ prepare_mod_dat <- function(presence_pts, # Main presence df data points
   # This is important bc this var will be wrapped in sine/cosine
   dat$slope_aspect <- dat$slope_aspect * pi / 180
   
-  # Collapse species codes into top X per elk + other
-  # TODO: this might not work for larger samples, e.g. full season datasets
+  # # Collapse species codes into top X per elk + other
+  # # TODO: this might not work for larger samples, e.g. full season datasets
+  # if ("species_cd_1" %in% names(dat)) {
+  #   # Whatever categories we collapse to, all factor levels must be
+  #   # present across all animal_ids, or the models will fail to converge.
+  #   # Setting cutoff of must have at least 3 instances of the species
+  #   # per animal_id.
+  #   ids_in_cd1 <- (table(dat$animal_id, dat$species_cd_1) > 3) |>
+  #     as.data.frame() |>
+  #     colSums()
+  #   # Subset to just those that appear in ALL animal_ids. Everything
+  #   # else will be condensed into "other"
+  #   ids_in_cd1 <- names(ids_in_cd1[ids_in_cd1 == length(unique(dat$animal_id))])
+  #   
+  #   dat$species_cd_1 <- ifelse(dat$species_cd_1 %in% ids_in_cd1,
+  #                              dat$species_cd_1,
+  #                              "Other")
+  #   
+  #   dat$species_cd_1 <- as.factor(dat$species_cd_1)
+  #   
+  #   # Make "Western Hemlock" the baseline for spp for more intuitive
+  #   # model interpretation. HW is all over the landscape.
+  #   dat$species_cd_1 <- forcats::fct_relevel(dat$species_cd_1, "HW")
+  # }
+  # 
+  # if ("species_cd_2" %in% names(dat)) {
+  #   ids_in_cd2 <- (table(dat$animal_id, dat$species_cd_2) > 3) |>
+  #     as.data.frame() |>
+  #     colSums()
+  #   ids_in_cd2 <- names(ids_in_cd2[ids_in_cd2 == length(unique(dat$animal_id))])
+  #   
+  #   dat$species_cd_2 <- ifelse(dat$species_cd_2 %in% ids_in_cd2,
+  #                              dat$species_cd_2,
+  #                              "Other")
+  #   
+  #   dat$species_cd_2 <- as.factor(dat$species_cd_2)
+  #   
+  #   # Make "Western Hemlock" the baseline for spp for more intuitive
+  #   # model interpretation. HW is all over the landscape.
+  #   dat$species_cd_2 <- forcats::fct_relevel(dat$species_cd_2, "HW")
+  # }
+  
+  # Change it up - let's make this much simpler. 
+  # Each tree spp must have at least 1000 obs per group to be 
+  # counted as a factor. Otherwise, it's lumped into "Other". 
   if ("species_cd_1" %in% names(dat)) {
-    # Whatever categories we collapse to, all factor levels must be
-    # present across all animal_ids, or the models will fail to converge.
-    # Setting cutoff of must have at least 3 instances of the species
-    # per animal_id.
-    ids_in_cd1 <- (table(dat$animal_id, dat$species_cd_1) > 3) |>
-      as.data.frame() |>
-      colSums()
-    # Subset to just those that appear in ALL animal_ids. Everything
-    # else will be condensed into "other"
-    ids_in_cd1 <- names(ids_in_cd1[ids_in_cd1 == length(unique(dat$animal_id))])
-    
-    dat$species_cd_1 <- ifelse(dat$species_cd_1 %in% ids_in_cd1,
+    spp1000 <- names(table(dat$species_cd_1))[table(dat$species_cd_1) >= 1000]
+    dat$species_cd_1 <- ifelse(dat$species_cd_1 %in% spp1000,
                                dat$species_cd_1,
                                "Other")
-    
     dat$species_cd_1 <- as.factor(dat$species_cd_1)
-    
     # Make "Western Hemlock" the baseline for spp for more intuitive
     # model interpretation. HW is all over the landscape.
     dat$species_cd_1 <- forcats::fct_relevel(dat$species_cd_1, "HW")
   }
-  
   if ("species_cd_2" %in% names(dat)) {
-    ids_in_cd2 <- (table(dat$animal_id, dat$species_cd_2) > 3) |>
-      as.data.frame() |>
-      colSums()
-    ids_in_cd2 <- names(ids_in_cd2[ids_in_cd2 == length(unique(dat$animal_id))])
-    
-    dat$species_cd_2 <- ifelse(dat$species_cd_2 %in% ids_in_cd2,
+    spp1000 <- names(table(dat$species_cd_2))[table(dat$species_cd_2) >= 1000]
+    dat$species_cd_2 <- ifelse(dat$species_cd_2 %in% spp1000,
                                dat$species_cd_2,
                                "Other")
-    
     dat$species_cd_2 <- as.factor(dat$species_cd_2)
-    
     # Make "Western Hemlock" the baseline for spp for more intuitive
     # model interpretation. HW is all over the landscape.
     dat$species_cd_2 <- forcats::fct_relevel(dat$species_cd_2, "HW")

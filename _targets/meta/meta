@@ -124,6 +124,13 @@ daily_swp_step|stem|d2f9cf689719cb55|e8130e70301c5a3f|e814a58e62bab9f1|-42869903
 all_szn_yearly_overlap|stem|a63261543c4a8091|0650ec91c3e3ba32|33c1dc614663a14b|-1713324419||t20532.1517554062s|s11630b|11630|rds|local|vector|||0||
 seasonal_overlap_summary|stem|5294847d02d8c9ae|1fcfbc0c1dbcaf3a|35980777306aeb17|627036650||t20532.1517600233s|s651b|651|rds|local|vector|||0.31||
 yearly_seasonal_overlap_summary|stem|ab170e7975cd924d|0c48be53267369b6|35980777306aeb17|-1519448991||t20532.1517645233s|s1623b|1623|rds|local|vector|||0.31||
+elk_vri|stem|a8ffbb5c9332511a|fc1fc2b973c8b3d8|ef38bb49c5eda834|30184935||t20532.9721830982s|s3538316b|3538316|rds|local|vector|||23.29|attribute variables are assumed to be spatially constant throughout all geometries|
+random_winter_vri|stem|1c581138275699cb|64920334b8ef9710|62fc59de42849f68|1761764807||t20532.9751642351s|s41454000b|41454000|rds|local|vector|||238.69|attribute variables are assumed to be spatially constant throughout all geometries|
+random_summer_vri|stem|f751bf6dab3b8ae7|fe739900fabd4e18|d0dc538832882529|-1766705154||t20532.9783767162s|s41449297b|41449297|rds|local|vector|||261.87|attribute variables are assumed to be spatially constant throughout all geometries|
+random_swp_vri|stem|b173421d7b320564|8511b0c3978f497e|bcdea8e73c96e259|-763469556||t20532.9786448901s|s4095718b|4095718|rds|local|vector|||19.72|attribute variables are assumed to be spatially constant throughout all geometries|
+random_spring_vri|stem|47d945db91afea68|8e1ec0969bf782ac|427af09b8071e9f7|36721359||t20532.9817406667s|s41468613b|41468613|rds|local|vector|||250.17|attribute variables are assumed to be spatially constant throughout all geometries|
+winter_mod_dat|stem|91ff89a6c50ff650|1aef4256612709a9|8e9d85832ea78e55|-1455324750||t20535.7182065522s|s44872782b|44872782|rds|local|vector|||21.21||
+swp_mod_dat|stem|771d8d13cba67091|7dd768be90e9e9fa|a85bfae3e17225b9|-1496767966||t20535.7182741833s|s2321547b|2321547|rds|local|vector|||1.44||
 extract_vri|function|f1d97f3fb94da7cc
 MCP_pctl|object|f43fe2c999030d30
 summer|object|292209e1f8fbf494
@@ -137,7 +144,7 @@ non_swp_elk|object|2c07bcfc1260c6a8
 individual_dbbmm|function|3495f8b948f0a5cb
 elk_per_month_plot|function|20740411dc9e6e24
 assign_daily_seasons|function|738918b74e6a16fe
-.Random.seed|object|819d758c7b23fbe2
+.Random.seed|object|47ac4219add6e2a5
 centroid_step|function|a458a84083a6b6a1
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -183,7 +190,7 @@ attribute_animal_id|function|9d65df7e940b435f
 study_area_poly|function|836ec739084c174b
 n_elk_per_year_month|function|74c304c23b6873ff
 szn_margin|object|1383ef88fd9bbb0e
-prepare_mod_dat|function|8409f672f3d03e56
+prepare_mod_dat|function|3c45c856caeea396
 elk_per_year_month_plot|function|bcfd85732921d5e0
 logger_dotplot|function|5b0e74c36ed11f20
 clean_collar_data|function|e2c296d1cf8e1e23
@@ -198,8 +205,5 @@ weekly_dbbmm|function|6c7de243de43fbbe
 daily_mcp|function|b6550459ae91769e
 seasonal_mcp|function|44e6e62e9bb4961a
 weekly_mcp|function|df86e293d7054eac
-elk_vri|stem|a8ffbb5c9332511a|fc1fc2b973c8b3d8|ef38bb49c5eda834|30184935||t20532.9721830982s|s3538316b|3538316|rds|local|vector|||23.29|attribute variables are assumed to be spatially constant throughout all geometries|
-random_winter_vri|stem|1c581138275699cb|64920334b8ef9710|62fc59de42849f68|1761764807||t20532.9751642351s|s41454000b|41454000|rds|local|vector|||238.69|attribute variables are assumed to be spatially constant throughout all geometries|
-random_summer_vri|stem|f751bf6dab3b8ae7|fe739900fabd4e18|d0dc538832882529|-1766705154||t20532.9783767162s|s41449297b|41449297|rds|local|vector|||261.87|attribute variables are assumed to be spatially constant throughout all geometries|
-random_swp_vri|stem|b173421d7b320564|8511b0c3978f497e|bcdea8e73c96e259|-763469556||t20532.9786448901s|s4095718b|4095718|rds|local|vector|||19.72|attribute variables are assumed to be spatially constant throughout all geometries|
-random_spring_vri|stem|47d945db91afea68|8e1ec0969bf782ac|427af09b8071e9f7|36721359||t20532.9817406667s|s41468613b|41468613|rds|local|vector|||250.17|attribute variables are assumed to be spatially constant throughout all geometries|
+summer_mod_dat|stem|14f5e60e6f27df41|64e952090f222a4d|3de9a88e7494bacd|697783975||t20535.7363413769s|s30070033b|30070033|rds|local|vector|||16.46||
+spring_mod_dat|stem|d5b06302d6e87748|c59bb2cd54aed5aa|cb610d2018182670|-877652968||t20535.7367504587s|s25281291b|25281291|rds|local|vector|||10.73||
