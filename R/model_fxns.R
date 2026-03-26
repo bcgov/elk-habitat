@@ -191,6 +191,8 @@ prepare_mod_dat <- function(presence_pts, # Main presence df data points
                   disturbance_year:edge_dist_m # disturbance lyr attributes
                   )
   
+  dat <- as.data.frame(dat)
+  
   
   return(dat)
   
