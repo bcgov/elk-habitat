@@ -199,6 +199,13 @@ prepare_mod_dat <- function(presence_pts, # Main presence df data points
   
 }
 
+# Literally the same as the base R `scale()` function, but doesn't
+# return the extra attributes that mess up the output.
+scale.simple <- function(x) {
+  out <- (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+  return(out)
+}
+
 # PREPARE DATAFRAME TO PREDICT TO
 #prepare_pred_dat <- function(){}
 
