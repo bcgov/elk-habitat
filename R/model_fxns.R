@@ -179,6 +179,18 @@ prepare_mod_dat <- function(presence_pts, # Main presence df data points
     dat$species_cd_2 <- forcats::fct_relevel(dat$species_cd_2, "HW")
   }
   
+  # If disturbance_year AND proj_height_1 are both NA, set proj_height_1
+  # to 0
+  # If disturbance_year AND crown_closure are both NA, set crown_closure
+  # to 0
+  # In these cases we assume that it is a non-vegetated area
+  if ("disturbance_year" %in% names(dat)) {
+    
+    if ("proj_height_1" %in% names(dat)) dat[["proj_height_1"]][is.na(dat$disturbance_year) & is.na(dat$proj_height_1)] <- 0
+    if ("crown_closure" %in% names(dat)) dat[["crown_closure"]][is.na(dat$disturbance_year) & is.na(dat$crown_closure)] <- 0
+    
+  }
+  
   # Reorder, drop cols
   dat <- dat |>
     dplyr::select(idposition, animal_id, collar_id, dttm,

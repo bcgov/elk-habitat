@@ -129,10 +129,6 @@ random_winter_vri|stem|1c581138275699cb|64920334b8ef9710|62fc59de42849f68|176176
 random_summer_vri|stem|f751bf6dab3b8ae7|fe739900fabd4e18|d0dc538832882529|-1766705154||t20532.9783767162s|s41449297b|41449297|rds|local|vector|||261.87|attribute variables are assumed to be spatially constant throughout all geometries|
 random_swp_vri|stem|b173421d7b320564|8511b0c3978f497e|bcdea8e73c96e259|-763469556||t20532.9786448901s|s4095718b|4095718|rds|local|vector|||19.72|attribute variables are assumed to be spatially constant throughout all geometries|
 random_spring_vri|stem|47d945db91afea68|8e1ec0969bf782ac|427af09b8071e9f7|36721359||t20532.9817406667s|s41468613b|41468613|rds|local|vector|||250.17|attribute variables are assumed to be spatially constant throughout all geometries|
-winter_mod_dat|stem|8277d67f855dd6da|1aef4256612709a9|7467168a881a3efc|-1455324750||t20535.9016613466s|s40990158b|40990158|rds|local|vector|||36.29||
-swp_mod_dat|stem|5309b86b931386cc|7dd768be90e9e9fa|6048b3d7ebf3b379|-1496767966||t20535.9017581569s|s2109420b|2109420|rds|local|vector|||1.91||
-spring_mod_dat|stem|1b20b777b14de6dd|c59bb2cd54aed5aa|f467753617f992a7|-877652968||t20535.9026146177s|s23158424b|23158424|rds|local|vector|||26.63||
-summer_mod_dat|stem|f0a4bf19d2f06fa3|64e952090f222a4d|a829f187d1da9c47|697783975||t20535.9031225195s|s27523600b|27523600|rds|local|vector|||16.97||
 wineter_corrplot|stem|91b98c7280e3f615|782db4a3a153139b|30adf62b43030f21|768381697||t20535.9045864538s|s103347405b|103347405|rds|local|vector|||2.3||
 winter_corrplot|stem|fd0a57072a41eb19|8c4663a87194fcec|30adf62b43030f21|373793079||t20535.935111657s|s44b|44|rds|local|vector|||5.44|Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties|
 swp_corrplot|stem|fd0a57072a41eb19|97a0345aae935911|d6be812f75b1ec3a|-108858007||t20535.9352586482s|s44b|44|rds|local|vector|||12.47|Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties. Cannot compute exact p-value with ties|
@@ -146,13 +142,34 @@ rsfE|stem|88090387a521211c|a4286f6159271815|d6be812f75b1ec3a|-1531242073||t20535
 rsfF|stem|f760163008f1cd1a|d4bfa9d14502dc42|d6be812f75b1ec3a|-4109103||t20536.0034898673s|s9620180b|9620180|rds|local|vector|||1115.11||
 rsfG|stem|1184409dfa0dec0f|44a6e107893dec84|d6be812f75b1ec3a|-41374093||t20536.0039193774s|s4497265b|4497265|rds|local|vector|||34.55||
 rsfH|stem|028f261f7c336788|ff2eea83e212821c|d6be812f75b1ec3a|-86846579||t20536.6507585685s|s4617879b|4617879|rds|local|vector|||53.83||
-rsfC_summer|stem|effcd44469f3a59e|040fa8f2edbd96cd|ba5eb56993115684|1929851364||t20536.9069141608s|s118320960b|118320960|rds|local|vector|||13615.2||
-rsfD_summer|stem|7119277d88f52d29|d9b01e738269a2c2|ba5eb56993115684|1277217432||t20537.0505312831s|s119919816b|119919816|rds|local|vector|||12353.97||
-rsfE_summer|stem|28118024de1d20ed|5b68e22babf92e51|ba5eb56993115684|-1103595484||t20537.159779747s|s115722419b|115722419|rds|local|vector|||9389.05||
-rsfA_summer|stem|f72c028b99675709|de5296ef0a39cfb2|ba5eb56993115684|-1024417638||t20537.2057491344s|s96817860b|96817860|rds|local|vector|||3939.13||
-rsfG_winter|stem|9dfbdf3d3b19b4d3|dd1dd21f23fa3729|30adf62b43030f21|-1397526271||t20538.740643987s|s84990603b|84990603|rds|local|vector|||897.2||
-rsfH_winter|stem|84a5e16b5938bcd9|916de8e2e126b7ed|30adf62b43030f21|-444227562||t20538.7625172544s|s87380957b|87380957|rds|local|vector|||1804.97||
-rsfA_swp|stem|8f62f215f12bd8ee|7ca92592e678235f|a7594b26906893e4|-1843589401||t20538.9768323929s|s8164056b|8164056|rds|local|vector|||34.2||
+winter_mod_dat|stem|73e46e46409fef58|1aef4256612709a9|db6f2a63e501d893|-1455324750||t20539.7840756411s|s41204952b|41204952|rds|local|vector|||20.07||
+spring_mod_dat|stem|f1526692ae1f1f5c|c59bb2cd54aed5aa|5cad8de657d91e26|-877652968||t20539.7844539822s|s23286310b|23286310|rds|local|vector|||12.36||
+summer_mod_dat|stem|78ed9c5691d897bc|64e952090f222a4d|77c59abbbb735035|697783975||t20539.7848649439s|s27672149b|27672149|rds|local|vector|||11.48||
+swp_mod_dat|stem|e78c95754893356d|7dd768be90e9e9fa|d796d1e71f662f4c|-1496767966||t20539.7849297048s|s2120033b|2120033|rds|local|vector|||1.47||
+rsfB_swp|stem|9cf4876d5e38d2b9|0bd4deefc2dc072b|8dd37d444c058755|-268652827||t20539.7854581906s|s9173126b|9173126|rds|local|vector|||42.97||
+rsfD_swp|stem|9370872463f82d55|e0b3d376ab6590e3|8dd37d444c058755|1912472225||t20539.7859769411s|s10275075b|10275075|rds|local|vector|||42.71||
+rsfF_swp|stem|05d5a70cca011cdf|52afe8723f1e59a3|8dd37d444c058755|1756368557||t20539.7864675724s|s10227082b|10227082|rds|local|vector|||39.36||
+rsfH_swp|stem|31e711f3ea12adb3|f18167565364bbce|8dd37d444c058755|-1476325034||t20539.7867179479s|s4691569b|4691569|rds|local|vector|||20||
+rsfA_swp|stem|2062437220ec9217|7ca92592e678235f|8dd37d444c058755|-1843589401||t20539.7870482503s|s8175164b|8175164|rds|local|vector|||26.67||
+rsfC_swp|stem|352557740e7bf053|40b1ee4b3d278471|8dd37d444c058755|-1429660954||t20539.7875457463s|s10126804b|10126804|rds|local|vector|||40.87||
+rsfE_swp|stem|92eba44147ce2cc9|f169adf82c7038c2|8dd37d444c058755|-141212725||t20539.7880837631s|s9886449b|9886449|rds|local|vector|||44.37||
+rsfG_swp|stem|7e48b22e6622dc43|7adc20cf7940166b|8dd37d444c058755|-1264432238||t20539.7882642448s|s4539592b|4539592|rds|local|vector|||14.08||
+rsfG_winter|stem|f20c005b9a604ecd|c32482a4c3229010|d9043ce412ba2613|-1397526271||t20539.8147106151s|s86261336b|86261336|rds|local|vector|||224.67||
+rsfH_winter|stem|decca0395adad911|ba4354cf005319fd|d9043ce412ba2613|-444227562||t20539.8192395302s|s88485951b|88485951|rds|local|vector|||352.77||
+rsfB_winter|stem|ad067682667f55a5|360f4f4f962319e7|d9043ce412ba2613|712952972||t20539.8531839678s|s173830048b|173830048|rds|local|vector|||2880.59||
+rsfC_winter|stem|c144b82e152def32|794080514e8e84f9|d9043ce412ba2613|-1389419230||t20539.9135660485s|s192388956b|192388956|rds|local|vector|||5147.07||
+rsfD_winter|stem|7af3cd1773e95529|5da15ef696805419|d9043ce412ba2613|-195067881||t20539.9908373686s|s194621816b|194621816|rds|local|vector|||6598.95||
+rsfE_winter|stem|ff073fdc1b405888|9d6e383fbf1f0bc8|d9043ce412ba2613|-1542638936||t20540.0472552182s|s187508837b|187508837|rds|local|vector|||4835.47||
+rsfA_winter|stem|1c61cbca2450021d|c476634989f91b7a|d9043ce412ba2613|-1024657047||t20540.077838006s|s155129466b|155129466|rds|local|vector|||2594.84||
+rsfF_winter|stem|493efe7f7a11e98f|fa9248027ec45651|d9043ce412ba2613|-935774330||t20540.1216891046s|s194385502b|194385502|rds|local|vector|||3726.67||
+rsfF_spring|stem|070a51c061f4f205|74872aea10ad1f44|404e73c21aff69d4|-1600400309||t20541.8630184158s|s109332357b|109332357|rds|local|vector|||1216.69||
+rsfG_spring|stem|35680f6f60e0a36c|7f6c7124780de8a8|404e73c21aff69d4|1882275701||t20541.8661744817s|s48740772b|48740772|rds|local|vector|||246.1||
+rsfH_spring|stem|96b0527661bb05ca|b8faa3c3952328f8|404e73c21aff69d4|1529966298||t20542.6415174958s|s49955179b|49955179|rds|local|vector|||380.9||
+rsfB_spring|stem|ac1d7a2b70c9d38f|8a39cd2695074ed9|404e73c21aff69d4|-961175229||t20542.6514996669s|s97801938b|97801938|rds|local|vector|||838.74||
+rsfC_spring|stem|0e63b9473797e905|305048ff2391a075|404e73c21aff69d4|55684757||t20542.6679987877s|s108290617b|108290617|rds|local|vector|||1398.23||
+rsfD_spring|stem|b49ba5955c5087f6|f2b3fc5d76d3144a|404e73c21aff69d4|-852071290||t20542.6873810867s|s109508232b|109508232|rds|local|vector|||1648.74||
+rsfA_spring|stem|bddefb0044c45e31|742ea84f85105c3a|404e73c21aff69d4|1899654340||t20542.6980935083s|s87305644b|87305644|rds|local|vector|||906.83||
+rsfE_spring|stem|3f5ac7b2987d10c1|fc660e19c2771710|404e73c21aff69d4|-317362229||t20542.7109287824s|s105463130b|105463130|rds|local|vector|||1086.58||
 dBBMM_weekly_ud|object|29e816842fabc47d
 prct_overlap|function|5b70fe85cb4cce78
 weekly_binning|function|957cca10ca8bb5f0
@@ -169,7 +186,7 @@ merge_dfs|function|51e7110d062d93ef
 n_dets_per_elk|function|08bd3cc58671e6df
 elk_dets_hist|function|a496a21bbf49b8dc
 extract_aspect|function|c1824b5878c68dec
-.Random.seed|object|730e79bd9c27c7c7
+.Random.seed|object|205a84fc1921bc6b
 MCP_pctl|object|f43fe2c999030d30
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -199,7 +216,7 @@ swp_days|object|a66a035b5e000a9e
 elk_per_year_month_plot|function|bcfd85732921d5e0
 nt|object|d516855f98da7f3d
 find_centre|function|738ee6d69ce867bc
-prepare_mod_dat|function|c5f619ab821d3b73
+prepare_mod_dat|function|9db8cb03cbf4782a
 n_elk_per_year_month|function|74c304c23b6873ff
 elk_fix_hist|function|b6a5bc4295baa22d
 non_swp_elk|object|2c07bcfc1260c6a8
@@ -229,10 +246,11 @@ weekly_dbbmm|function|6c7de243de43fbbe
 seasonal_mcp|function|44e6e62e9bb4961a
 daily_mcp|function|b6550459ae91769e
 weekly_mcp|function|df86e293d7054eac
-rsfB_swp|stem|57a073de6ac47577|0bd4deefc2dc072b|a7594b26906893e4|-268652827||t20539.6327721169s|s9162637b|9162637|rds|local|vector|||41.33||
-rsfD_swp|stem|8f785565baa16922|e0b3d376ab6590e3|a7594b26906893e4|1912472225||t20539.6332701359s|s10265876b|10265876|rds|local|vector|||40.87||
-rsfF_swp|stem|cd78b028aaec1d1b|52afe8723f1e59a3|a7594b26906893e4|1756368557||t20539.633864658s|s10215915b|10215915|rds|local|vector|||48.86||
-rsfH_swp|stem|dee75c636d7311b9|f18167565364bbce|a7594b26906893e4|-1476325034||t20539.6341465445s|s4681872b|4681872|rds|local|vector|||22.16||
-rsfC_swp|stem|f9ef13c33c9460b6|40b1ee4b3d278471|a7594b26906893e4|-1429660954||t20539.6346766255s|s10115890b|10115890|rds|local|vector|||43.73||
-rsfE_swp|stem|61ad9b0858887c9c|f169adf82c7038c2|a7594b26906893e4|-141212725||t20539.6351528231s|s9873803b|9873803|rds|local|vector|||39.06||
-rsfG_swp|stem|3cb29ebabe63081c|7adc20cf7940166b|a7594b26906893e4|-1264432238||t20539.635323229s|s4529383b|4529383|rds|local|vector|||13.18||
+rsfC_summer|stem|d339dc8d3b597e55|2d6209bb90e6aff9|dd419b54cd4b0caa|1929851364||t20542.9707658733s|s125773895b|125773895|rds|local|vector|||1222.08||
+rsfD_summer|stem|7e0f060f7c32be35|edcffc39854d0ca0|dd419b54cd4b0caa|1277217432||t20542.9926939578s|s127199265b|127199265|rds|local|vector|||1858.14||
+rsfE_summer|stem|e219103c9a95e5f9|159aafe004925b42|dd419b54cd4b0caa|-1103595484||t20543.019426114s|s122602442b|122602442|rds|local|vector|||2265.17||
+rsfA_summer|stem|cceffd9334f64bea|82750c3586017a2b|dd419b54cd4b0caa|-1024417638||t20543.0383781535s|s101849368b|101849368|rds|local|vector|||1602.51||
+rsfF_summer|stem|64577a36ea466001|dfafe5a6b2da806b|dd419b54cd4b0caa|-1589617330||t20543.0607021278s|s127039972b|127039972|rds|local|vector|||1888.49||
+rsfG_summer|stem|d5d0dfe178f3a376|f29b6fd8a2213ab3|dd419b54cd4b0caa|-687143564||t20543.0660803723s|s57145945b|57145945|rds|local|vector|||434.31||
+rsfH_summer|stem|99ad7f64a0486429|8b4a0518130058d2|dd419b54cd4b0caa|1103556588||t20543.0748610577s|s58560320b|58560320|rds|local|vector|||733.09||
+rsfB_summer|stem|21625f07137ba5d1|bc796add1322ca59|dd419b54cd4b0caa|-744016402||t20543.1031174171s|s113703766b|113703766|rds|local|vector|||2408.48||
