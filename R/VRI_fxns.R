@@ -16,22 +16,8 @@
 
 # VRI fxns
 
-# Functions to extract the VRI data from the geodatabase file,
-# clean it up, extract attributes from the VRI, and extract
-# polygon edges from the VRI.
-
-read_vri <- function(gdb, layer = "VEG_COMP_LYR_R1_POLY_CC_RES") {
-  vri <- sf::st_read(gdb, layer = layer)
-  # Fix the buggy polygons
-  vri <- sf::st_cast(vri, "MULTIPOLYGON")
-  vri <- sf::st_make_valid(vri)
-  # Remove ocean polygons
-  vri <- vri[which(vri$BEST_AGE_CL_STS != -1), ]
-  # Recalculate shape area
-  vri$Shape_Area <- sf::st_area(vri)
-  return(vri)
-}
-
+# Fxn to extract point data from supplied cols
+# The VRI itself is directly pulled from the BCDC in the main pipeline.
 
 
 extract_vri <- function(pts, id_col = "idposition",
@@ -74,6 +60,17 @@ extract_vri <- function(pts, id_col = "idposition",
   #ixn <- sf::st_intersection(vri, pts)
   
   ixn <- sf::st_drop_geometry(ixn)
+  
+  # Fix coastal douglas fir issue
+  # (ALL douglas fir on Vancouver Island is 'coastal' / FDC)
+  if ("SPECIES_CD_1" %in% cols) ixn$SPECIES_CD_1 <- ifelse(ixn$SPECIES_CD_1 == "FD", "FDC", ixn$SPECIES_CD_1)
+  if ("SPECIES_CD_2" %in% cols) ixn$SPECIES_CD_2 <- ifelse(ixn$SPECIES_CD_2 == "FD", "FDC", ixn$SPECIES_CD_2)
+  if ("SPECIES_CD_3" %in% cols) ixn$SPECIES_CD_3 <- ifelse(ixn$SPECIES_CD_3 == "FD", "FDC", ixn$SPECIES_CD_3)
+  if ("SPECIES_CD_4" %in% cols) ixn$SPECIES_CD_4 <- ifelse(ixn$SPECIES_CD_4 == "FD", "FDC", ixn$SPECIES_CD_4)
+  if ("SPECIES_CD_5" %in% cols) ixn$SPECIES_CD_5 <- ifelse(ixn$SPECIES_CD_5 == "FD", "FDC", ixn$SPECIES_CD_5)
+  if ("SPECIES_CD_6" %in% cols) ixn$SPECIES_CD_6 <- ifelse(ixn$SPECIES_CD_6 == "FD", "FDC", ixn$SPECIES_CD_6)
+  if ("EST_SITE_INDEX_SPECIES_CD" %in% cols) ixn$EST_SITE_INDEX_SPECIES_CD <- ifelse(ixn$EST_SITE_INDEX_SPECIES_CD == "FD", "FDC", ixn$EST_SITE_INDEX_SPECIES_CD)
+  
   return(ixn)
 }
 

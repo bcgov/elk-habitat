@@ -802,6 +802,43 @@
       "Author": "Roger Koenker [cre, aut], Pin Tian Ng [ctb] (Contributions to Sparse QR code), Yousef Saad [ctb] (author of sparskit2), Ben Shaby [ctb] (author of chol2csr), Martin Maechler [ctb] (chol() tweaks; S4, <https://orcid.org/0000-0002-8685-9910>)",
       "Repository": "CRAN"
     },
+    "TMB": {
+      "Package": "TMB",
+      "Version": "1.9.19",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Template Model Builder: A General Random Effect Tool Inspired by 'ADMB'",
+      "Date": "2025-12-15",
+      "Authors@R": "c(person(\"Kasper\",\"Kristensen\",role=c(\"aut\",\"cre\",\"cph\"),email=\"kaskr@dtu.dk\"), person(\"Brad\",\"Bell\",role=\"cph\"), person(\"Hans\",\"Skaug\",role=\"ctb\"), person(\"Arni\",\"Magnusson\",role=\"ctb\"), person(\"Casper\",\"Berg\",role=\"ctb\"), person(\"Anders\",\"Nielsen\",role=\"ctb\"), person(\"Martin\",\"Maechler\",role=\"ctb\"), person(\"Theo\",\"Michelot\",role=\"ctb\"), person(\"Mollie\",\"Brooks\",role=\"ctb\"), person(\"Alex\",\"Forrence\",role=\"ctb\"), person(\"Christoffer\",\"Moesgaard Albertsen\",role=\"ctb\"), person(\"Cole\",\"Monnahan\",role=\"ctb\") )",
+      "Maintainer": "Kasper Kristensen <kaskr@dtu.dk>",
+      "Author": "Kasper Kristensen [aut, cre, cph], Brad Bell [cph], Hans Skaug [ctb], Arni Magnusson [ctb], Casper Berg [ctb], Anders Nielsen [ctb], Martin Maechler [ctb], Theo Michelot [ctb], Mollie Brooks [ctb], Alex Forrence [ctb], Christoffer Moesgaard Albertsen [ctb], Cole Monnahan [ctb]",
+      "Copyright": "See the file COPYRIGHTS",
+      "Description": "With this tool, a user should be able to quickly implement complex random effect models through simple C++ templates. The package combines 'CppAD' (C++ automatic differentiation), 'Eigen' (templated matrix-vector library) and 'CHOLMOD' (sparse matrix routines available from R) to obtain an efficient implementation of the applied Laplace approximation with exact derivatives. Key features are: Automatic sparseness detection, parallelism through 'BLAS' and parallel user templates.",
+      "License": "GPL-2",
+      "URL": "https://github.com/kaskr/adcomp/wiki",
+      "BugReports": "https://github.com/kaskr/adcomp/issues",
+      "Depends": [
+        "R (>= 3.0.0)"
+      ],
+      "Imports": [
+        "graphics",
+        "methods",
+        "stats",
+        "utils",
+        "Matrix (>= 1.0-12)"
+      ],
+      "LinkingTo": [
+        "Matrix",
+        "RcppEigen"
+      ],
+      "Suggests": [
+        "numDeriv",
+        "parallel"
+      ],
+      "RoxygenNote": "7.2.3",
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN"
+    },
     "abind": {
       "Package": "abind",
       "Version": "1.4-8",
@@ -3492,6 +3529,83 @@
       "NeedsCompilation": "no",
       "Author": "Constantin Ahlmann-Eltze [aut, cre, ctb] (<https://orcid.org/0000-0002-3762-068X>, @const_ae), Indrajeet Patil [aut, ctb] (<https://orcid.org/0000-0003-1995-6531>, @patilindrajeets)",
       "Maintainer": "Constantin Ahlmann-Eltze <artjom31415@googlemail.com>",
+      "Repository": "CRAN"
+    },
+    "glmmTMB": {
+      "Package": "glmmTMB",
+      "Version": "1.1.14",
+      "Source": "Repository",
+      "Title": "Generalized Linear Mixed Models using Template Model Builder",
+      "Authors@R": "c(person(\"Mollie\",\"Brooks\", comment=c(ORCID=\"0000-0001-6963-8326\"), role = c(\"aut\", \"cre\"), email = \"mollieebrooks@gmail.com\"), person(\"Ben\",\"Bolker\", role=\"aut\", comment=c(ORCID=\"0000-0002-2127-0443\")), person(\"Kasper\",\"Kristensen\",role=\"aut\"), person(\"Martin\",\"Maechler\", role=\"aut\", comment=c(ORCID=\"0000-0002-8685-9910\")), person(\"Arni\",\"Magnusson\", role=\"aut\", comment=c(ORCID=\"0000-0003-2769-6741\")), person(\"Maeve\",\"McGillycuddy\", role=\"ctb\"), person(\"Hans\",\"Skaug\",role=\"aut\", comment=c(ORCID=\"0000-0003-4235-2592\")), person(\"Anders\",\"Nielsen\", role=\"aut\", comment=c(ORCID=\"0000-0001-9683-9262\")), person(\"Casper\",\"Berg\", role=\"aut\", comment=c(ORCID=\"0000-0002-3812-5269\")), person(\"Koen\",\"van Bentham\", role=\"aut\"), person(\"Nafis\",\"Sadat\",role=\"ctb\", comment=c(ORCID=\"0000-0001-5715-616X\")), person(\"Daniel\",\"Lüdecke\", role=\"ctb\", comment=c(ORCID=\"0000-0002-8895-3206\")), person(\"Russ\",\"Lenth\", role=\"ctb\"), person(\"Joseph\", \"O'Brien\", role = \"ctb\", comment = c(ORCID = \"0000-0001-9851-5077\")), person(\"Charles J.\",\"Geyer\", role=\"ctb\"), person(\"Mikael\",\"Jagan\", role=\"ctb\", comment = c(ORCID = \"0000-0002-3542-2938\")), person(\"Brenton\", \"Wiernik\", role=\"ctb\", comment = c(ORCID = \"0000-0001-9560-6336\")), person(\"Daniel B.\", \"Stouffer\", role=\"ctb\", comment = c(ORCID = \"0000-0001-9436-9674\")), person(\"Michael\", \"Agronah\", role = \"ctb\", comment = c(ORCID = \"0009-0007-2655-4094\")), person(\"Hatice Tül Kübra\", \"Akdur\", role = \"ctb\", comment = c(ORCID = \"0000-0003-2144-0518\")), person(\"Daniel\", \"Sabanés Bové\", role = \"ctb\", comment = c(ORCID = \"0000-0002-0176-9239\")), person(\"Nikolas\", \"Krieger\", role = \"ctb\", comment = c(ORCID = \"0000-0002-4581-3545\")), person(\"Coralie\", \"Williams\", role = \"ctb\", comment = c(ORCID = \"0000-0003-1312-4953\")) )",
+      "Description": "Fit linear and generalized linear mixed models with various extensions, including zero-inflation. The models are fitted using maximum likelihood estimation via 'TMB' (Template Model Builder). Random effects are assumed to be Gaussian on the scale of the linear predictor and are integrated out using the Laplace approximation. Gradients are calculated using automatic differentiation.",
+      "License": "AGPL-3",
+      "Depends": [
+        "R (>= 3.6.0)"
+      ],
+      "Imports": [
+        "methods",
+        "TMB (>= 1.9.0)",
+        "lme4 (>= 1.1-18.9000)",
+        "Matrix",
+        "nlme",
+        "numDeriv",
+        "mgcv",
+        "reformulas (>= 0.4.3.1)",
+        "pbkrtest",
+        "sandwich"
+      ],
+      "LinkingTo": [
+        "TMB",
+        "RcppEigen"
+      ],
+      "Suggests": [
+        "knitr",
+        "rmarkdown",
+        "testthat",
+        "MASS",
+        "lattice",
+        "ggplot2 (>= 2.2.1)",
+        "mlmRev",
+        "bbmle (>= 1.0.19)",
+        "pscl",
+        "coda",
+        "reshape2",
+        "car (>= 3.0.6)",
+        "emmeans (>= 1.4)",
+        "estimability",
+        "DHARMa",
+        "multcomp",
+        "MuMIn",
+        "effects (>= 4.0-1)",
+        "dotwhisker",
+        "broom",
+        "broom.mixed",
+        "plyr",
+        "png",
+        "boot",
+        "texreg",
+        "xtable",
+        "huxtable",
+        "parallel",
+        "blme",
+        "purrr",
+        "dplyr",
+        "ade4",
+        "ape",
+        "gsl",
+        "lmerTest",
+        "metafor"
+      ],
+      "SystemRequirements": "GNU make",
+      "VignetteBuilder": "knitr, rmarkdown",
+      "URL": "https://github.com/glmmTMB/glmmTMB",
+      "LazyData": "TRUE",
+      "BugReports": "https://github.com/glmmTMB/glmmTMB/issues",
+      "NeedsCompilation": "yes",
+      "Encoding": "UTF-8",
+      "RoxygenNote": "7.3.3",
+      "Author": "Mollie Brooks [aut, cre] (ORCID: <https://orcid.org/0000-0001-6963-8326>), Ben Bolker [aut] (ORCID: <https://orcid.org/0000-0002-2127-0443>), Kasper Kristensen [aut], Martin Maechler [aut] (ORCID: <https://orcid.org/0000-0002-8685-9910>), Arni Magnusson [aut] (ORCID: <https://orcid.org/0000-0003-2769-6741>), Maeve McGillycuddy [ctb], Hans Skaug [aut] (ORCID: <https://orcid.org/0000-0003-4235-2592>), Anders Nielsen [aut] (ORCID: <https://orcid.org/0000-0001-9683-9262>), Casper Berg [aut] (ORCID: <https://orcid.org/0000-0002-3812-5269>), Koen van Bentham [aut], Nafis Sadat [ctb] (ORCID: <https://orcid.org/0000-0001-5715-616X>), Daniel Lüdecke [ctb] (ORCID: <https://orcid.org/0000-0002-8895-3206>), Russ Lenth [ctb], Joseph O'Brien [ctb] (ORCID: <https://orcid.org/0000-0001-9851-5077>), Charles J. Geyer [ctb], Mikael Jagan [ctb] (ORCID: <https://orcid.org/0000-0002-3542-2938>), Brenton Wiernik [ctb] (ORCID: <https://orcid.org/0000-0001-9560-6336>), Daniel B. Stouffer [ctb] (ORCID: <https://orcid.org/0000-0001-9436-9674>), Michael Agronah [ctb] (ORCID: <https://orcid.org/0009-0007-2655-4094>), Hatice Tül Kübra Akdur [ctb] (ORCID: <https://orcid.org/0000-0003-2144-0518>), Daniel Sabanés Bové [ctb] (ORCID: <https://orcid.org/0000-0002-0176-9239>), Nikolas Krieger [ctb] (ORCID: <https://orcid.org/0000-0002-4581-3545>), Coralie Williams [ctb] (ORCID: <https://orcid.org/0000-0003-1312-4953>)",
+      "Maintainer": "Mollie Brooks <mollieebrooks@gmail.com>",
       "Repository": "CRAN"
     },
     "globals": {
@@ -6862,6 +6976,48 @@
       "NeedsCompilation": "yes",
       "Author": "Dewey Dunnington [aut] (ORCID: <https://orcid.org/0000-0002-9415-4582>), Edzer Pebesma [aut, cre] (ORCID: <https://orcid.org/0000-0001-8049-7069>), Ege Rubak [aut], Jeroen Ooms [ctb] (configure script), Google, Inc. [cph] (Original s2geometry.io source code)",
       "Maintainer": "Edzer Pebesma <edzer.pebesma@uni-muenster.de>",
+      "Repository": "CRAN"
+    },
+    "sandwich": {
+      "Package": "sandwich",
+      "Version": "3.1-1",
+      "Source": "Repository",
+      "Date": "2024-09-16",
+      "Title": "Robust Covariance Matrix Estimators",
+      "Authors@R": "c(person(given = \"Achim\", family = \"Zeileis\", role = c(\"aut\", \"cre\"), email = \"Achim.Zeileis@R-project.org\", comment = c(ORCID = \"0000-0003-0918-3766\")), person(given = \"Thomas\", family = \"Lumley\", role = \"aut\", email = \"t.lumley@auckland.ac.nz\", comment = c(ORCID = \"0000-0003-4255-5437\")), person(given = \"Nathaniel\", family = \"Graham\", role = \"ctb\", email = \"npgraham1@gmail.com\", comment = c(ORCID = \"0009-0002-1215-5256\")), person(given = \"Susanne\", family = \"Koell\", role = \"ctb\"))",
+      "Description": "Object-oriented software for model-robust covariance matrix estimators. Starting out from the basic  robust Eicker-Huber-White sandwich covariance methods include: heteroscedasticity-consistent (HC) covariances for cross-section data; heteroscedasticity- and autocorrelation-consistent (HAC) covariances for time series data (such as Andrews' kernel HAC, Newey-West, and WEAVE estimators); clustered covariances (one-way and multi-way); panel and panel-corrected covariances; outer-product-of-gradients covariances; and (clustered) bootstrap covariances. All methods are applicable to (generalized) linear model objects fitted by lm() and glm() but can also be adapted to other classes through S3 methods. Details can be found in Zeileis et al. (2020) <doi:10.18637/jss.v095.i01>, Zeileis (2004) <doi:10.18637/jss.v011.i10> and Zeileis (2006) <doi:10.18637/jss.v016.i09>.",
+      "Depends": [
+        "R (>= 3.0.0)"
+      ],
+      "Imports": [
+        "stats",
+        "utils",
+        "zoo"
+      ],
+      "Suggests": [
+        "AER",
+        "car",
+        "geepack",
+        "lattice",
+        "lme4",
+        "lmtest",
+        "MASS",
+        "multiwayvcov",
+        "parallel",
+        "pcse",
+        "plm",
+        "pscl",
+        "scatterplot3d",
+        "stats4",
+        "strucchange",
+        "survival"
+      ],
+      "License": "GPL-2 | GPL-3",
+      "URL": "https://sandwich.R-Forge.R-project.org/",
+      "BugReports": "https://sandwich.R-Forge.R-project.org/contact.html",
+      "NeedsCompilation": "no",
+      "Author": "Achim Zeileis [aut, cre] (<https://orcid.org/0000-0003-0918-3766>), Thomas Lumley [aut] (<https://orcid.org/0000-0003-4255-5437>), Nathaniel Graham [ctb] (<https://orcid.org/0009-0002-1215-5256>), Susanne Koell [ctb]",
+      "Maintainer": "Achim Zeileis <Achim.Zeileis@R-project.org>",
       "Repository": "CRAN"
     },
     "sass": {
