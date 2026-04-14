@@ -820,111 +820,111 @@ list(
                                           availability_shp = winter_rsf_mcp)),
   tar_target(random_swp, st_rsf_sample(presence_pts = elk[lubridate::date(elk$dttm) %in% swp_dates, ],
                                           availability_shp = winter_rsf_mcp)),
-  # #### ELK DATA EXTRACTION ####
-  # ##### DEM attributes #####
-  # # Extract elevation, slope grade (%), slope aspect (degrees), and
-  # # roughness.
-  # tar_target(elk_dem, extract_dem(pts = elk, cded_path = cded)),
-  # ##### LiDAR attributes #####
-  # # Pull the LiDAR-derived data products off the W:/ drive onto local
-  # # machine + keep track of it if it changes on the server, then extract
-  # # the data from it (elevation, slope grade (%), canopy height, edge
-  # # category, edge distance).
-  # # Keep track of the W:/ drive LiDAR file
-  # # This makes the pipeline a lot slower bc the server is slow.
-  # # So commenting out.
-  # # tar_target(uwr_lidar_gdb_path,
-  # #            "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
-  # #            format = "file"),
-  # # Make a local copy of the W:/ drive LiDAR file (this will get re-downloaded
-  # # if the W:/ drive copy is ever updated/modified)
-  # tar_target(uwr_lidar_gdb,
-  #            download_from_server(#server_path = uwr_lidar_gdb_path,
-  #              server_path = "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
-  #              local_path = "GIS/LiDAR products",
-  #              download = FALSE), # set to FALSE bc I just manually moved it over in the end
+  #### ELK DATA EXTRACTION ####
+  ##### DEM attributes #####
+  # Extract elevation, slope grade (%), slope aspect (degrees), and
+  # roughness.
+  tar_target(elk_dem, extract_dem(pts = elk, cded_path = cded)),
+  ##### LiDAR attributes #####
+  # Pull the LiDAR-derived data products off the W:/ drive onto local
+  # machine + keep track of it if it changes on the server, then extract
+  # the data from it (elevation, slope grade (%), canopy height, edge
+  # category, edge distance).
+  # Keep track of the W:/ drive LiDAR file
+  # This makes the pipeline a lot slower bc the server is slow.
+  # So commenting out.
+  # tar_target(uwr_lidar_gdb_path,
+  #            "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
   #            format = "file"),
-  # tar_target(elk_uwr, extract_uwr(pts = elk,
-  #                                 gdb = uwr_lidar_gdb,
-  #                                 layers = lidar_cols)),
-  # # Since the UWR layers might not be suitable for this analysis, let's
-  # # also extract data from a crown height model that was provided to us
-  # # by BCTS.
-  # tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
-  # tar_target(elk_chm, extract_chm(pts = elk,
-  #                                 path = chm_path)),
-  # ##### VRI attributes #####
-  # tar_target(elk_vri, extract_vri(pts = elk,
-  #                                 vri = vri,
-  #                                 cols = vri_cols)),
-  # 
-  # ##### Disturbance attributes #####
-  # tar_target(elk_disturbance, extract_disturbance(pts = elk,
-  #                                                 disturbance = disturbance,
-  #                                                 stand_edge = stand_edge,
-  #                                                 edge_dist = edge_dist)),
-  # 
-  # 
-  # #### RANDOM DATA EXTRACTION ####
-  # ##### DEM attributes #####
-  # tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
-  # tar_target(random_spring_dem, extract_dem(pts = random_spring, cded_path = cded)),
-  # tar_target(random_summer_dem, extract_dem(pts = random_summer, cded_path = cded)),
-  # tar_target(random_swp_dem, extract_dem(pts = random_swp, cded_path = cded)),
-  # ##### LiDAR attributes #####
-  # # UWR data
-  # tar_target(random_winter_uwr, extract_uwr(pts = random_winter,
-  #                                           gdb = uwr_lidar_gdb,
-  #                                           layers = lidar_cols)),
-  # tar_target(random_spring_uwr, extract_uwr(pts = random_spring,
-  #                                           gdb = uwr_lidar_gdb,
-  #                                           layers = lidar_cols)),
-  # tar_target(random_summer_uwr, extract_uwr(pts = random_summer,
-  #                                           gdb = uwr_lidar_gdb,
-  #                                           layers = lidar_cols)),
-  # tar_target(random_swp_uwr, extract_uwr(pts = random_swp,
-  #                                        gdb = uwr_lidar_gdb,
-  #                                        layers = lidar_cols)),
-  # # CHM data
-  # tar_target(random_winter_chm, extract_chm(pts = random_winter,
-  #                                           path = chm_path)),
-  # tar_target(random_spring_chm, extract_chm(pts = random_spring,
-  #                                           path = chm_path)),
-  # tar_target(random_summer_chm, extract_chm(pts = random_summer,
-  #                                           path = chm_path)),
-  # tar_target(random_swp_chm, extract_chm(pts = random_swp,
-  #                                        path = chm_path)),
-  # ##### VRI attributes #####
-  # tar_target(random_winter_vri, extract_vri(pts = random_winter,
-  #                                           vri = vri,
-  #                                           cols = vri_cols)),
-  # tar_target(random_spring_vri, extract_vri(pts = random_spring,
-  #                                           vri = vri,
-  #                                           cols = vri_cols)),
-  # tar_target(random_summer_vri, extract_vri(pts = random_summer,
-  #                                           vri = vri,
-  #                                           cols = vri_cols)),
-  # tar_target(random_swp_vri, extract_vri(pts = random_swp,
-  #                                           vri = vri,
-  #                                           cols = vri_cols)),
-  # ##### Disturbance attributes #####
-  # tar_target(random_winter_disturbance, extract_disturbance(pts = random_winter,
-  #                                                           disturbance = disturbance,
-  #                                                           stand_edge = stand_edge,
-  #                                                           edge_dist = edge_dist)),
-  # tar_target(random_spring_disturbance, extract_disturbance(pts = random_spring,
-  #                                                           disturbance = disturbance,
-  #                                                           stand_edge = stand_edge,
-  #                                                           edge_dist = edge_dist)),
-  # tar_target(random_summer_disturbance, extract_disturbance(pts = random_summer,
-  #                                                           disturbance = disturbance,
-  #                                                           stand_edge = stand_edge,
-  #                                                           edge_dist = edge_dist)),
-  # tar_target(random_swp_disturbance, extract_disturbance(pts = random_swp,
-  #                                                        disturbance = disturbance,
-  #                                                        stand_edge = stand_edge,
-  #                                                        edge_dist = edge_dist)),
-  # 
+  # Make a local copy of the W:/ drive LiDAR file (this will get re-downloaded
+  # if the W:/ drive copy is ever updated/modified)
+  tar_target(uwr_lidar_gdb,
+             download_from_server(#server_path = uwr_lidar_gdb_path,
+               server_path = "W:/wlap/nan/Workarea/Ecosystems_share/LiDAR/LiDAR_Project2020/Forsite_NOGO_UWR_Deliverables_Sept2021/UWR_Deliverables/uwr_intermediate_north_island.gdb",
+               local_path = "GIS/LiDAR products",
+               download = FALSE), # set to FALSE bc I just manually moved it over in the end
+             format = "file"),
+  tar_target(elk_uwr, extract_uwr(pts = elk,
+                                  gdb = uwr_lidar_gdb,
+                                  layers = lidar_cols)),
+  # Since the UWR layers might not be suitable for this analysis, let's
+  # also extract data from a crown height model that was provided to us
+  # by BCTS.
+  tar_target(chm_path, "GIS/LiDAR products/crown_height.tif", format = "file"),
+  tar_target(elk_chm, extract_chm(pts = elk,
+                                  path = chm_path)),
+  ##### VRI attributes #####
+  tar_target(elk_vri, extract_vri(pts = elk,
+                                  vri = vri,
+                                  cols = vri_cols)),
+
+  ##### Disturbance attributes #####
+  tar_target(elk_disturbance, extract_disturbance(pts = elk,
+                                                  disturbance = disturbance,
+                                                  stand_edge = stand_edge,
+                                                  edge_dist = edge_dist)),
+
+
+  #### RANDOM DATA EXTRACTION ####
+  ##### DEM attributes #####
+  tar_target(random_winter_dem, extract_dem(pts = random_winter, cded_path = cded)),
+  tar_target(random_spring_dem, extract_dem(pts = random_spring, cded_path = cded)),
+  tar_target(random_summer_dem, extract_dem(pts = random_summer, cded_path = cded)),
+  tar_target(random_swp_dem, extract_dem(pts = random_swp, cded_path = cded)),
+  ##### LiDAR attributes #####
+  # UWR data
+  tar_target(random_winter_uwr, extract_uwr(pts = random_winter,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_spring_uwr, extract_uwr(pts = random_spring,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_summer_uwr, extract_uwr(pts = random_summer,
+                                            gdb = uwr_lidar_gdb,
+                                            layers = lidar_cols)),
+  tar_target(random_swp_uwr, extract_uwr(pts = random_swp,
+                                         gdb = uwr_lidar_gdb,
+                                         layers = lidar_cols)),
+  # CHM data
+  tar_target(random_winter_chm, extract_chm(pts = random_winter,
+                                            path = chm_path)),
+  tar_target(random_spring_chm, extract_chm(pts = random_spring,
+                                            path = chm_path)),
+  tar_target(random_summer_chm, extract_chm(pts = random_summer,
+                                            path = chm_path)),
+  tar_target(random_swp_chm, extract_chm(pts = random_swp,
+                                         path = chm_path)),
+  ##### VRI attributes #####
+  tar_target(random_winter_vri, extract_vri(pts = random_winter,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_spring_vri, extract_vri(pts = random_spring,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_summer_vri, extract_vri(pts = random_summer,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  tar_target(random_swp_vri, extract_vri(pts = random_swp,
+                                            vri = vri,
+                                            cols = vri_cols)),
+  ##### Disturbance attributes #####
+  tar_target(random_winter_disturbance, extract_disturbance(pts = random_winter,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_spring_disturbance, extract_disturbance(pts = random_spring,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_summer_disturbance, extract_disturbance(pts = random_summer,
+                                                            disturbance = disturbance,
+                                                            stand_edge = stand_edge,
+                                                            edge_dist = edge_dist)),
+  tar_target(random_swp_disturbance, extract_disturbance(pts = random_swp,
+                                                         disturbance = disturbance,
+                                                         stand_edge = stand_edge,
+                                                         edge_dist = edge_dist))
+
   # #### PREPARE MODEL DAT ####
   # # Finally, merge the various layers together into single 
   # # dataframes, containing both presences and random pseudoabsences,
