@@ -923,106 +923,106 @@ list(
   tar_target(random_swp_disturbance, extract_disturbance(pts = random_swp,
                                                          disturbance = disturbance,
                                                          stand_edge = stand_edge,
-                                                         edge_dist = edge_dist))
+                                                         edge_dist = edge_dist)),
 
-  # #### PREPARE MODEL DAT ####
-  # # Finally, merge the various layers together into single 
-  # # dataframes, containing both presences and random pseudoabsences,
-  # # that can be fed directly into the models down 
-  # # the road.
-  # # For now I'm not filtering to complete cases here bc I want to use the same base
-  # # dataset for either VRI or non-VRI models, which will have vastly
-  # # different sample sizes. 
-  # # Default parameters:
-  # #   - Minimum sample size of at least 100 detections per animal_id to make it into the model
-  # #   - 10 pseudoabsences for every presence point
-  # #   - Pseudoabsences weighted 5000 to 1 presence (see Muff et al. 2020 on weighting)
-  # #   - For tree species factors, there must be at least 1k data point per spp, otherwise the spp is lumped as "Other"
-  # ##### Seasonal Mod Dat #####
+  #### PREPARE MODEL DAT ####
+  # Finally, merge the various layers together into single
+  # dataframes, containing both presences and random pseudoabsences,
+  # that can be fed directly into the models down
+  # the road.
+  # For now I'm not filtering to complete cases here bc I want to use the same base
+  # dataset for either VRI or non-VRI models, which will have vastly
+  # different sample sizes.
+  # Default parameters:
+  #   - Minimum sample size of at least 100 detections per animal_id to make it into the model
+  #   - 10 pseudoabsences for every presence point
+  #   - Pseudoabsences weighted 5000 to 1 presence (see Muff et al. 2020 on weighting)
+  #   - For tree species factors, there must be at least 1k data point per spp, otherwise the spp is lumped as "Other"
+  ##### Seasonal Mod Dat #####
+  ## Severe Winter Period ##
+  tar_target(swp_mod_dat, prepare_mod_dat(presence_pts = elk |>
+                                            dplyr::filter(lubridate::date(dttm) %in% swp_dates,
+                                                          !(animal_id %in% non_swp_elk)),
+                                          presence_dat = list(elk_dem,
+                                                              elk_vri,
+                                                              elk_disturbance),
+                                          pseudoabsence_pts = random_swp,
+                                          pseudoabsence_dat = list(random_swp_dem,
+                                                                   random_swp_vri,
+                                                                   random_swp_disturbance))),
+  ## Winter ##
+  tar_target(winter_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Winter"), ],
+                                             presence_dat = list(elk_dem,
+                                                                 elk_vri,
+                                                                 elk_disturbance),
+                                             pseudoabsence_pts = random_winter,
+                                             pseudoabsence_dat = list(random_winter_dem,
+                                                                      random_winter_vri,
+                                                                      random_winter_disturbance))),
+  ## Spring ##
+  tar_target(spring_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Spring"), ],
+                                             presence_dat = list(elk_dem,
+                                                                 elk_vri,
+                                                                 elk_disturbance),
+                                             pseudoabsence_pts = random_spring,
+                                             pseudoabsence_dat = list(random_spring_dem,
+                                                                      random_spring_vri,
+                                                                      random_spring_disturbance))),
+  ## Summer ##
+  tar_target(summer_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Summer"), ],
+                                             presence_dat = list(elk_dem,
+                                                                 elk_vri,
+                                                                 elk_disturbance),
+                                             pseudoabsence_pts = random_summer,
+                                             pseudoabsence_dat = list(random_summer_dem,
+                                                                      random_summer_vri,
+                                                                      random_summer_disturbance)))
+
+  ##### Examine colinearity #####
+  # We're going to randomly sample 10k points from each season
+  # so the plots don't take forever.
+  # As expected, colinear vars don't change by season -
+  # these are colinear across the entire study period.
+  # CORRELATED VARS:
+  # disturbance_year and proj_age_1
+  # disturbance_year and proj_height_1
+  # proj_height_1 and proj_age_1
+  # crown_closure and proj_height_1
+  # slope_prct and elevation_m (borderline)
+  # vri_live_stems_per_ha and proj_height_1
+  # vri_live_stems_per_ha and proj_age_1
+  # vri_live_stems_per_ha and disturbance_year
+  # shrub_crown_closure and crown_closure
+  # TODO: these don't actually save as targets. Ah well.
+  # https://github.com/wlandau/targets-tutorial/discussions/16
   # ## Severe Winter Period ##
-  # tar_target(swp_mod_dat, prepare_mod_dat(presence_pts = elk |> 
-  #                                           dplyr::filter(lubridate::date(dttm) %in% swp_dates,
-  #                                                         !(animal_id %in% non_swp_elk)),
-  #                                         presence_dat = list(elk_dem,
-  #                                                             elk_vri,
-  #                                                             elk_disturbance),
-  #                                         pseudoabsence_pts = random_swp,
-  #                                         pseudoabsence_dat = list(random_swp_dem,
-  #                                                                  random_swp_vri,
-  #                                                                  random_swp_disturbance))),
+  # tar_target(swp_corrplot, swp_mod_dat |>
+  #              dplyr::slice_sample(n = 10000) |>
+  #              dplyr::select(elevation_m:edge_dist_m) |>
+  #              dplyr::select(dplyr::where(is.numeric)) |>
+  #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
+  # # For spp: chisq.test(swp_mod_dat$species_cd_1, swp_mod_dat$species_cd_2)
   # ## Winter ##
-  # tar_target(winter_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Winter"), ],
-  #                                            presence_dat = list(elk_dem,
-  #                                                                elk_vri,
-  #                                                                elk_disturbance),
-  #                                            pseudoabsence_pts = random_winter,
-  #                                            pseudoabsence_dat = list(random_winter_dem,
-  #                                                                     random_winter_vri,
-  #                                                                     random_winter_disturbance))),
+  # tar_target(winter_corrplot, winter_mod_dat |>
+  #              dplyr::slice_sample(n = 10000) |>
+  #              dplyr::select(elevation_m:edge_dist_m) |>
+  #              dplyr::select(dplyr::where(is.numeric)) |>
+  #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
+  # # For spp: chisq.test(winter_mod_dat$species_cd_1, winter_mod_dat$species_cd_2)
   # ## Spring ##
-  # tar_target(spring_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Spring"), ],
-  #                                            presence_dat = list(elk_dem,
-  #                                                                elk_vri,
-  #                                                                elk_disturbance),
-  #                                            pseudoabsence_pts = random_spring,
-  #                                            pseudoabsence_dat = list(random_spring_dem,
-  #                                                                     random_spring_vri,
-  #                                                                     random_spring_disturbance))),
+  # tar_target(spring_corrplot, spring_mod_dat |>
+  #              dplyr::slice_sample(n = 10000) |>
+  #              dplyr::select(elevation_m:edge_dist_m) |>
+  #              dplyr::select(dplyr::where(is.numeric)) |>
+  #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
+  # # For spp: chisq.test(spring_mod_dat$species_cd_1, spring_mod_dat$species_cd_2)
   # ## Summer ##
-  # tar_target(summer_mod_dat, prepare_mod_dat(presence_pts = elk[which(elk$season == "Summer"), ],
-  #                                            presence_dat = list(elk_dem,
-  #                                                                elk_vri,
-  #                                                                elk_disturbance),
-  #                                            pseudoabsence_pts = random_summer,
-  #                                            pseudoabsence_dat = list(random_summer_dem,
-  #                                                                     random_summer_vri,
-  #                                                                     random_summer_disturbance))),
-  # 
-  # ##### Examine colinearity #####
-  # # We're going to randomly sample 10k points from each season
-  # # so the plots don't take forever. 
-  # # As expected, colinear vars don't change by season - 
-  # # these are colinear across the entire study period.
-  # # CORRELATED VARS:
-  # # disturbance_year and proj_age_1
-  # # disturbance_year and proj_height_1
-  # # proj_height_1 and proj_age_1
-  # # crown_closure and proj_height_1
-  # # slope_prct and elevation_m (borderline)
-  # # vri_live_stems_per_ha and proj_height_1
-  # # vri_live_stems_per_ha and proj_age_1
-  # # vri_live_stems_per_ha and disturbance_year
-  # # shrub_crown_closure and crown_closure
-  # # TODO: these don't actually save as targets. Ah well. 
-  # # https://github.com/wlandau/targets-tutorial/discussions/16
-  # # ## Severe Winter Period ##
-  # # tar_target(swp_corrplot, swp_mod_dat |>
-  # #              dplyr::slice_sample(n = 10000) |>
-  # #              dplyr::select(elevation_m:edge_dist_m) |>
-  # #              dplyr::select(dplyr::where(is.numeric)) |>
-  # #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
-  # # # For spp: chisq.test(swp_mod_dat$species_cd_1, swp_mod_dat$species_cd_2)
-  # # ## Winter ##
-  # # tar_target(winter_corrplot, winter_mod_dat |>
-  # #              dplyr::slice_sample(n = 10000) |>
-  # #              dplyr::select(elevation_m:edge_dist_m) |>
-  # #              dplyr::select(dplyr::where(is.numeric)) |> 
-  # #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
-  # # # For spp: chisq.test(winter_mod_dat$species_cd_1, winter_mod_dat$species_cd_2)
-  # # ## Spring ##
-  # # tar_target(spring_corrplot, spring_mod_dat |>
-  # #              dplyr::slice_sample(n = 10000) |>
-  # #              dplyr::select(elevation_m:edge_dist_m) |>
-  # #              dplyr::select(dplyr::where(is.numeric)) |> 
-  # #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
-  # # # For spp: chisq.test(spring_mod_dat$species_cd_1, spring_mod_dat$species_cd_2)
-  # # ## Summer ##
-  # # tar_target(summer_corrplot, summer_mod_dat |>
-  # #              dplyr::slice_sample(n = 10000) |>
-  # #              dplyr::select(elevation_m:edge_dist_m) |>
-  # #              dplyr::select(dplyr::where(is.numeric)) |> 
-  # #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
-  # # # For spp: chisq.test(summer_mod_dat$species_cd_1, summer_mod_dat$species_cd_2)
+  # tar_target(summer_corrplot, summer_mod_dat |>
+  #              dplyr::slice_sample(n = 10000) |>
+  #              dplyr::select(elevation_m:edge_dist_m) |>
+  #              dplyr::select(dplyr::where(is.numeric)) |>
+  #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
+  # # For spp: chisq.test(summer_mod_dat$species_cd_1, summer_mod_dat$species_cd_2)
   # 
   # # >> RSF MODELS ####
   # # We will have two model sets: causal model sets, exploring
