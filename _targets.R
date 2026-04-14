@@ -809,22 +809,17 @@ list(
                sf::st_intersection(study_area) |>
                sf::st_write("temp/Pipeline outputs/MCP_RSF_SWP.shp",
                             append = FALSE)
-  )
-  # ##### Generate Random Pts #####
-  # # Sample random points within each of our availability MCPs to use in RSFs
-  # tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk) * 10) |>
-  #              sf::st_as_sf() |>
-  #              dplyr::mutate(idposition = dplyr::row_number())),
-  # tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk) * 10) |>
-  #              sf::st_as_sf() |>
-  #              dplyr::mutate(idposition = dplyr::row_number())),
-  # tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk) * 10) |>
-  #              sf::st_as_sf() |>
-  #              dplyr::mutate(idposition = dplyr::row_number())),
-  # tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |>
-  #              sf::st_as_sf() |>
-  #              dplyr::mutate(idposition = dplyr::row_number())),
-  # 
+  ),
+  ##### Generate Random Pts #####
+  # Sample random points within each of our availability MCPs to use in RSFs
+  tar_target(random_winter, st_rsf_sample(presence_pts = elk[which(elk$season == "Winter"), ],
+                                          availability_shp = winter_rsf_mcp)),
+  tar_target(random_spring, st_rsf_sample(presence_pts = elk[which(elk$season == "Spring"), ],
+                                          availability_shp = winter_rsf_mcp)),
+  tar_target(random_summer, st_rsf_sample(presence_pts = elk[which(elk$season == "Summer"), ],
+                                          availability_shp = winter_rsf_mcp)),
+  tar_target(random_swp, st_rsf_sample(presence_pts = elk[lubridate::date(elk$dttm) %in% swp_dates, ],
+                                          availability_shp = winter_rsf_mcp)),
   # #### ELK DATA EXTRACTION ####
   # ##### DEM attributes #####
   # # Extract elevation, slope grade (%), slope aspect (degrees), and

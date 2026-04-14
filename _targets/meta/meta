@@ -49,10 +49,6 @@ forest_age|stem|ab0de14c8c2c4626|543fe8d555bc92ae|2b2945c9116d3ce7|2025303678||t
 results|stem|dfa8a039f12be650|e595e8357626d714|d90062bdbdb28af3|-322906963||t20530.7515329615s|s35710620b|35710620|rds|local|vector|||98.85||
 mcp_seasonal_summary|stem|fa004401d1d2e96a|41c36d11592ebd28|e43eefed9dd9ddf1|-939293508||t20530.7521509035s|s670b|670|rds|local|vector|||0.05||
 disturbance|stem|d9be4f6f0938774b|40c6ab23950c055b|cec82fe7e6d9a1e4|-428419592||t20530.753330134s|s26018879b|26018879|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||65.39|Polygons transformed to raster CRS. To avoid on-the-fly coordinate transformation, ensure that st_crs() returns the same result for both raster and polygon inputs.|
-random_winter|stem|e3cd2718339c0ad2|8ecd3941ee269be8|d939ce200d7b3215|2030135424||t20530.7568976921s|s93937708b|93937708|rds|local|vector|||289.72||
-random_summer|stem|14782b088b368c77|78167169fc2ccbfb|9869368c16f86247|-1628418462||t20530.7596574284s|s93975404b|93975404|rds|local|vector|||215.37||
-random_swp|stem|3bdd6410d800eb6a|5aaedbf618cc3975|331471ccc7e22ed8|-1905150981||t20530.7599703502s|s9366128b|9366128|rds|local|vector|||22.84||
-random_spring|stem|3f9ebdce4222ed82|8d399dc868b69f36|8e9fb05b984e0bf4|1803844473||t20530.7625840853s|s93885565b|93885565|rds|local|vector|||213.78||
 random_winter_dem|stem|7cf177f9d1548d51|015c997ac65bf8a7|f07259c2586f336e|124403925||t20530.7723973255s|s54248947b|54248947|rds|local|vector|||524.42||
 random_winter_uwr|stem|bccb4e813da10246|4da4378e39ed9355|cb40d0e0386bba5b|-1997755743||t20530.7845773967s|s28616092b|28616092|rds|local|vector|||1032.2||
 random_winter_chm|stem|32aced7c987fd055|94219e5c68ec1ec1|aa940e3b614c7bda|-321507621||t20530.7871719669s|s4966799b|4966799|rds|local|vector|||207.34||
@@ -178,6 +174,8 @@ aggregate_overlap_summary|stem|1e787fce5d2a7572|a2f3f3654fce4af5|f49dfce4ef5ba4d
 winter_rsf_mcp|stem|fdbbbac67da76e8a|82b2b06327b66f19|dc398dcf58e69bb3|-994354900||t20557.8697296971s|s265585b|265585|rds|local|vector|||14.88|attribute variables are assumed to be spatially constant throughout all geometries. GDAL Error 4: Unable to open temp/Pipeline outputs/MCP_RSF_Winter.shx or temp/Pipeline outputs/MCP_RSF_Winter.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4: Unable to open temp/Pipeline outputs/MCP_RSF_Winter.shx or temp/Pipeline outputs/MCP_RSF_Winter.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.|
 summer_rsf_mcp|stem|789cb90f18acd7e6|9501cbb12a16197f|a13dc4007e65d4b5|-987843483||t20557.870888332s|s215035b|215035|rds|local|vector|||21.75|attribute variables are assumed to be spatially constant throughout all geometries|
 spring_rsf_mcp|stem|8ace39a8b34fac35|4a37af159dd0d9db|bebd96cdfc0917de|436210894||t20557.871097025s|s229643b|229643|rds|local|vector|||15.52|attribute variables are assumed to be spatially constant throughout all geometries|
+swp_rsf_mcp|stem|983862a5585c7902|3b99edf982ddb6c0|563ac1e2d0e49913|1485982528||t20557.8811189961s|s116691b|116691|rds|local|vector|||6.95|attribute variables are assumed to be spatially constant throughout all geometries|
+random_winter|stem|761908d5e93d7c33|1246d44dcd559a5d|c0ec7e2098f4c941|2030135424||t20557.9415631785s|s25670004b|25670004|rds|local|vector|||58.43||
 dBBMM_weekly_ud|object|29e816842fabc47d
 prct_overlap|function|5b70fe85cb4cce78
 weekly_binning|function|957cca10ca8bb5f0
@@ -194,7 +192,7 @@ merge_dfs|function|51e7110d062d93ef
 n_dets_per_elk|function|08bd3cc58671e6df
 elk_dets_hist|function|a496a21bbf49b8dc
 extract_aspect|function|c1824b5878c68dec
-.Random.seed|object|54c5c77d27859daa
+.Random.seed|object|5a20a8b4d13e77c3
 MCP_pctl|object|f43fe2c999030d30
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -220,6 +218,7 @@ weekly_margin|object|1383ef88fd9bbb0e
 spring|object|6398ef5e90b44e6d
 scale.simple|function|79ed33566a6063db
 summarize_area|function|f2dffbde683174e4
+st_rsf_sample|function|22928f9cda9392c2
 swp_days|object|a66a035b5e000a9e
 elk_per_year_month_plot|function|bcfd85732921d5e0
 nt|object|d516855f98da7f3d
@@ -240,8 +239,8 @@ step_length|function|97a0717a017cb942
 summarize_overlap|function|5861f38aad2d8fc7
 download_from_server|function|59f25d37f0fbd513
 calc_disturbance_lyr|function|bc1b5cbfba22eb89
-szn_window|object|4c06678fced12882
 assign_daily_seasons|function|738918b74e6a16fe
+szn_window|object|4c06678fced12882
 yearly_prct_overlap|function|6d8800d84d72e357
 individual_mcp|function|390e0ed3e3283042
 clean_collar_data|function|e2c296d1cf8e1e23
@@ -254,4 +253,6 @@ weekly_dbbmm|function|6c7de243de43fbbe
 seasonal_mcp|function|44e6e62e9bb4961a
 daily_mcp|function|b6550459ae91769e
 weekly_mcp|function|df86e293d7054eac
-swp_rsf_mcp|stem|983862a5585c7902|3b99edf982ddb6c0|563ac1e2d0e49913|1485982528||t20557.8811189961s|s116691b|116691|rds|local|vector|||6.95|attribute variables are assumed to be spatially constant throughout all geometries|
+random_summer|stem|c4d9004261610d45|04ddf7e89ca5ece8|c0ec7e2098f4c941|-1628418462||t20557.9452662868s|s17062836b|17062836|rds|local|vector|||31.33||
+random_spring|stem|8493baf7f421a436|466b99dd1f1182cd|c0ec7e2098f4c941|1803844473||t20557.9456509073s|s14350579b|14350579|rds|local|vector|||27.46||
+random_swp|stem|1d04ce07f5129296|8edaa87cc855bb2d|efe36f9e6bd3fbfb|-1905150981||t20557.9457545899s|s1428801b|1428801|rds|local|vector|||5.86||

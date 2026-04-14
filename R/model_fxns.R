@@ -16,6 +16,38 @@
 # etc.; functions to prepare prediction dataframes and actually
 # predict outputs. 
 
+
+# Sample random points by animal_id
+st_rsf_sample <- function(presence_pts, 
+                          availability_shp,
+                          pseudoabsence_ratio = 10,
+                          id_col = "animal_id") {
+  # Calculate N pts per ID
+  n_pts_per_id <- plyr::count(presence_pts[[id_col]])
+  
+  # For each animal_id, pull out the availability
+  # polygon and sample random points from within it.
+  sample <- lapply(n_pts_per_id$x, function(x) {
+    # Pull out animal_id shp
+    shp <- availability_shp[which(availability_shp[[id_col]] == x), ]
+    # Pull out N pts for that animal_id
+    N <- n_pts_per_id[["freq"]][n_pts_per_id$x == x]
+    # Sample pts
+    pts <- sf::st_sample(shp, size = N * pseudoabsence_ratio) |> sf::st_as_sf()
+    pts$animal_id <- x
+    return(pts)
+  })
+  
+  sample <- dplyr::bind_rows(sample)
+  sf::st_geometry(sample) <- "geometry"
+  
+  # Add row number, which will be used to more easily 
+  # merge attribute data down the line.
+  sample$idposition <- as.numeric(row.names(sample))
+  
+  return(sample)
+}
+
 # PREPARE DATA FOR MODELING FXNS
 # Notes:
 # This fxn was written to be super generalizable to other potential
