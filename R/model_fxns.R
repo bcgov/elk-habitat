@@ -67,8 +67,7 @@ prepare_mod_dat <- function(presence_pts, # Main presence df data points
                             pseudoabsence_merge_col = "idposition", # Column to use for merging pseudoabsence pts and any supplemental dfs
                             id_col = "animal_id", # column to group by/indicator for individual samples
                             min_pts = 100, # minimum sample size of points per `group` that is permitted to keep for modeling
-                            pseudoabsence_weight = 5000, # weights value to generate for presences in the 'weights' column
-                            pseudoabsence_ratio = 10 # ratio of pseudoabsence pts to presence pts. Defaults to 10:1
+                            pseudoabsence_weight = 5000 # weights value to generate for presences in the 'weights' column
                             ) {
   # Convert *_dat obj to lists, if not already (i.e. if only one df supplied)
   if (!(inherits(presence_dat, "list"))) presence_dat <- list(presence_dat)
@@ -123,13 +122,6 @@ prepare_mod_dat <- function(presence_pts, # Main presence df data points
   pseudoabs$presence <- 0
   # Assign weight
   pseudoabs$w <- pseudoabsence_weight
-  # Subsample pseudoabsences down to the supplied presence:absence ratio
-  pseudoabs <- pseudoabs[sample(nrow(pseudoabs), nrow(presences) * pseudoabsence_ratio, replace = FALSE), ]
-  # Assign animal_id to random pts
-  # For each real presence point (1) in our dataset, we will have a
-  # corresponding N `pseudoabsence_ratio` available/unused (0) points in our dataset.
-  pseudoabs[[id_col]] <- NA
-  pseudoabs[[id_col]] <- rep(presences[[id_col]], pseudoabsence_ratio) # just repeat the animal_id list 10 times
   
   ## Merge the two ##
   dat <- dplyr::bind_rows(presences, pseudoabs)
