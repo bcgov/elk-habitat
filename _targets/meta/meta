@@ -23,7 +23,6 @@ weekly_mcps|stem|8918fce2bf209258|5729369fdfbc5e26|c3ada0561255086b|-1315591038|
 dets_per_elk|stem|61bbf354f9c308d6|cffc3ee6ced78c00|c77670bba94dd212|-360331643||t20530.0759140182s|s177b|177|rds|local|vector|||0.17||
 p_dets_per_elk|stem|73f1060946e4ae54|ef744c8c91fd6ab6|e66245d27b5f31b1|784997253||t20530.0761438479s|s39054589b|39054589|rds|local|vector|||0.58||
 spring_mcp|stem|1bfb213d777f5d87|b8b92ce6deeb7d5b|13c130337f6cf347|2029814444||t20530.0792554086s|s46902b|46902|rds|local|vector|||67.17||
-detection_efficiency|stem|45617f771f53cc09|8d8488432aca6501|44e9326aea6aee83|947972721||t20530.0793400822s|s2769b|2769|rds|local|vector|||2.97||
 winter_mcp|stem|86826c7d9e74b197|7bcad1dd10552d50|9bb65e14bd866f74|844460800||t20530.080020026s|s34087b|34087|rds|local|vector|||54.92||
 elk_dotplot|stem|4be5d4eb5461e707|94d5abc6f5fa7398|52975936333d6e18|-2021513789||t20530.0807840563s|s155157794b|155157794|rds|local|vector|||0.16||
 elk_per_year_month|stem|45b7caf237b57fdd|7f857d14421b1f2e|cee609a71fa075c2|692555464||t20530.0808324491s|s619b|619|rds|local|vector|||0.46||
@@ -41,7 +40,6 @@ step_length_swp_summary|stem|e401a372e0ab2b9b|618e1dc9b0d080dd|713511e5aa6ea547|
 nsd_seasonal_summary|stem|ff22886ec771b269|3ebf9ffb9236a065|713511e5aa6ea547|718091351||t20530.0836320578s|s541b|541|rds|local|vector|||0.16||
 weekly_mcp_seasonal_summary|stem|fbf4f7aee3f79f24|c1b8781b3abb3eec|cd5780250f22da03|-1911070737||t20530.083635505s|s753b|753|rds|local|vector|||0.11||
 weekly_mcp_swp_summary|stem|07f60bbaddbe2a12|21c78168eb8e0959|892299c3e045f9e7|-1290166597||t20530.0836401909s|s989b|989|rds|local|vector|||0.22||
-p_efficiency|stem|65e7089ba80114bf|dc663c41ca62b40a|0f57410a9bc2c2a1|-1905756578||t20530.0836490373s|s367047b|367047|rds|local|vector|||0.15||
 all_seasons_mcp|stem|7053ad0abc87e7a3|49512c53edbb9f8e|90946abcb563d58d|37521217||t20530.0836520178s|s123483b|123483|rds|local|vector|||0.08||
 vri|stem|0fb8e7cac1bfaef4|b244d74f11a53b66|d90062bdbdb28af3|-1341468610||t20530.1101978306s|s41060264b|41060264|rds|local|vector|||254.04||
 capture_data|stem|ff0b6d7550758ebf|e14ef5cd5be2470c|eb9661605065fb1d|1127347996||t20530.1297812398s|s12527b|12527|rds|local|vector|||0.77||
@@ -171,6 +169,16 @@ rsfE_spring|stem|d37d2e5bb3911029|fc660e19c2771710|c3c3fe241520aeb2|-317362229||
 rsfF_spring|stem|cc8404e3ce65a469|74872aea10ad1f44|c3c3fe241520aeb2|-1600400309||t20558.7536552265s|s101532153b|101532153|rds|local|vector|||3609.67||
 rsfG_spring|stem|0a55c17e685bb8ae|7f6c7124780de8a8|c3c3fe241520aeb2|1882275701||t20558.755323605s|s42736472b|42736472|rds|local|vector|||112.99||
 rsfH_spring|stem|8884321bfb045607|b8faa3c3952328f8|c3c3fe241520aeb2|1529966298||t20558.757810943s|s44359498b|44359498|rds|local|vector|||184.73||
+rsfB_summer|stem|f6b5d19063c6814f|bc796add1322ca59|0fd31522a2ef7cd1|-744016402||t20558.8318410087s|s108600053b|108600053|rds|local|vector|||3492.61||
+rsfC_summer|stem|de9fc90669aac20f|2d6209bb90e6aff9|0fd31522a2ef7cd1|1929851364||t20558.874722361s|s118513713b|118513713|rds|local|vector|||3657.07||
+rsfD_summer|stem|3cb3d1bf6ab8b8cb|edcffc39854d0ca0|0fd31522a2ef7cd1|1277217432||t20558.9214379293s|s120397073b|120397073|rds|local|vector|||3959.84||
+rsfE_summer|stem|4fc51719b8fc3858|159aafe004925b42|0fd31522a2ef7cd1|-1103595484||t20558.9907819063s|s116436959b|116436959|rds|local|vector|||5961.09||
+rsfA_summer|stem|43dc01dc6b2acaa1|82750c3586017a2b|0fd31522a2ef7cd1|-1024417638||t20559.0002059945s|s96808324b|96808324|rds|local|vector|||791.89||
+rsfF_summer|stem|ae9fc456d7821114|dfafe5a6b2da806b|0fd31522a2ef7cd1|-1589617330||t20559.0257420921s|s119946113b|119946113|rds|local|vector|||2180.27||
+rsfG_summer|stem|91f555de39e49222|f29b6fd8a2213ab3|0fd31522a2ef7cd1|-687143564||t20559.0265352545s|s50568784b|50568784|rds|local|vector|||51.59||
+rsfH_summer|stem|1247d9c3a5cd4332|8b4a0518130058d2|0fd31522a2ef7cd1|1103556588||t20559.0275032525s|s52443523b|52443523|rds|local|vector|||66.56||
+detection_efficiency|stem|0e7ce74a8c1e0764|ba0bbd0c539a3a38|b53e1810da5f33ab|947972721||t20565.8477554808s|s2775b|2775|rds|local|vector|||1.28||
+p_efficiency|stem|9fd9c8355b61b20e|dc663c41ca62b40a|06e5566b97060f83|-1905756578||t20565.8477603126s|s367058b|367058|rds|local|vector|||0.05||
 dBBMM_weekly_ud|object|29e816842fabc47d
 prct_overlap|function|5b70fe85cb4cce78
 weekly_binning|function|957cca10ca8bb5f0
@@ -187,7 +195,7 @@ merge_dfs|function|51e7110d062d93ef
 n_dets_per_elk|function|08bd3cc58671e6df
 elk_dets_hist|function|a496a21bbf49b8dc
 extract_aspect|function|c1824b5878c68dec
-.Random.seed|object|0d9b93a68b5fe397
+.Random.seed|object|911e16cac3299bbc
 MCP_pctl|object|f43fe2c999030d30
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -198,6 +206,7 @@ swp_dates|object|07f7b91bb0dcd613
 ferrarini_goi|function|a44344d174e2a91f
 summer|object|292209e1f8fbf494
 extract_roughness|function|2f400d5f99e57c24
+collar_days_hist|function|af48a0f911a32c13
 centroid_step|function|a458a84083a6b6a1
 elk_per_month_plot|function|20740411dc9e6e24
 fix_rate|function|2197936bd65279fe
@@ -248,11 +257,4 @@ weekly_dbbmm|function|6c7de243de43fbbe
 seasonal_mcp|function|44e6e62e9bb4961a
 daily_mcp|function|b6550459ae91769e
 weekly_mcp|function|df86e293d7054eac
-rsfB_summer|stem|f6b5d19063c6814f|bc796add1322ca59|0fd31522a2ef7cd1|-744016402||t20558.8318410087s|s108600053b|108600053|rds|local|vector|||3492.61||
-rsfC_summer|stem|de9fc90669aac20f|2d6209bb90e6aff9|0fd31522a2ef7cd1|1929851364||t20558.874722361s|s118513713b|118513713|rds|local|vector|||3657.07||
-rsfD_summer|stem|3cb3d1bf6ab8b8cb|edcffc39854d0ca0|0fd31522a2ef7cd1|1277217432||t20558.9214379293s|s120397073b|120397073|rds|local|vector|||3959.84||
-rsfE_summer|stem|4fc51719b8fc3858|159aafe004925b42|0fd31522a2ef7cd1|-1103595484||t20558.9907819063s|s116436959b|116436959|rds|local|vector|||5961.09||
-rsfA_summer|stem|43dc01dc6b2acaa1|82750c3586017a2b|0fd31522a2ef7cd1|-1024417638||t20559.0002059945s|s96808324b|96808324|rds|local|vector|||791.89||
-rsfF_summer|stem|ae9fc456d7821114|dfafe5a6b2da806b|0fd31522a2ef7cd1|-1589617330||t20559.0257420921s|s119946113b|119946113|rds|local|vector|||2180.27||
-rsfG_summer|stem|91f555de39e49222|f29b6fd8a2213ab3|0fd31522a2ef7cd1|-687143564||t20559.0265352545s|s50568784b|50568784|rds|local|vector|||51.59||
-rsfH_summer|stem|1247d9c3a5cd4332|8b4a0518130058d2|0fd31522a2ef7cd1|1103556588||t20559.0275032525s|s52443523b|52443523|rds|local|vector|||66.56||
+p_duration_per_collar|stem|ce7390161c5afdb3|371e23cd142b628d|4579ec1bda508dd9|1105797506||t20565.8700343163s|s39130061b|39130061|rds|local|vector|||0.65||

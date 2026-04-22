@@ -209,12 +209,13 @@ list(
   tar_target(dets_per_elk, n_dets_per_elk(elk)),
   tar_target(p_dets_per_elk, elk_dets_hist(elk)),
   # Fix success / detection efficiency
-  tar_target(detection_efficiency, fix_rate(elk)),
+  tar_target(detection_efficiency, fix_rate(cleaned_collar_data)), # determine fix rate success using the full dataset, prior to thinning. 
   tar_target(p_efficiency, elk_fix_hist(detection_efficiency)),
   tar_render(daily_dets_plots,
              "reports/elk_dets_per_day.Rmd",
              output_file = "elk_dets_per_day.pdf",
              params = list(elk_data = elk)),
+  tar_target(p_duration_per_collar, collar_days_hist(elk)),
   # Net squared displacement
   tar_render(nsd_plots,
              "reports/elk_nsd.Rmd",

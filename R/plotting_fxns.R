@@ -85,6 +85,31 @@ elk_per_month_plot <- function(elk) {
   return(p)
 }
 
+collar_days_hist <- function(elk) {
+  p <- elk |>
+    sf::st_drop_geometry() |>
+    dplyr::mutate(date = lubridate::date(dttm)) |>
+    dplyr::select(animal_id, collar_id, date) |>
+    dplyr::distinct() |>
+    dplyr::group_by(animal_id, collar_id) |>
+    dplyr::summarise(N_days = dplyr::n()) |>
+    ggplot2::ggplot(ggplot2::aes(x = N_days)) +
+    ggplot2::geom_vline(xintercept = seq(360, 1820, 360),
+                        color = "grey15",
+                        alpha = 0.7) +
+    ggplot2::geom_histogram(bins = 30,
+                            color = "white") +
+    ggplot2::labs(x = "Total days monitored",
+                  y = "N collars") +
+    ggplot2::scale_x_continuous(breaks = seq(0, 1820, 90)) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.05))) +
+    ggplot2::theme_light() +
+    ggplot2::theme(panel.border = ggplot2::element_blank(),
+                   panel.grid.minor.x = ggplot2::element_blank(), 
+                   panel.grid.minor.y = ggplot2::element_blank())
+  return(p)
+}
+
 elk_dets_hist <- function(elk) {
   p <- elk |>
     sf::st_drop_geometry() |>
