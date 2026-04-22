@@ -416,7 +416,8 @@ list(
                                               out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
                                               return(out)
                                             }) |>
-               dplyr::bind_rows()),
+               dplyr::bind_rows() |>
+               dplyr::mutate(season = "Winter")),
   tar_target(dbbmm_winter_agg_overlap, lapply(unique(winter_dbbmm$animal_id),
                                               function(x){
                                                 shp <- winter_dbbmm[winter_dbbmm$animal_id == x, ]
@@ -428,7 +429,8 @@ list(
                                                 out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
                                                 return(out)
                                               }) |>
-               dplyr::bind_rows()),
+               dplyr::bind_rows() |>
+               dplyr::mutate(season = "Winter")),
   ## SPRING ##
   tar_target(mcp_spring_agg_overlap, lapply(unique(spring_mcp$animal_id),
                                             function(x){
@@ -441,7 +443,8 @@ list(
                                               out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
                                               return(out)
                                             }) |>
-               dplyr::bind_rows()),
+               dplyr::bind_rows() |>
+               dplyr::mutate(season = "Spring")),
   tar_target(dbbmm_spring_agg_overlap, lapply(unique(spring_dbbmm$animal_id),
                                               function(x){
                                                 shp <- spring_dbbmm[spring_dbbmm$animal_id == x, ]
@@ -453,7 +456,8 @@ list(
                                                 out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
                                                 return(out)
                                               }) |>
-               dplyr::bind_rows()),
+               dplyr::bind_rows() |>
+               dplyr::mutate(season = "Spring")),
   ## SUMMER ##
   tar_target(mcp_summer_agg_overlap, lapply(unique(summer_mcp$animal_id),
                                             function(x){
@@ -466,7 +470,8 @@ list(
                                               out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
                                               return(out)
                                             }) |>
-               dplyr::bind_rows()),
+               dplyr::bind_rows() |>
+               dplyr::mutate(season = "Summer")),
   tar_target(dbbmm_summer_agg_overlap, lapply(unique(summer_dbbmm$animal_id),
                                               function(x){
                                                 shp <- summer_dbbmm[summer_dbbmm$animal_id == x, ]
@@ -478,7 +483,29 @@ list(
                                                 out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
                                                 return(out)
                                               }) |>
-               dplyr::bind_rows()),
+               dplyr::bind_rows() |>
+               dplyr::mutate(season = "Summer")),
+  ###### All years summarized ######
+  tar_target(aggregate_overlap_summary, dplyr::bind_rows(mcp_winter_agg_overlap, 
+                                                         mcp_spring_agg_overlap,
+                                                         mcp_summer_agg_overlap,
+                                                         dbbmm_winter_agg_overlap,
+                                                         dbbmm_spring_agg_overlap,
+                                                         dbbmm_summer_agg_overlap) |>
+               dplyr::mutate(season = factor(season, levels = c("Winter", "Spring", "Summer"))) |>
+               dplyr::filter(!is.na(ferrarini_goi)) |>
+               dplyr::group_by(method, season) |>
+               dplyr::summarise(n_elk = dplyr::n(),
+                                n_seasons = sum(N),
+                                n_zero_overlap = sum((ferrarini_goi == 0)),
+                                min = min(ferrarini_goi),
+                                q25 = quantile(ferrarini_goi, 0.25),
+                                median = median(ferrarini_goi),
+                                q75 = quantile(ferrarini_goi, 0.75),
+                                max = max(ferrarini_goi)) |>
+               tidyr::pivot_wider(names_from = method,
+                                  values_from = c(min:max)) |>
+               dplyr::select(season, n_elk, n_zero_overlap, n_seasons, dplyr::ends_with("MCP"), dplyr::ends_with("dBBMM"))),
   ##### Cumulative home range #####
   tar_target(cumulative_winter_mcp, cumulative_shp(winter_mcp)),
   tar_target(cumulative_spring_mcp, cumulative_shp(spring_mcp)),
@@ -721,7 +748,8 @@ list(
                                           season = winter,
                                           min_days = 0, # we want to include the full dataset, regardless of minimum N points
                                           percent = 100) |> # 100% MCP - include all points
-               sf::st_union() |>
+               dplyr::group_by(animal_id) |>
+               dplyr::summarise() |>
                sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points. In theory, an elk could move half it's step length out, and then half it's step length back in within the 3 hour gap btwn fixes.
                sf::st_intersection(study_area) |>
                sf::st_write("temp/Pipeline outputs/MCP_RSF_Winter.shp",
@@ -731,7 +759,8 @@ list(
                                           season = spring,
                                           min_days = 0, # we want to include the full dataset, regardless of minimum N points
                                           percent = 100) |> # 100% MCP - include all points
-               sf::st_union() |>
+               dplyr::group_by(animal_id) |>
+               dplyr::summarise() |>
                sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
                sf::st_intersection(study_area) |>
                sf::st_write("temp/Pipeline outputs/MCP_RSF_Spring.shp",
@@ -741,7 +770,8 @@ list(
                                           season = summer,
                                           min_days = 0, # we want to include the full dataset, regardless of minimum N points
                                           percent = 100) |> # 100% MCP - include all points
-               sf::st_union() |>
+               dplyr::group_by(animal_id) |>
+               dplyr::summarise() |>
                sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
                sf::st_intersection(study_area) |>
                sf::st_write("temp/Pipeline outputs/MCP_RSF_Summer.shp",
@@ -773,7 +803,8 @@ list(
                                   dplyr::filter((animal_id == '20-1000' & isoyear_week == '2021.51')|
                                                   (animal_id == '20-0982' & isoyear_week == '2021.52'))
                ) |>
-               sf::st_union() |>
+               dplyr::group_by(animal_id) |>
+               dplyr::summarise() |>
                sf::st_buffer(dist = step_length_buffer / 2) |> # buffer outermost points
                sf::st_intersection(study_area) |>
                sf::st_write("temp/Pipeline outputs/MCP_RSF_SWP.shp",
@@ -781,19 +812,14 @@ list(
   ),
   ##### Generate Random Pts #####
   # Sample random points within each of our availability MCPs to use in RSFs
-  tar_target(random_winter, sf::st_sample(winter_rsf_mcp, size = nrow(elk) * 10) |>
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_spring, sf::st_sample(spring_rsf_mcp, size = nrow(elk) * 10) |>
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_summer, sf::st_sample(summer_rsf_mcp, size = nrow(elk) * 10) |>
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-  tar_target(random_swp, sf::st_sample(swp_rsf_mcp, size = nrow(elk)) |>
-               sf::st_as_sf() |>
-               dplyr::mutate(idposition = dplyr::row_number())),
-
+  tar_target(random_winter, st_rsf_sample(presence_pts = elk[which(elk$season == "Winter"), ],
+                                          availability_shp = winter_rsf_mcp)),
+  tar_target(random_spring, st_rsf_sample(presence_pts = elk[which(elk$season == "Spring"), ],
+                                          availability_shp = winter_rsf_mcp)),
+  tar_target(random_summer, st_rsf_sample(presence_pts = elk[which(elk$season == "Summer"), ],
+                                          availability_shp = winter_rsf_mcp)),
+  tar_target(random_swp, st_rsf_sample(presence_pts = elk[lubridate::date(elk$dttm) %in% swp_dates, ],
+                                          availability_shp = winter_rsf_mcp)),
   #### ELK DATA EXTRACTION ####
   ##### DEM attributes #####
   # Extract elevation, slope grade (%), slope aspect (degrees), and
@@ -898,15 +924,15 @@ list(
                                                          disturbance = disturbance,
                                                          stand_edge = stand_edge,
                                                          edge_dist = edge_dist)),
-  
+
   #### PREPARE MODEL DAT ####
-  # Finally, merge the various layers together into single 
+  # Finally, merge the various layers together into single
   # dataframes, containing both presences and random pseudoabsences,
-  # that can be fed directly into the models down 
+  # that can be fed directly into the models down
   # the road.
   # For now I'm not filtering to complete cases here bc I want to use the same base
   # dataset for either VRI or non-VRI models, which will have vastly
-  # different sample sizes. 
+  # different sample sizes.
   # Default parameters:
   #   - Minimum sample size of at least 100 detections per animal_id to make it into the model
   #   - 10 pseudoabsences for every presence point
@@ -914,7 +940,7 @@ list(
   #   - For tree species factors, there must be at least 1k data point per spp, otherwise the spp is lumped as "Other"
   ##### Seasonal Mod Dat #####
   ## Severe Winter Period ##
-  tar_target(swp_mod_dat, prepare_mod_dat(presence_pts = elk |> 
+  tar_target(swp_mod_dat, prepare_mod_dat(presence_pts = elk |>
                                             dplyr::filter(lubridate::date(dttm) %in% swp_dates,
                                                           !(animal_id %in% non_swp_elk)),
                                           presence_dat = list(elk_dem,
@@ -951,11 +977,11 @@ list(
                                              pseudoabsence_dat = list(random_summer_dem,
                                                                       random_summer_vri,
                                                                       random_summer_disturbance))),
-  
+
   ##### Examine colinearity #####
   # We're going to randomly sample 10k points from each season
-  # so the plots don't take forever. 
-  # As expected, colinear vars don't change by season - 
+  # so the plots don't take forever.
+  # As expected, colinear vars don't change by season -
   # these are colinear across the entire study period.
   # CORRELATED VARS:
   # disturbance_year and proj_age_1
@@ -967,7 +993,7 @@ list(
   # vri_live_stems_per_ha and proj_age_1
   # vri_live_stems_per_ha and disturbance_year
   # shrub_crown_closure and crown_closure
-  # TODO: these don't actually save as targets. Ah well. 
+  # TODO: these don't actually save as targets. Ah well.
   # https://github.com/wlandau/targets-tutorial/discussions/16
   # ## Severe Winter Period ##
   # tar_target(swp_corrplot, swp_mod_dat |>
@@ -980,63 +1006,63 @@ list(
   # tar_target(winter_corrplot, winter_mod_dat |>
   #              dplyr::slice_sample(n = 10000) |>
   #              dplyr::select(elevation_m:edge_dist_m) |>
-  #              dplyr::select(dplyr::where(is.numeric)) |> 
+  #              dplyr::select(dplyr::where(is.numeric)) |>
   #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
   # # For spp: chisq.test(winter_mod_dat$species_cd_1, winter_mod_dat$species_cd_2)
   # ## Spring ##
   # tar_target(spring_corrplot, spring_mod_dat |>
   #              dplyr::slice_sample(n = 10000) |>
   #              dplyr::select(elevation_m:edge_dist_m) |>
-  #              dplyr::select(dplyr::where(is.numeric)) |> 
+  #              dplyr::select(dplyr::where(is.numeric)) |>
   #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
   # # For spp: chisq.test(spring_mod_dat$species_cd_1, spring_mod_dat$species_cd_2)
   # ## Summer ##
   # tar_target(summer_corrplot, summer_mod_dat |>
   #              dplyr::slice_sample(n = 10000) |>
   #              dplyr::select(elevation_m:edge_dist_m) |>
-  #              dplyr::select(dplyr::where(is.numeric)) |> 
+  #              dplyr::select(dplyr::where(is.numeric)) |>
   #              PerformanceAnalytics::chart.Correlation(method = "spearman")),
   # # For spp: chisq.test(summer_mod_dat$species_cd_1, summer_mod_dat$species_cd_2)
-  
+
   # >> RSF MODELS ####
   # We will have two model sets: causal model sets, exploring
   # the contribution of each model variable to presence/absence,
   # and predictive model sets, which cannot be used for causal
-  # inference but have higher predictive power. 
+  # inference but have higher predictive power.
   # See Arif & MacNeil (2022) "Predictive models aren't for causal inference"
   # for a good primer on the difference btwn the two methods.
-  
+
   ##### Inferential modelling #####
   # Pruned models, for helping *interpret drivers behind selection*
   ###### SWP ######
   # DEM only
   tar_target(rsfA_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
-               glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct 
-                                    + sin(slope_aspect) + cos(slope_aspect) 
+               glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
+                                    + sin(slope_aspect) + cos(slope_aspect)
                                     + (1|animal_id) # random intercept
                                     # followed by random slopes of all predictor vars
-                                    + (0+elevation_m|animal_id) 
+                                    + (0+elevation_m|animal_id)
                                     + (0+slope_prct|animal_id)
                                     + (0+sin(slope_aspect)|animal_id)
-                                    + (0+cos(slope_aspect)|animal_id), 
+                                    + (0+cos(slope_aspect)|animal_id),
                                     data = _, # base R version of `.` with `%>%`
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
   # DEM + edge distance
   tar_target(rsfB_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
@@ -1055,11 +1081,11 @@ list(
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
   # All DEM vars, + age + edge_dist
   tar_target(rsfC_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
@@ -1079,11 +1105,11 @@ list(
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
   # All DEM vars, + height + edge_dist
   tar_target(rsfD_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
@@ -1103,11 +1129,11 @@ list(
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
   # All DEM vars, + crown closure + edge_dist
   tar_target(rsfE_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
@@ -1121,17 +1147,17 @@ list(
                                     + (0+cos(slope_aspect)|animal_id)
                                     + (0+crown_closure|animal_id)
                                     + (0+edge_dist_m|animal_id),
-                                    data = _, 
+                                    data = _,
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
   # All DEM vars, + disturbance year + edge_dist
   tar_target(rsfF_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
@@ -1151,11 +1177,11 @@ list(
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
   # Tree species 1 + VRI age
   tar_target(rsfG_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1
@@ -1168,11 +1194,11 @@ list(
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
   # Tree species 1 + height
   tar_target(rsfH_swp, swp_mod_dat |>
-               dplyr::select(presence, animal_id, elevation_m, slope_prct, 
-                             slope_aspect, edge_dist_m, proj_age_1, 
-                             proj_height_1, crown_closure, 
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
                              disturbance_year, species_cd_1, w) |>
-               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w), 
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_height_1
@@ -1183,7 +1209,7 @@ list(
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
-  
+
   ###### Winter ######
   # DEM only
   tar_target(rsfA_winter, winter_mod_dat |>
@@ -1519,7 +1545,7 @@ list(
                                 data = _,
                                 weights = w,
                                 family = "binomial")),
-  
+
   ###### Summer ######
   # DEM only
   tar_target(rsfA_summer, summer_mod_dat |>
@@ -1687,11 +1713,11 @@ list(
                                 data = _,
                                 weights = w,
                                 family = "binomial"))#,
-  
+
   ##### Predictive modelling #####
   # TODO: For models w/o VRI age - in cases where disturbance is NA, set height & crown_closure == 0
-  
-  
+
+
 
 )
 
