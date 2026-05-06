@@ -179,6 +179,7 @@ rsfG_summer|stem|91f555de39e49222|f29b6fd8a2213ab3|0fd31522a2ef7cd1|-687143564||
 rsfH_summer|stem|1247d9c3a5cd4332|8b4a0518130058d2|0fd31522a2ef7cd1|1103556588||t20559.0275032525s|s52443523b|52443523|rds|local|vector|||66.56||
 detection_efficiency|stem|0e7ce74a8c1e0764|ba0bbd0c539a3a38|b53e1810da5f33ab|947972721||t20565.8477554808s|s2775b|2775|rds|local|vector|||1.28||
 p_efficiency|stem|9fd9c8355b61b20e|dc663c41ca62b40a|06e5566b97060f83|-1905756578||t20565.8477603126s|s367058b|367058|rds|local|vector|||0.05||
+p_duration_per_collar|stem|ce7390161c5afdb3|371e23cd142b628d|4579ec1bda508dd9|1105797506||t20565.8700343163s|s39130061b|39130061|rds|local|vector|||0.65||
 dBBMM_weekly_ud|object|29e816842fabc47d
 prct_overlap|function|5b70fe85cb4cce78
 weekly_binning|function|957cca10ca8bb5f0
@@ -195,7 +196,7 @@ merge_dfs|function|51e7110d062d93ef
 n_dets_per_elk|function|08bd3cc58671e6df
 elk_dets_hist|function|a496a21bbf49b8dc
 extract_aspect|function|c1824b5878c68dec
-.Random.seed|object|911e16cac3299bbc
+.Random.seed|object|bfa15fc558c99f0a
 MCP_pctl|object|f43fe2c999030d30
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -257,4 +258,4 @@ weekly_dbbmm|function|6c7de243de43fbbe
 seasonal_mcp|function|44e6e62e9bb4961a
 daily_mcp|function|b6550459ae91769e
 weekly_mcp|function|df86e293d7054eac
-p_duration_per_collar|stem|ce7390161c5afdb3|371e23cd142b628d|4579ec1bda508dd9|1105797506||t20565.8700343163s|s39130061b|39130061|rds|local|vector|||0.65||
+winter_spring_step|stem|ad59097e0d934465|e0b8a7bc33848335|337a2d9cf4c2f807|1118151225||t20579.8925933829s|s13409b|13409|rds|local|vector|||9.35||

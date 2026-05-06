@@ -651,6 +651,16 @@ list(
                                               group_by = c("animal_id", "season"),
                                               date_col = c("year")) |>
                                   dplyr::mutate(method = "dBBMM"))),
+  # WINTER-TO-SPRING
+  # For each individual & year, calculate centroid dist
+  tar_target(winter_spring_step, centroid_step(shp = dplyr::bind_rows(winter_mcp, spring_mcp),
+                                               group_by = c("year", "animal_id"),
+                                               date_col = "year") |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(centroid_step(shp = dplyr::bind_rows(winter_dbbmm, spring_dbbmm), 
+                                              group_by = c("year", "animal_id"),
+                                              date_col = "year") |>
+                                  dplyr::mutate(method = "dBBMM"))),
 
   ##### 99 pctl step length #####
   # The 99th pctl step length is the distance that 99% of the elk are
