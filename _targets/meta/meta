@@ -112,7 +112,6 @@ mcp_summer_agg_overlap|stem|1e8ad49c08ef8148|72d044a9edc66717|c9012c198cd3bbf2|3
 dbbmm_winter_agg_overlap|stem|283848a84cc1ddcb|972109eb20ce78e9|f09af26ad7278cc3|-1889499879||t20545.7418859057s|s833b|833|rds|local|vector|||4.53||
 dbbmm_summer_agg_overlap|stem|3df887a26de6db8d|5bb75cdec5c1a810|128f93f9f0123a85|1961110594||t20545.7419645867s|s995b|995|rds|local|vector|||6.64||
 dbbmm_spring_agg_overlap|stem|4c0e609c503d0e90|6bf2cd74802513a7|d8cd3aa20cbfe0a1|962387022||t20545.7420491371s|s1028b|1028|rds|local|vector|||7.14||
-aggregate_overlap_summary|stem|1e787fce5d2a7572|a2f3f3654fce4af5|f49dfce4ef5ba4d0|-1443066389||t20545.7420589921s|s467b|467|rds|local|vector|||0.75||
 winter_rsf_mcp|stem|fdbbbac67da76e8a|82b2b06327b66f19|dc398dcf58e69bb3|-994354900||t20557.8697296971s|s265585b|265585|rds|local|vector|||14.88|attribute variables are assumed to be spatially constant throughout all geometries. GDAL Error 4: Unable to open temp/Pipeline outputs/MCP_RSF_Winter.shx or temp/Pipeline outputs/MCP_RSF_Winter.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.. GDAL Error 4: Unable to open temp/Pipeline outputs/MCP_RSF_Winter.shx or temp/Pipeline outputs/MCP_RSF_Winter.SHX. Set SHAPE_RESTORE_SHX config option to YES to restore or create it.|
 summer_rsf_mcp|stem|789cb90f18acd7e6|9501cbb12a16197f|a13dc4007e65d4b5|-987843483||t20557.870888332s|s215035b|215035|rds|local|vector|||21.75|attribute variables are assumed to be spatially constant throughout all geometries|
 spring_rsf_mcp|stem|8ace39a8b34fac35|4a37af159dd0d9db|bebd96cdfc0917de|436210894||t20557.871097025s|s229643b|229643|rds|local|vector|||15.52|attribute variables are assumed to be spatially constant throughout all geometries|
@@ -180,6 +179,7 @@ rsfH_summer|stem|1247d9c3a5cd4332|8b4a0518130058d2|0fd31522a2ef7cd1|1103556588||
 detection_efficiency|stem|0e7ce74a8c1e0764|ba0bbd0c539a3a38|b53e1810da5f33ab|947972721||t20565.8477554808s|s2775b|2775|rds|local|vector|||1.28||
 p_efficiency|stem|9fd9c8355b61b20e|dc663c41ca62b40a|06e5566b97060f83|-1905756578||t20565.8477603126s|s367058b|367058|rds|local|vector|||0.05||
 p_duration_per_collar|stem|ce7390161c5afdb3|371e23cd142b628d|4579ec1bda508dd9|1105797506||t20565.8700343163s|s39130061b|39130061|rds|local|vector|||0.65||
+winter_spring_step|stem|ad59097e0d934465|e0b8a7bc33848335|337a2d9cf4c2f807|1118151225||t20579.8925933829s|s13409b|13409|rds|local|vector|||9.35||
 dBBMM_weekly_ud|object|29e816842fabc47d
 prct_overlap|function|5b70fe85cb4cce78
 weekly_binning|function|957cca10ca8bb5f0
@@ -196,7 +196,7 @@ merge_dfs|function|51e7110d062d93ef
 n_dets_per_elk|function|08bd3cc58671e6df
 elk_dets_hist|function|a496a21bbf49b8dc
 extract_aspect|function|c1824b5878c68dec
-.Random.seed|object|bfa15fc558c99f0a
+.Random.seed|object|cd3454f0e4ae9209
 MCP_pctl|object|f43fe2c999030d30
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -204,9 +204,9 @@ extract_stand_edge|function|3edea8a43b9cc4fc
 winter|object|326711d79cc870d3
 extract_uwr_lyr|function|ad86d871a3ba0d42
 swp_dates|object|07f7b91bb0dcd613
-ferrarini_goi|function|a44344d174e2a91f
 summer|object|292209e1f8fbf494
 extract_roughness|function|2f400d5f99e57c24
+ferrarini_goi|function|a44344d174e2a91f
 collar_days_hist|function|af48a0f911a32c13
 centroid_step|function|a458a84083a6b6a1
 elk_per_month_plot|function|20740411dc9e6e24
@@ -251,11 +251,15 @@ individual_mcp|function|390e0ed3e3283042
 clean_collar_data|function|e2c296d1cf8e1e23
 extract_disturbance|function|c1f04a89ca77e98b
 extract_uwr|function|550f6d35719f844f
-aggregate_overlap|function|515d3e1f8b162692
+.aggregate_overlap_internal|function|515d3e1f8b162692
 extract_dem|function|e091c890c97affa4
 seasonal_dbbmm|function|098e6421db5fcde6
 weekly_dbbmm|function|6c7de243de43fbbe
 seasonal_mcp|function|44e6e62e9bb4961a
 daily_mcp|function|b6550459ae91769e
 weekly_mcp|function|df86e293d7054eac
-winter_spring_step|stem|ad59097e0d934465|e0b8a7bc33848335|337a2d9cf4c2f807|1118151225||t20579.8925933829s|s13409b|13409|rds|local|vector|||9.35||
+aggregate_overlap|function|07e4f8c638e0f020
+winter_agg_overlap|stem|aa80f9ef55b6d673|c47c2ce288564229|379f1dab7a9c2e18|-906812296||t20579.994988066s|s1149b|1149|rds|local|vector|||7.81||
+spring_agg_overlap|stem|50d1d0529b2b053a|159ee43312bacc63|513654e124bc16a8|1539472016||t20579.9951155409s|s1431b|1431|rds|local|vector|||10.77||
+summer_agg_overlap|stem|c587d83e60b7c98a|ded73bb59df6e943|12a630e4f9188115|-399178052||t20579.9952337571s|s1373b|1373|rds|local|vector|||10||
+aggregate_overlap_summary|stem|1e787fce5d2a7572|aabdf93afe70bcbb|e1ccb539ce8ac30b|-1443066389||t20579.9952423358s|s467b|467|rds|local|vector|||0.67||
