@@ -64,3 +64,4 @@ GIS/*
 
 # Map tiles cache
 rosm.cache/*
+.positai

@@ -209,12 +209,13 @@ list(
   tar_target(dets_per_elk, n_dets_per_elk(elk)),
   tar_target(p_dets_per_elk, elk_dets_hist(elk)),
   # Fix success / detection efficiency
-  tar_target(detection_efficiency, fix_rate(elk)),
+  tar_target(detection_efficiency, fix_rate(cleaned_collar_data)), # determine fix rate success using the full dataset, prior to thinning. 
   tar_target(p_efficiency, elk_fix_hist(detection_efficiency)),
   tar_render(daily_dets_plots,
              "reports/elk_dets_per_day.Rmd",
              output_file = "elk_dets_per_day.pdf",
              params = list(elk_data = elk)),
+  tar_target(p_duration_per_collar, collar_days_hist(elk)),
   # Net squared displacement
   tar_render(nsd_plots,
              "reports/elk_nsd.Rmd",
@@ -405,97 +406,52 @@ list(
   # 1) max overlap area / union of all areas
   # 2) GOI metric described in Ferrarini et al. (2021)
   ## WINTER ##
-  tar_target(mcp_winter_agg_overlap, lapply(unique(winter_mcp$animal_id),
-                                            function(x){
-                                              shp <- winter_mcp[winter_mcp$animal_id == x, ]
-                                              n <- nrow(shp)
-                                              out <- aggregate_overlap(shp)
-                                              out$animal_id <- x
-                                              out$N <- n
-                                              out$method <- "MCP"
-                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-                                              return(out)
-                                            }) |>
-               dplyr::bind_rows() |>
-               dplyr::mutate(season = "Winter")),
-  tar_target(dbbmm_winter_agg_overlap, lapply(unique(winter_dbbmm$animal_id),
-                                              function(x){
-                                                shp <- winter_dbbmm[winter_dbbmm$animal_id == x, ]
-                                                n <- nrow(shp)
-                                                out <- aggregate_overlap(shp)
-                                                out$animal_id <- x
-                                                out$N <- n
-                                                out$method <- "dBBMM"
-                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-                                                return(out)
-                                              }) |>
-               dplyr::bind_rows() |>
-               dplyr::mutate(season = "Winter")),
+  tar_target(winter_agg_overlap, aggregate_overlap(winter_mcp, group_by = "animal_id") |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(aggregate_overlap(winter_dbbmm, group_by = "animal_id") |>
+                                  dplyr::mutate(method = "dBBMM")) |>
+             dplyr::mutate(season = "Winter")),
   ## SPRING ##
-  tar_target(mcp_spring_agg_overlap, lapply(unique(spring_mcp$animal_id),
-                                            function(x){
-                                              shp <- spring_mcp[spring_mcp$animal_id == x, ]
-                                              n <- nrow(shp)
-                                              out <- aggregate_overlap(shp)
-                                              out$animal_id <- x
-                                              out$N <- n
-                                              out$method <- "MCP"
-                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-                                              return(out)
-                                            }) |>
-               dplyr::bind_rows() |>
-               dplyr::mutate(season = "Spring")),
-  tar_target(dbbmm_spring_agg_overlap, lapply(unique(spring_dbbmm$animal_id),
-                                              function(x){
-                                                shp <- spring_dbbmm[spring_dbbmm$animal_id == x, ]
-                                                n <- nrow(shp)
-                                                out <- aggregate_overlap(shp)
-                                                out$animal_id <- x
-                                                out$N <- n
-                                                out$method <- "dBBMM"
-                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-                                                return(out)
-                                              }) |>
-               dplyr::bind_rows() |>
+  tar_target(spring_agg_overlap, aggregate_overlap(spring_mcp, group_by = "animal_id") |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(aggregate_overlap(spring_dbbmm, group_by = "animal_id") |>
+                                  dplyr::mutate(method = "dBBMM")) |>
                dplyr::mutate(season = "Spring")),
   ## SUMMER ##
-  tar_target(mcp_summer_agg_overlap, lapply(unique(summer_mcp$animal_id),
-                                            function(x){
-                                              shp <- summer_mcp[summer_mcp$animal_id == x, ]
-                                              n <- nrow(shp)
-                                              out <- aggregate_overlap(shp)
-                                              out$animal_id <- x
-                                              out$N <- n
-                                              out$method <- "MCP"
-                                              out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-                                              return(out)
-                                            }) |>
-               dplyr::bind_rows() |>
+  tar_target(summer_agg_overlap, aggregate_overlap(summer_mcp, group_by = "animal_id") |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(aggregate_overlap(summer_dbbmm, group_by = "animal_id") |>
+                                  dplyr::mutate(method = "dBBMM")) |>
                dplyr::mutate(season = "Summer")),
-  tar_target(dbbmm_summer_agg_overlap, lapply(unique(summer_dbbmm$animal_id),
-                                              function(x){
-                                                shp <- summer_dbbmm[summer_dbbmm$animal_id == x, ]
-                                                n <- nrow(shp)
-                                                out <- aggregate_overlap(shp)
-                                                out$animal_id <- x
-                                                out$N <- n
-                                                out$method <- "dBBMM"
-                                                out <- out[,c("animal_id", "N", "method", "cumulative_overlap", "ferrarini_goi")]
-                                                return(out)
-                                              }) |>
-               dplyr::bind_rows() |>
-               dplyr::mutate(season = "Summer")),
+  ## WINTER-SPRING ##
+  # Requires a bit more fiddling 
+  tar_target(winter_spring_agg_overlap, 
+             # First build winter + spring MCP df, then calc agg overlap
+             dplyr::bind_rows(winter_mcp, spring_mcp) |>
+               dplyr::mutate(elk_year = paste(animal_id, year)) |>
+               aggregate_overlap(group_by = "elk_year") |>
+               dplyr::mutate(method = "MCP") |>
+               # Next dplyr::bind_rows to the winter + spring dBBMM agg overlap result
+               dplyr::bind_rows(
+                 # Within this bind_rows, build winter + spring dBBMM df and calc agg overlap
+                 dplyr::bind_rows(winter_dbbmm, spring_dbbmm) |>
+                   dplyr::mutate(elk_year = paste(animal_id, year)) |>
+                   aggregate_overlap(group_by = "elk_year") |>
+                   dplyr::mutate(method = "dBBMM")
+               ) |>
+               # Finally add season col and animal_id col
+               dplyr::mutate(season = "Winter-Spring",
+                             animal_id = stringr::str_extract(elk_year, "\\d{2}-\\d+"))
+             ),
   ###### All years summarized ######
-  tar_target(aggregate_overlap_summary, dplyr::bind_rows(mcp_winter_agg_overlap, 
-                                                         mcp_spring_agg_overlap,
-                                                         mcp_summer_agg_overlap,
-                                                         dbbmm_winter_agg_overlap,
-                                                         dbbmm_spring_agg_overlap,
-                                                         dbbmm_summer_agg_overlap) |>
-               dplyr::mutate(season = factor(season, levels = c("Winter", "Spring", "Summer"))) |>
+  tar_target(aggregate_overlap_summary, dplyr::bind_rows(winter_agg_overlap, 
+                                                         spring_agg_overlap,
+                                                         summer_agg_overlap,
+                                                         winter_spring_agg_overlap) |>
+               dplyr::mutate(season = factor(season, levels = c("Winter", "Spring", "Summer", "Winter-Spring"))) |>
                dplyr::filter(!is.na(ferrarini_goi)) |>
                dplyr::group_by(method, season) |>
-               dplyr::summarise(n_elk = dplyr::n(),
+               dplyr::summarise(n_elk = length(unique(animal_id)),
                                 n_seasons = sum(N),
                                 n_zero_overlap = sum((ferrarini_goi == 0)),
                                 min = min(ferrarini_goi),
@@ -649,6 +605,16 @@ list(
                dplyr::bind_rows(centroid_step(shp = all_seasons_dbbmm,
                                               group_by = c("animal_id", "season"),
                                               date_col = c("year")) |>
+                                  dplyr::mutate(method = "dBBMM"))),
+  # WINTER-TO-SPRING
+  # For each individual & year, calculate centroid dist
+  tar_target(winter_spring_step, centroid_step(shp = dplyr::bind_rows(winter_mcp, spring_mcp),
+                                               group_by = c("year", "animal_id"),
+                                               date_col = "year") |>
+               dplyr::mutate(method = "MCP") |>
+               dplyr::bind_rows(centroid_step(shp = dplyr::bind_rows(winter_dbbmm, spring_dbbmm), 
+                                              group_by = c("year", "animal_id"),
+                                              date_col = "year") |>
                                   dplyr::mutate(method = "dBBMM"))),
 
   ##### 99 pctl step length #####

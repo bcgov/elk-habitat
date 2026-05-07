@@ -250,7 +250,7 @@ ferrarini_goi <- function(shp,
 
 # Bit silly the area_unit arg is totally useless since it's a %,
 # but it's already done, so...
-aggregate_overlap <- function(shp, ...) {
+.aggregate_overlap_internal <- function(shp, ...) {
   dots <- list(...)
   if (length(dots) > 0) {
     dots$shp <- shp
@@ -267,6 +267,24 @@ aggregate_overlap <- function(shp, ...) {
   return(out)
 }
 
+
+# Now create a wrapper function to more conveniently use 
+# .aggregate_overlap_internal. B/c overwise I was running
+# lapply loops w the fxn within the pipeline targets.
+aggregate_overlap <- function(shp, group_by, ...) {
+  agg_out <- lapply(unique(shp[[group_by]]),
+         function(x){
+           shp2 <- shp[shp[[group_by]] == x, ]
+           n <- nrow(shp2)
+           out <- .aggregate_overlap_internal(shp2)
+           out[group_by] <- x
+           out$N <- n
+           out <- out[,c(group_by, "N", "cumulative_overlap", "ferrarini_goi")]
+           return(out)
+         })
+   agg_out <- dplyr::bind_rows(agg_out)
+   return(agg_out)
+}
 
 
 
