@@ -423,14 +423,35 @@ list(
                dplyr::bind_rows(aggregate_overlap(summer_dbbmm, group_by = "animal_id") |>
                                   dplyr::mutate(method = "dBBMM")) |>
                dplyr::mutate(season = "Summer")),
+  ## WINTER-SPRING ##
+  # Requires a bit more fiddling 
+  tar_target(winter_spring_agg_overlap, 
+             # First build winter + spring MCP df, then calc agg overlap
+             dplyr::bind_rows(winter_mcp, spring_mcp) |>
+               dplyr::mutate(elk_year = paste(animal_id, year)) |>
+               aggregate_overlap(group_by = "elk_year") |>
+               dplyr::mutate(method = "MCP") |>
+               # Next dplyr::bind_rows to the winter + spring dBBMM agg overlap result
+               dplyr::bind_rows(
+                 # Within this bind_rows, build winter + spring dBBMM df and calc agg overlap
+                 dplyr::bind_rows(winter_dbbmm, spring_dbbmm) |>
+                   dplyr::mutate(elk_year = paste(animal_id, year)) |>
+                   aggregate_overlap(group_by = "elk_year") |>
+                   dplyr::mutate(method = "dBBMM")
+               ) |>
+               # Finally add season col and animal_id col
+               dplyr::mutate(season = "Winter-Spring",
+                             animal_id = stringr::str_extract(elk_year, "\\d{2}-\\d+"))
+             ),
   ###### All years summarized ######
   tar_target(aggregate_overlap_summary, dplyr::bind_rows(winter_agg_overlap, 
                                                          spring_agg_overlap,
-                                                         summer_agg_overlap) |>
-               dplyr::mutate(season = factor(season, levels = c("Winter", "Spring", "Summer"))) |>
+                                                         summer_agg_overlap,
+                                                         winter_spring_agg_overlap) |>
+               dplyr::mutate(season = factor(season, levels = c("Winter", "Spring", "Summer", "Winter-Spring"))) |>
                dplyr::filter(!is.na(ferrarini_goi)) |>
                dplyr::group_by(method, season) |>
-               dplyr::summarise(n_elk = dplyr::n(),
+               dplyr::summarise(n_elk = length(unique(animal_id)),
                                 n_seasons = sum(N),
                                 n_zero_overlap = sum((ferrarini_goi == 0)),
                                 min = min(ferrarini_goi),
