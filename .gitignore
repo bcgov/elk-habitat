@@ -53,9 +53,8 @@ temp/
 
 # Datasets
 data/Collar\ Keys
-data/raw_detections.csv
-data/~$*
-data/DATABASE_Elk Capture_Updtd_20240513.xlsx
+data/*
+!data/BCID_V_RGB_pos.png
 
 # Large GIS files, except regions
 GIS/*
