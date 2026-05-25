@@ -650,6 +650,10 @@ list(
   tar_target(results, bcdata::bcdc_query_geodata("56ac43a7-724a-4f01-b193-d5f9a16ef0a8") |>
                dplyr::filter(bcdata::INTERSECTS(study_area)) |>
                dplyr::collect()),
+  ##### Download TEM #####
+  tar_target(tem, bcdata::bcdc_query_geodata("0a83163b-a62f-4ce6-a9a1-21c228b0c0a3") |>
+               dplyr::filter(bcdata::INTERSECTS(study_area)) |>
+               dplyr::collect()),
   ##### Load Depletions #####
   # This dataset needs to be within the 'GIS/Depletions' directory.
   # The depletions data is originally from:
