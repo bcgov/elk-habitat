@@ -650,6 +650,17 @@ list(
   tar_target(results, bcdata::bcdc_query_geodata("56ac43a7-724a-4f01-b193-d5f9a16ef0a8") |>
                dplyr::filter(bcdata::INTERSECTS(study_area)) |>
                dplyr::collect()),
+  ##### Download TEM #####
+  tar_target(tem, bcdata::bcdc_query_geodata("0a83163b-a62f-4ce6-a9a1-21c228b0c0a3") |>
+               dplyr::filter(bcdata::INTERSECTS(study_area)) |>
+               dplyr::collect()),
+  ##### Load TEM wetland codes #####
+  # Track Excel file w all relevant codes
+  tar_target(wetland_path,"data/TEM_Wetland_Codes.xlsx", format = "file"),
+  # Pull the specific sheet with the codes we need
+  tar_target(wetland_codes, readxl::read_excel(wetland_path, 
+                                               sheet = "Resulting Ecosystems", 
+                                               na = c("", "na", "NA", "N/A"))),
   ##### Load Depletions #####
   # This dataset needs to be within the 'GIS/Depletions' directory.
   # The depletions data is originally from:
@@ -698,7 +709,25 @@ list(
   tar_terra_rast(stand_edge, terra::ifel(edginess >= 60, 1, 0)),
   ##### Distance to Edge #####
   tar_terra_rast(edge_dist, terra::distance(stand_edge, target = 0, exclude = NA)),
-
+  ##### Land Cover classification #####
+  # Canada-wide 30m land classification dataset
+  # As described Hermosilla et al. (2022)
+  # https://www.sciencedirect.com/science/article/pii/S0034425721005009?via%3Dihub
+  # This target downloads the .tiff files, crops them to
+  # the study area, then saves the cropped .tiff to the
+  # "Land Cover Classification" directory.
+  # This file takes about 4 mins to download on my 80 Mbps internet.
+  tar_terra_rast(land_class, download_land_class(url = "https://opendata.nfis.org/downloads/forest_change/CA_forest_VLCE2_2022.zip",
+                                                 aoi = study_area,
+                                                 save_tiff = FALSE)),
+  ##### Wetlands #####
+  # Extract wetland polygons from TEM, then fill in any NA data gaps
+  # with the national scale land cover class raster. 
+  tar_terra_rast(wetlands, calc_wetlands_lyr(TEM = tem,
+                                             wetland_codes = wetland_codes, 
+                                             land_class = land_class, 
+                                             study_area = study_area, 
+                                             res = dem_res)),
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat
@@ -829,7 +858,10 @@ list(
                                                   disturbance = disturbance,
                                                   stand_edge = stand_edge,
                                                   edge_dist = edge_dist)),
-
+  ##### Wetland component #####
+  # Aka riparian areas
+  tar_target(elk_wetlands, extract_wetland_component(pts = elk,
+                                                     wetlands = wetlands)),
 
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####
@@ -890,6 +922,15 @@ list(
                                                          disturbance = disturbance,
                                                          stand_edge = stand_edge,
                                                          edge_dist = edge_dist)),
+  ##### Wetland attributes #####
+  tar_target(random_winter_wetlands, extract_wetland_component(pts = random_winter,
+                                                               wetlands = wetlands)),
+  tar_target(random_spring_wetlands, extract_wetland_component(pts = random_spring,
+                                                               wetlands = wetlands)),
+  tar_target(random_summer_wetlands, extract_wetland_component(pts = random_summer,
+                                                               wetlands = wetlands)),
+  tar_target(random_swp_wetlands, extract_wetland_component(pts = random_swp,
+                                                            wetlands = wetlands)),
 
   #### PREPARE MODEL DAT ####
   # Finally, merge the various layers together into single

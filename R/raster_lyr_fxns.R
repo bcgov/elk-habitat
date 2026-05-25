@@ -13,6 +13,10 @@
 # limitations under the License.
 
 
+# DOWNLOADS ---------------------------------------------------------------
+
+
+
 # Download Maltman et al. (2023) 30m resolution dataset,
 # crop it to the study area, and save it to the "GIS/Forest age" dir.
 # https://www.sciencedirect.com/science/article/pii/S0034425723000809
@@ -85,6 +89,85 @@ download_forest_age <- function(url, aoi, save_tiff = TRUE) {
   return(t)
   
 }
+
+# Download Maltman et al. (2023) 30m resolution dataset,
+# crop it to the study area, and save it to the "GIS/Forest age" dir.
+# https://www.sciencedirect.com/science/article/pii/S0034425723000809
+# https://opendata.nfis.org/mapserver/nfis-change_eng.html
+download_land_class <- function(url, aoi, save_tiff = TRUE) {
+  # Create temporary directory
+  tmp <- tempdir()
+  
+  # Pull basename from url
+  basename <- basename(url)
+  
+  # Download the file to the temporary path
+  tryCatch({
+    # Takes about 10-20 mins on my internet. Set a timeout of 30 mins here
+    # Edit 2026-03-18: Having some serious issues w downloading this thing.
+    # Set the timeout to a stupid 3 hours.
+    options(timeout = 10800)
+    download.file(url, 
+                  destfile = file.path(tmp, basename), 
+                  mode = "wb",
+                  method = "auto")
+    options(timeout = 60)
+    cat("Download complete.\n")
+  }, error = function(e) {
+    cat(paste("Error during download:", e$message, "\n"))
+  })
+  
+  # Unzip and crop to area of interest (aoi)
+  if (file.exists(tmp)) {
+    # Find the zipped folder and unzip to same location
+    unzip(file.path(tmp, basename),
+          exdir = file.path(tmp))
+    # Find and load the .tif we need
+    t <- terra::rast(file.path(tmp, gsub(".zip", ".tif", basename)))
+    # Extract `t` CRS
+    # t_crs <- terra::crs(t)
+    # t_epsg <- stringr::str_extract(t_crs, "EPSG.*$") |> 
+    #   stringr::str_extract(pattern = "\\d+") |>
+    #   as.numeric()
+    # Transform aoi to the same CRS as `t`
+    # Do in manually. Can't correctly extract crs programmatically.
+    # Had to use the EPSG code from QGIS.
+    aoi3978 <- sf::st_transform(aoi, 3978)
+    # Crop to aoi
+    t <- terra::crop(t, aoi3978)
+    t <- terra::mask(t, aoi3978)
+    # Transform `t`
+    #t <- terra::project(t, "epsg:3005")
+    #t <- terra::crop(t, aoi)
+    
+    # Save raster locally, if applicable
+    if (save_tiff) {
+      # Create "GIS/Land Cover Classification" dir
+      dir.create("GIS/Land Cover Classification", showWarnings = FALSE)
+      # Save `t` to "GIS/Land Cover Classification" dir
+      terra::writeRaster(t, file.path("GIS/Land Cover Classification", gsub(".zip", ".tiff", basename)), overwrite = TRUE)
+      # Move the README txt file to "GIS/Land Cover Classification" dir
+      file.copy(file.path(tmp, gsub(".zip", "_README.txt", basename)),
+                file.path("GIS/Land Cover Classification", gsub(".zip", "_README.txt", basename)))
+    }
+    
+  }
+  
+  # Delete the temporary file when no longer needed
+  # The 'on.exit()' function is useful for ensuring the file is deleted
+  # even if an error occurs within the function where it is used.
+  on.exit(unlink(tmp, recursive = TRUE))
+  
+  # Return t
+  return(t)
+  
+}
+
+
+
+# CALC LAYERS -------------------------------------------------------------
+
+
 
 calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, change_detection) {
   ## Setup ##
@@ -231,6 +314,69 @@ calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, ch
 }
 
 
+calc_wetlands_lyr <- function(TEM, wetland_codes, land_class, study_area, res) {
+  # First, load up TEM layer. `prepare_tem_wetlands` then
+  # extracts out wetland polygons (defined in R/TEM_fxns.R).
+  tem_wetlands <- prepare_tem_wetlands(TEM, wetland_codes)
+  
+  # Reproject land classification raster to ESPG 3005
+  # Use method = "near" when re-projecting forest age to new projection,
+  # otherwise you get inaccurate smoothing/averaging of categorical variables.
+  land_class <- terra::project(land_class, "epsg:3005", method = "near")
+  
+  # Bizarrely this reprojection creates boundary cells w value of 4e+09.
+  
+  # Extract only wetland codes from the land_class raster 
+  # (codes 80 + 81, determined from visual exploration)
+  # Let's assume the 'wetlandiness' (or wetland_component) 
+  # of the land_class wetlands to be 10. Everything else 
+  # will be 0
+  # `terra::ifel(land_class %in% c(80, 81), 10, 0)` causes some fussiness w targets...
+  land_class <- terra::ifel((land_class == 80 | land_class == 81), 10, 0)
+  
+  # Crop to study area
+  land_class <- terra::crop(land_class, study_area, mask = TRUE)
+  
+  # Figure out max extent that encompasses all 5 layers
+  bounds <- c(xmin = min(sf::st_bbox(tem_wetlands)[1], sf::st_bbox(land_class)[1]),
+              ymin = min(sf::st_bbox(tem_wetlands)[2], sf::st_bbox(land_class)[2]),
+              xmax = max(sf::st_bbox(tem_wetlands)[3], sf::st_bbox(land_class)[3]),
+              ymax = max(sf::st_bbox(tem_wetlands)[4], sf::st_bbox(land_class)[4]))
+  bounds <- bounds |>
+    sf::st_bbox() |>
+    sf::st_as_sfc() |>
+    sf::st_as_sf(crs = sf::st_crs(tem_wetlands)) |>
+    raster::extent() # convert to `raster` pkg type extent object
+  
+  # Create a raster template following the supplied resolution
+  temp <- raster::raster(bounds, # the extent will be equal to the bounds calculated in `bounds`
+                         res = res, # the resolution will be the supplied resolution
+                         crs = terra::crs(tem_wetlands)) # the CRS will be that of VRI (which is that of every other layer)
+  
+  # Now rasterize TEM
+  tem_wetland_comp <- fasterize::fasterize(tem_wetlands, temp, field = "wetland_component")
+  tem_wetland_comp <- terra::rast(tem_wetland_comp)
+  
+  # Resample land_class to be same res as TEM
+  land_class <- terra::resample(land_class, tem_wetland_comp)
+  names(land_class) <- "wetland_component"
+  
+  # Merge the two rasters, taking TEM data first where available.
+  w <- terra::merge(tem_wetland_comp, land_class, first = TRUE)
+  
+  # Set NA areas to zero just in case to cover any sliver gaps, then 
+  # re-crop to study area
+  w <- terra::ifel(is.na(w), 0, w)
+  w <- terra::crop(w, study_area, mask = TRUE)
+  
+  return(w)
+}
+
+
+# EXTRACT  ----------------------------------------------------------------
+
+
+
 # Extract disturbance layer data (base layer)
 extract_disturbance_year <- function(pts, id_col, disturbance) {
   # Set up
@@ -290,6 +436,22 @@ extract_disturbance <- function(pts,
   out <- merge(dist_year, edginess, all = TRUE)
   out <- merge(out, edge_dist_m, all = TRUE)
   
+  return(out)
+}
+
+
+# Extract wetland component
+extract_wetland_component <- function(pts, id_col = "idposition", wetlands) {
+  # Set up
+  w <- wetlands
+  # Subset pts to just ID column
+  pts <- pts[,id_col]
+  # Extract disturbance
+  out <- terra::extract(w, pts, ID = FALSE)
+  # Return out
+  out <- cbind(pts, out)
+  names(out)[2] <- "wetland_component"
+  out <- sf::st_drop_geometry(out)
   return(out)
 }
 
