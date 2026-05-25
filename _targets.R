@@ -654,6 +654,13 @@ list(
   tar_target(tem, bcdata::bcdc_query_geodata("0a83163b-a62f-4ce6-a9a1-21c228b0c0a3") |>
                dplyr::filter(bcdata::INTERSECTS(study_area)) |>
                dplyr::collect()),
+  ##### Load TEM wetland codes #####
+  # Track Excel file w all relevant codes
+  tar_target(wetland_path,"data/TEM_Wetland_Codes.xlsx", format = "file"),
+  # Pull the specific sheet with the codes we need
+  tar_target(wetland_codes, readxl::read_excel(wetland_path, 
+                                               sheet = "Resulting Ecosystems", 
+                                               na = c("", "na", "NA", "N/A"))),
   ##### Load Depletions #####
   # This dataset needs to be within the 'GIS/Depletions' directory.
   # The depletions data is originally from:
@@ -702,7 +709,20 @@ list(
   tar_terra_rast(stand_edge, terra::ifel(edginess >= 60, 1, 0)),
   ##### Distance to Edge #####
   tar_terra_rast(edge_dist, terra::distance(stand_edge, target = 0, exclude = NA)),
-
+  ##### Land Cover classification #####
+  # Canada-wide 30m land classification dataset
+  # As described Hermosilla et al. (2022)
+  # https://www.sciencedirect.com/science/article/pii/S0034425721005009?via%3Dihub
+  # This target downloads the .tiff files, crops them to
+  # the study area, then saves the cropped .tiff to the
+  # "Land Cover Classification" directory.
+  # This file takes about 4 mins to download on my 80 Mbps internet.
+  tar_terra_rast(land_class, download_land_class(url = "https://opendata.nfis.org/downloads/forest_change/CA_forest_VLCE2_2022.zip",
+                                                 aoi = study_area,
+                                                 save_tiff = FALSE)),
+  ##### Wetlands #####
+  # Extract wetland polygons from TEM, then fill in any NA data gaps
+  # with the national scale land cover class raster. 
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat

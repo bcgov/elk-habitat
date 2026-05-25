@@ -185,6 +185,9 @@ aggregate_overlap_summary|stem|15729bb881e10315|9b04896644824019|bc0325ab03443a1
 capture_data_path|stem|ced298a01ea51875|9359dfabf3df40c5|2c530c1562a7fbd1|-1991879437|data/DATABASE_Elk Capture.xlsx|t20598.7137196909s|s112876b|112876|file|local|vector|||6.14||
 capture_data|stem|2e4d985f705f774b|e14ef5cd5be2470c|5a13a4d913f205fc|1127347996||t20598.7818858094s|s12524b|12524|rds|local|vector|||0.98||
 full_collar_data|stem|4f47aad4a041ab21|fcaac25f0f6c862d|e5db96c922696862|1289326002||t20598.7820705613s|s14105476b|14105476|rds|local|vector|||10.02||
+tem|stem|1363f24436c0af8a|07e0a33639c6bc89|d90062bdbdb28af3|1622089510||t20598.8348213892s|s57543373b|57543373|rds|local|vector|||163.91||
+wetland_path|stem|ee9fb909292b2a16|751b4a6cb85f469e|2c530c1562a7fbd1|823117876|data/TEM_Wetland_Codes.xlsx|t20598.7379030676s|s112157b|112157|file|local|vector|||0.95||
+wetland_codes|stem|757683ae2b841228|c75b1771981e23b1|254ab731b41e48a7|-1125697490||t20598.8839077324s|s16136b|16136|rds|local|vector|||0.17||
 dBBMM_weekly_ud|object|29e816842fabc47d
 prct_overlap|function|5b70fe85cb4cce78
 weekly_binning|function|957cca10ca8bb5f0
@@ -201,7 +204,8 @@ merge_dfs|function|51e7110d062d93ef
 n_dets_per_elk|function|08bd3cc58671e6df
 elk_dets_hist|function|a496a21bbf49b8dc
 extract_aspect|function|c1824b5878c68dec
-.Random.seed|object|8cf3f3da662d8d59
+prepare_tem_wetlands|function|aaea191a4fc635bf
+.Random.seed|object|6cedab50b4b49b95
 MCP_pctl|object|f43fe2c999030d30
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -209,6 +213,7 @@ extract_stand_edge|function|3edea8a43b9cc4fc
 winter|object|326711d79cc870d3
 extract_uwr_lyr|function|ad86d871a3ba0d42
 swp_dates|object|07f7b91bb0dcd613
+download_land_class|function|72d92ba18a04d5b2
 summer|object|292209e1f8fbf494
 extract_roughness|function|2f400d5f99e57c24
 ferrarini_goi|function|a44344d174e2a91f
@@ -247,8 +252,8 @@ assign_weekly_seasons|function|663c05c5ec7782cf
 cumulative_shp|function|b4cd38f203de5a6f
 step_length|function|97a0717a017cb942
 summarize_overlap|function|5861f38aad2d8fc7
-download_from_server|function|59f25d37f0fbd513
 calc_disturbance_lyr|function|bc1b5cbfba22eb89
+download_from_server|function|59f25d37f0fbd513
 assign_daily_seasons|function|738918b74e6a16fe
 szn_window|object|4c06678fced12882
 yearly_prct_overlap|function|6d8800d84d72e357
@@ -264,4 +269,4 @@ seasonal_mcp|function|44e6e62e9bb4961a
 daily_mcp|function|b6550459ae91769e
 weekly_mcp|function|df86e293d7054eac
 aggregate_overlap|function|07e4f8c638e0f020
-tem|stem|1363f24436c0af8a|07e0a33639c6bc89|d90062bdbdb28af3|1622089510||t20598.8348213892s|s57543373b|57543373|rds|local|vector|||163.91||
+land_class|stem|372000186010ff1a|7f1bf9603d80d762|8e10e7f2e59829b3|1439340817||t20598.9508147063s|s2782529b|2782529|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||158.72||

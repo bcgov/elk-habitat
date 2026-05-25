@@ -86,6 +86,79 @@ download_forest_age <- function(url, aoi, save_tiff = TRUE) {
   
 }
 
+# Download Maltman et al. (2023) 30m resolution dataset,
+# crop it to the study area, and save it to the "GIS/Forest age" dir.
+# https://www.sciencedirect.com/science/article/pii/S0034425723000809
+# https://opendata.nfis.org/mapserver/nfis-change_eng.html
+download_land_class <- function(url, aoi, save_tiff = TRUE) {
+  # Create temporary directory
+  tmp <- tempdir()
+  
+  # Pull basename from url
+  basename <- basename(url)
+  
+  # Download the file to the temporary path
+  tryCatch({
+    # Takes about 10-20 mins on my internet. Set a timeout of 30 mins here
+    # Edit 2026-03-18: Having some serious issues w downloading this thing.
+    # Set the timeout to a stupid 3 hours.
+    options(timeout = 10800)
+    download.file(url, 
+                  destfile = file.path(tmp, basename), 
+                  mode = "wb",
+                  method = "auto")
+    options(timeout = 60)
+    cat("Download complete.\n")
+  }, error = function(e) {
+    cat(paste("Error during download:", e$message, "\n"))
+  })
+  
+  # Unzip and crop to area of interest (aoi)
+  if (file.exists(tmp)) {
+    # Find the zipped folder and unzip to same location
+    unzip(file.path(tmp, basename),
+          exdir = file.path(tmp))
+    # Find and load the .tif we need
+    t <- terra::rast(file.path(tmp, gsub(".zip", ".tif", basename)))
+    # Extract `t` CRS
+    # t_crs <- terra::crs(t)
+    # t_epsg <- stringr::str_extract(t_crs, "EPSG.*$") |> 
+    #   stringr::str_extract(pattern = "\\d+") |>
+    #   as.numeric()
+    # Transform aoi to the same CRS as `t`
+    # Do in manually. Can't correctly extract crs programmatically.
+    # Had to use the EPSG code from QGIS.
+    aoi3978 <- sf::st_transform(aoi, 3978)
+    # Crop to aoi
+    t <- terra::crop(t, aoi3978)
+    t <- terra::mask(t, aoi3978)
+    # Transform `t`
+    #t <- terra::project(t, "epsg:3005")
+    #t <- terra::crop(t, aoi)
+    
+    # Save raster locally, if applicable
+    if (save_tiff) {
+      # Create "GIS/Land Cover Classification" dir
+      dir.create("GIS/Land Cover Classification", showWarnings = FALSE)
+      # Save `t` to "GIS/Land Cover Classification" dir
+      terra::writeRaster(t, file.path("GIS/Land Cover Classification", gsub(".zip", ".tiff", basename)), overwrite = TRUE)
+      # Move the README txt file to "GIS/Land Cover Classification" dir
+      file.copy(file.path(tmp, gsub(".zip", "_README.txt", basename)),
+                file.path("GIS/Land Cover Classification", gsub(".zip", "_README.txt", basename)))
+    }
+    
+  }
+  
+  # Delete the temporary file when no longer needed
+  # The 'on.exit()' function is useful for ensuring the file is deleted
+  # even if an error occurs within the function where it is used.
+  on.exit(unlink(tmp, recursive = TRUE))
+  
+  # Return t
+  return(t)
+  
+}
+
 calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, change_detection) {
   ## Setup ##
   deps <- depletions
