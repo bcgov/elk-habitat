@@ -188,8 +188,10 @@ full_collar_data|stem|4f47aad4a041ab21|fcaac25f0f6c862d|e5db96c922696862|1289326
 tem|stem|1363f24436c0af8a|07e0a33639c6bc89|d90062bdbdb28af3|1622089510||t20598.8348213892s|s57543373b|57543373|rds|local|vector|||163.91||
 wetland_path|stem|ee9fb909292b2a16|751b4a6cb85f469e|2c530c1562a7fbd1|823117876|data/TEM_Wetland_Codes.xlsx|t20598.7379030676s|s112157b|112157|file|local|vector|||0.95||
 wetland_codes|stem|757683ae2b841228|c75b1771981e23b1|254ab731b41e48a7|-1125697490||t20598.8839077324s|s16136b|16136|rds|local|vector|||0.17||
+land_class|stem|372000186010ff1a|7f1bf9603d80d762|8e10e7f2e59829b3|1439340817||t20598.9508147063s|s2782529b|2782529|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||158.72||
 dBBMM_weekly_ud|object|29e816842fabc47d
 prct_overlap|function|5b70fe85cb4cce78
+prepare_tem_wetlands|function|aaea191a4fc635bf
 weekly_binning|function|957cca10ca8bb5f0
 logger_dotplot|function|5b0e74c36ed11f20
 attribute_animal_id|function|9d65df7e940b435f
@@ -204,8 +206,7 @@ merge_dfs|function|51e7110d062d93ef
 n_dets_per_elk|function|08bd3cc58671e6df
 elk_dets_hist|function|a496a21bbf49b8dc
 extract_aspect|function|c1824b5878c68dec
-prepare_tem_wetlands|function|aaea191a4fc635bf
-.Random.seed|object|6cedab50b4b49b95
+.Random.seed|object|9837f0628cdac890
 MCP_pctl|object|f43fe2c999030d30
 extract_disturbance_year|function|2f8d995dfb6c33ab
 extract_edge_dist|function|f65254ea28131a37
@@ -257,6 +258,7 @@ download_from_server|function|59f25d37f0fbd513
 assign_daily_seasons|function|738918b74e6a16fe
 szn_window|object|4c06678fced12882
 yearly_prct_overlap|function|6d8800d84d72e357
+calc_wetlands_lyr|function|1a9d3fb2e3ffa4fd
 individual_mcp|function|390e0ed3e3283042
 clean_collar_data|function|e2c296d1cf8e1e23
 extract_disturbance|function|c1f04a89ca77e98b
@@ -269,4 +271,4 @@ seasonal_mcp|function|44e6e62e9bb4961a
 daily_mcp|function|b6550459ae91769e
 weekly_mcp|function|df86e293d7054eac
 aggregate_overlap|function|07e4f8c638e0f020
-land_class|stem|372000186010ff1a|7f1bf9603d80d762|8e10e7f2e59829b3|1439340817||t20598.9508147063s|s2782529b|2782529|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||158.72||
+wetlands|stem|44944bdf48d0fb4c|95b4e8136d55df66|445d1273270ae73b|1164817516||t20598.9848806545s|s3814657b|3814657|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||67.2||

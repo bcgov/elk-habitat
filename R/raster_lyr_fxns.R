@@ -13,6 +13,10 @@
 # limitations under the License.
 
 
+# DOWNLOADS ---------------------------------------------------------------
+
+
+
 # Download Maltman et al. (2023) 30m resolution dataset,
 # crop it to the study area, and save it to the "GIS/Forest age" dir.
 # https://www.sciencedirect.com/science/article/pii/S0034425723000809
@@ -159,6 +163,12 @@ download_land_class <- function(url, aoi, save_tiff = TRUE) {
   
 }
 
+
+
+# CALC LAYERS -------------------------------------------------------------
+
+
+
 calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, change_detection) {
   ## Setup ##
   deps <- depletions
@@ -302,6 +312,69 @@ calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, ch
   # Return
   return(d)
 }
+
+
+calc_wetlands_lyr <- function(TEM, wetland_codes, land_class, study_area, res) {
+  # First, load up TEM layer. `prepare_tem_wetlands` then
+  # extracts out wetland polygons (defined in R/TEM_fxns.R).
+  tem_wetlands <- prepare_tem_wetlands(TEM, wetland_codes)
+  
+  # Reproject land classification raster to ESPG 3005
+  # Use method = "near" when re-projecting forest age to new projection,
+  # otherwise you get inaccurate smoothing/averaging of categorical variables.
+  land_class <- terra::project(land_class, "epsg:3005", method = "near")
+  
+  # Bizarrely this reprojection creates boundary cells w value of 4e+09.
+  
+  # Extract only wetland codes from the land_class raster 
+  # (codes 80 + 81, determined from visual exploration)
+  # Let's assume the 'wetlandiness' (or wetland_component) 
+  # of the land_class wetlands to be 10. Everything else 
+  # will be 0
+  # `terra::ifel(land_class %in% c(80, 81), 10, 0)` causes some fussiness w targets...
+  land_class <- terra::ifel((land_class == 80 | land_class == 81), 10, 0)
+  
+  # Crop to study area
+  land_class <- terra::crop(land_class, study_area, mask = TRUE)
+  
+  # Figure out max extent that encompasses all 5 layers
+  bounds <- c(xmin = min(sf::st_bbox(tem_wetlands)[1], sf::st_bbox(land_class)[1]),
+              ymin = min(sf::st_bbox(tem_wetlands)[2], sf::st_bbox(land_class)[2]),
+              xmax = max(sf::st_bbox(tem_wetlands)[3], sf::st_bbox(land_class)[3]),
+              ymax = max(sf::st_bbox(tem_wetlands)[4], sf::st_bbox(land_class)[4]))
+  bounds <- bounds |>
+    sf::st_bbox() |>
+    sf::st_as_sfc() |>
+    sf::st_as_sf(crs = sf::st_crs(tem_wetlands)) |>
+    raster::extent() # convert to `raster` pkg type extent object
+  
+  # Create a raster template following the supplied resolution
+  temp <- raster::raster(bounds, # the extent will be equal to the bounds calculated in `bounds`
+                         res = res, # the resolution will be the supplied resolution
+                         crs = terra::crs(tem_wetlands)) # the CRS will be that of VRI (which is that of every other layer)
+  
+  # Now rasterize TEM
+  tem_wetland_comp <- fasterize::fasterize(tem_wetlands, temp, field = "wetland_component")
+  tem_wetland_comp <- terra::rast(tem_wetland_comp)
+  
+  # Resample land_class to be same res as TEM
+  land_class <- terra::resample(land_class, tem_wetland_comp)
+  names(land_class) <- "wetland_component"
+  
+  # Merge the two rasters, taking TEM data first where available.
+  w <- terra::merge(tem_wetland_comp, land_class, first = TRUE)
+  
+  # Set NA areas to zero just in case to cover any sliver gaps, then 
+  # re-crop to study area
+  w <- terra::ifel(is.na(w), 0, w)
+  w <- terra::crop(w, study_area, mask = TRUE)
+  
+  return(w)
+}
+
+
+# EXTRACT  ----------------------------------------------------------------
+
 
 
 # Extract disturbance layer data (base layer)

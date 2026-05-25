@@ -723,6 +723,11 @@ list(
   ##### Wetlands #####
   # Extract wetland polygons from TEM, then fill in any NA data gaps
   # with the national scale land cover class raster. 
+  tar_terra_rast(wetlands, calc_wetlands_lyr(TEM = tem,
+                                             wetland_codes = wetland_codes, 
+                                             land_class = land_class, 
+                                             study_area = study_area, 
+                                             res = dem_res)),
   #### DEFINE RSF AVAILABILITY ####
   ##### Availability MCPs - Seasonal #####
   # Rather than pull from the 95 percentile MCPs, known available habitat
