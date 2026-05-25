@@ -858,7 +858,10 @@ list(
                                                   disturbance = disturbance,
                                                   stand_edge = stand_edge,
                                                   edge_dist = edge_dist)),
-
+  ##### Wetland component #####
+  # Aka riparian areas
+  tar_target(elk_wetlands, extract_wetland_component(pts = elk,
+                                                     wetlands = wetlands)),
 
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####
@@ -919,6 +922,15 @@ list(
                                                          disturbance = disturbance,
                                                          stand_edge = stand_edge,
                                                          edge_dist = edge_dist)),
+  ##### Wetland attributes #####
+  tar_target(random_winter_wetlands, extract_wetland_component(pts = random_winter,
+                                                               wetlands = wetlands)),
+  tar_target(random_spring_wetlands, extract_wetland_component(pts = random_spring,
+                                                               wetlands = wetlands)),
+  tar_target(random_summer_wetlands, extract_wetland_component(pts = random_summer,
+                                                               wetlands = wetlands)),
+  tar_target(random_swp_wetlands, extract_wetland_component(pts = random_swp,
+                                                            wetlands = wetlands)),
 
   #### PREPARE MODEL DAT ####
   # Finally, merge the various layers together into single

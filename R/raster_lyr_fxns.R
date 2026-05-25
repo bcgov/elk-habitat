@@ -439,3 +439,19 @@ extract_disturbance <- function(pts,
   return(out)
 }
 
+
+# Extract wetland component
+extract_wetland_component <- function(pts, id_col = "idposition", wetlands) {
+  # Set up
+  w <- wetlands
+  # Subset pts to just ID column
+  pts <- pts[,id_col]
+  # Extract disturbance
+  out <- terra::extract(w, pts, ID = FALSE)
+  # Return out
+  out <- cbind(pts, out)
+  names(out)[2] <- "wetland_component"
+  out <- sf::st_drop_geometry(out)
+  return(out)
+}
+
