@@ -224,7 +224,8 @@ prepare_mod_dat <- function(presence_pts, # Main presence df data points
                   step, angle, nsd, dt, mps, kph,
                   elevation_m:slope_aspect, # DEM attributes
                   proj_age_1:species_cd_3, # VRI attributes
-                  disturbance_year:edge_dist_m # disturbance lyr attributes
+                  disturbance_year:edge_dist_m, # disturbance lyr attributes
+                  wetland_component # wetlands
                   )
   
   dat <- as.data.frame(dat)
