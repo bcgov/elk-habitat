@@ -33,7 +33,29 @@ prepare_tem_wetlands <- function(TEM, wetland_codes) {
   # In cases where sitemc_s == site_s, set site_s to '00'
   wetland_codes$site_s <- ifelse(wetland_codes$sitemc_s == wetland_codes$site_s, "00", wetland_codes$site_s)
   # Build lookup code!
-  wetland_codes$lookup <- paste(wetland_codes$bgc_lbl, wetland_codes$sitemc_s, wetland_codes$site_s, sep = "-")
+  lookup <- paste(wetland_codes$bgc_lbl, wetland_codes$sitemc_s, wetland_codes$site_s, sep = "-")
+  
+  # Add missing realm/group codes to the lookup list
+  # Realms
+  # E - Estuarine
+  # H - Hydrogenic
+  # F - Flood
+  # M - Mineral
+  # P - Peat
+  lookup <- c(lookup, "E", "H", "F", "M", "P")
+  # Non-forest
+  # LA - Lake -> Excluding
+  # MU - Mudflat sediment (possibly exclude?)
+  # OW - Shallow Open Water (aka swamp / retired code)
+  # PD - Pond
+  # RI - River
+  # CF - Cultivated Field -> Excluding for now
+  # GB - Gravel bar (retired code) - e.g. 30yo gravel bars are now riparian habitat
+  lookup <- c(lookup, "MU", "OW", "PD", "RI", "GB")
+  
+  lookup <- unique(lookup)
+  
+  # Mario's file has 36382 records
   
   # Prepare TEM
   tem <- TEM
@@ -54,9 +76,9 @@ prepare_tem_wetlands <- function(TEM, wetland_codes) {
   
   # Previous approach - extract wetland-only polyons
   # # Create 3 vectors containing the passing row #s.
-  # fltr1 <- which(tem$lookup1 %in% wetland_codes$lookup)
-  # fltr2 <- which(tem$lookup2 %in% wetland_codes$lookup)
-  # fltr3 <- which(tem$lookup3 %in% wetland_codes$lookup)
+  # fltr1 <- which(tem$lookup1 %in% lookup)
+  # fltr2 <- which(tem$lookup2 %in% lookup)
+  # fltr3 <- which(tem$lookup3 %in% lookup)
   # 
   # fltr <- unique(c(fltr1, fltr2, fltr3))
   # 
@@ -65,9 +87,9 @@ prepare_tem_wetlands <- function(TEM, wetland_codes) {
   # # Let's get the wetlandiness amount in there
   # # If the component falls within Mario's wetland component list,
   # # add up the deciles. Otherwise, exclude the deciles.
-  # wetlands$l1_true <- wetlands$lookup1 %in% wetland_codes$lookup
-  # wetlands$l2_true <- wetlands$lookup2 %in% wetland_codes$lookup
-  # wetlands$l3_true <- wetlands$lookup3 %in% wetland_codes$lookup
+  # wetlands$l1_true <- wetlands$lookup1 %in% lookup
+  # wetlands$l2_true <- wetlands$lookup2 %in% lookup
+  # wetlands$l3_true <- wetlands$lookup3 %in% lookup
   # 
   # wetlands$wetland1 <- wetlands$l1_true * wetlands$ECOSYSTEM_DECILE_CPNT_1
   # wetlands$wetland2 <- wetlands$l2_true * wetlands$ECOSYSTEM_DECILE_CPNT_2
@@ -75,17 +97,30 @@ prepare_tem_wetlands <- function(TEM, wetland_codes) {
   # 
   # wetlands$wetland_component <- rowSums(data.frame(wetlands$wetland1, wetlands$wetland2, wetlands$wetland3), na.rm = TRUE)
   
-  # Current approach - keep al polygons but label appropriately
+  # Current approach - keep all polygons but label appropriately
   # This way we are aware of 0 wetland vs true no TEM data areas
-  tem$l1_true <- tem$lookup1 %in% wetland_codes$lookup
-  tem$l2_true <- tem$lookup2 %in% wetland_codes$lookup
-  tem$l3_true <- tem$lookup3 %in% wetland_codes$lookup
+  tem$l1_true <- tem$lookup1 %in% lookup
+  tem$l2_true <- tem$lookup2 %in% lookup
+  tem$l3_true <- tem$lookup3 %in% lookup
   
+  # Non-forest components
+  tem$nf_l1_true <- (tem$SITE_SERIES_LBL_CPNT_1 %in% lookup | tem$SITE_SERIES_MAP_CDE_LBL_CPNT_1 %in% lookup)
+  tem$nf_l2_true <- (tem$SITE_SERIES_LBL_CPNT_2 %in% lookup | tem$SITE_SERIES_MAP_CDE_LBL_CPNT_2 %in% lookup)
+  tem$nf_l3_true <- (tem$SITE_SERIES_LBL_CPNT_3 %in% lookup | tem$SITE_SERIES_MAP_CDE_LBL_CPNT_3 %in% lookup)
+  
+  # Forested wetland deciles
   tem$wetland1 <- tem$l1_true * tem$ECOSYSTEM_DECILE_CPNT_1
   tem$wetland2 <- tem$l2_true * tem$ECOSYSTEM_DECILE_CPNT_2
   tem$wetland3 <- tem$l3_true * tem$ECOSYSTEM_DECILE_CPNT_3
   
-  tem$wetland_component <- rowSums(data.frame(tem$wetland1, tem$wetland2, tem$wetland3), na.rm = TRUE)
+  # Non-forested wetland deciles
+  tem$wetland_nf1 <- tem$nf_l1_true * tem$ECOSYSTEM_DECILE_CPNT_1
+  tem$wetland_nf2 <- tem$nf_l2_true * tem$ECOSYSTEM_DECILE_CPNT_2
+  tem$wetland_nf3 <- tem$nf_l3_true * tem$ECOSYSTEM_DECILE_CPNT_3
+  
+  tem$wetland_component <- rowSums(data.frame(tem$wetland1, tem$wetland2, tem$wetland3,
+                                              tem$wetland_nf1, tem$wetland_nf2, tem$wetland_nf3), 
+                                   na.rm = TRUE)
   
   return(tem)
   
