@@ -55,6 +55,7 @@ elk_lidar <- tar_read(elk_uwr) # UWR LiDAR-derived attributes
 tar_load(elk_chm) # BCTS Crown Height Model
 tar_load(elk_vri) # VRI-derived attributes
 tar_load(elk_disturbance) # Disturbance layer attributes
+tar_load(elk_wetlands) # TEM wetland component
 
 # Two elk did not experience severe winter conditions, per Mario's
 # work looking at snow depth data on cameras deployed across the
@@ -82,8 +83,9 @@ elk <- merge(elk, elk_lidar, by = "idposition", all = TRUE)
 elk <- merge(elk, elk_chm, by = "idposition", all = TRUE)
 elk <- merge(elk, elk_vri, by = "idposition", all = TRUE)
 elk <- merge(elk, elk_disturbance, by = "idposition", all = TRUE)
+elk <- merge(elk, elk_wetlands, by = "idposition", all = TRUE)
 
-rm(elk_dem, elk_lidar, elk_chm, elk_vri, elk_disturbance)
+rm(elk_dem, elk_lidar, elk_chm, elk_vri, elk_disturbance, elk_wetlands)
 
 elk <- janitor::clean_names(elk)
 
@@ -121,6 +123,8 @@ names(elk)[grep("li_dar", names(elk))] <- "edge_dist"
 #' - disturbance_year
 #' - edginess - was an elk within a patch (closer to 0) or within an edge (closer to 90)
 #' - edge_dist_m
+#' WETLAND VARIABLES
+#' - wetland_component
 
 #' Perhaps let's start with comparing the GPS collar 
 #' derived elevation to the DEM elevation to the LiDAR
@@ -150,15 +154,17 @@ tar_load(random_winter_uwr)
 tar_load(random_winter_chm)
 tar_load(random_winter_vri)
 tar_load(random_winter_disturbance)
+tar_load(random_winter_wetlands)
 
 random_winter <- merge(random_winter_dem, random_winter_uwr, by = "idposition", all = TRUE)
 random_winter <- merge(random_winter, random_winter_chm, by = "idposition", all = TRUE)
 random_winter <- merge(random_winter, random_winter_vri, by = "idposition", all = TRUE)
 random_winter <- merge(random_winter, random_winter_disturbance, by = "idposition", all = TRUE)
+random_winter <- merge(random_winter, random_winter_wetlands, by = "idposition", all = TRUE)
 
 random_winter$season <- "Winter"
 
-rm(random_winter_dem, random_winter_uwr, random_winter_chm, random_winter_vri, random_winter_disturbance)
+rm(random_winter_dem, random_winter_uwr, random_winter_chm, random_winter_vri, random_winter_disturbance, random_winter_wetlands)
 
 # Subsample to 100k rows so plots don't take forever
 random_winter <- random_winter[sample(nrow(random_winter), 100000, replace = FALSE), ]
@@ -169,15 +175,17 @@ tar_load(random_spring_uwr)
 tar_load(random_spring_chm)
 tar_load(random_spring_vri)
 tar_load(random_spring_disturbance)
+tar_load(random_spring_wetlands)
 
 random_spring <- merge(random_spring_dem, random_spring_uwr, by = "idposition", all = TRUE)
 random_spring <- merge(random_spring, random_spring_chm, by = "idposition", all = TRUE)
 random_spring <- merge(random_spring, random_spring_vri, by = "idposition", all = TRUE)
 random_spring <- merge(random_spring, random_spring_disturbance, by = "idposition", all = TRUE)
+random_spring <- merge(random_spring, random_spring_wetlands, by = "idposition", all = TRUE)
 
 random_spring$season <- "Spring"
 
-rm(random_spring_dem, random_spring_uwr, random_spring_chm, random_spring_vri, random_spring_disturbance)
+rm(random_spring_dem, random_spring_uwr, random_spring_chm, random_spring_vri, random_spring_disturbance, random_spring_wetlands)
 
 # Subsample to 100k rows so plots don't take forever
 random_spring <- random_spring[sample(nrow(random_spring), 100000, replace = FALSE), ]
@@ -188,15 +196,17 @@ tar_load(random_summer_uwr)
 tar_load(random_summer_chm)
 tar_load(random_summer_vri)
 tar_load(random_summer_disturbance)
+tar_load(random_summer_wetlands)
 
 random_summer <- merge(random_summer_dem, random_summer_uwr, by = "idposition", all = TRUE)
 random_summer <- merge(random_summer, random_summer_chm, by = "idposition", all = TRUE)
 random_summer <- merge(random_summer, random_summer_vri, by = "idposition", all = TRUE)
 random_summer <- merge(random_summer, random_summer_disturbance, by = "idposition", all = TRUE)
+random_summer <- merge(random_summer, random_summer_wetlands, by = "idposition", all = TRUE)
 
 random_summer$season <- "Summer"
 
-rm(random_summer_dem, random_summer_uwr, random_summer_chm, random_summer_vri, random_summer_disturbance)
+rm(random_summer_dem, random_summer_uwr, random_summer_chm, random_summer_vri, random_summer_disturbance, random_summer_wetlands)
 
 # Subsample to 100k rows so plots don't take forever
 random_summer <- random_summer[sample(nrow(random_summer), 100000, replace = FALSE), ]
@@ -207,16 +217,18 @@ tar_load(random_swp_uwr)
 tar_load(random_swp_chm)
 tar_load(random_swp_vri)
 tar_load(random_swp_disturbance)
+tar_load(random_swp_wetlands)
 
 random_swp <- merge(random_swp_dem, random_swp_uwr, by = "idposition", all = TRUE)
 random_swp <- merge(random_swp, random_swp_chm, by = "idposition", all = TRUE)
 random_swp <- merge(random_swp, random_swp_vri, by = "idposition", all = TRUE)
 random_swp <- merge(random_swp, random_swp_disturbance, by = "idposition", all = TRUE)
+random_swp <- merge(random_swp, random_swp_wetlands, by = "idposition", all = TRUE)
 
 # Set SWP flag
 random_swp$SWP <- TRUE
 
-rm(random_swp_dem, random_swp_uwr, random_swp_chm, random_swp_vri, random_swp_disturbance)
+rm(random_swp_dem, random_swp_uwr, random_swp_chm, random_swp_vri, random_swp_disturbance, random_swp_wetlands)
 
 # Subsample to 50k rows so plots don't take forever
 random_swp <- random_swp[sample(nrow(random_swp), 50000, replace = FALSE), ]
@@ -236,18 +248,10 @@ rm(random_winter, random_spring, random_summer, random_swp)
 
 ## Misc fixes ####
 
-# Any "FD" should be "FDC"
-elk$species_cd_1 <- ifelse(elk$species_cd_1 == "FD", "FDC", elk$species_cd_1)
-elk$species_cd_2 <- ifelse(elk$species_cd_2 == "FD", "FDC", elk$species_cd_2)
-elk$species_cd_3 <- ifelse(elk$species_cd_3 == "FD", "FDC", elk$species_cd_3)
+# 2026-05-26 As of this writing, all fixes have been moved to the pipeline
 
-random_pts$SPECIES_CD_1 <- ifelse(random_pts$SPECIES_CD_1 == "FD", "FDC", random_pts$SPECIES_CD_1)
-random_pts$SPECIES_CD_2 <- ifelse(random_pts$SPECIES_CD_2 == "FD", "FDC", random_pts$SPECIES_CD_2)
-random_pts$SPECIES_CD_3 <- ifelse(random_pts$SPECIES_CD_3 == "FD", "FDC", random_pts$SPECIES_CD_3)
 
 # SOURCE COMPARISON -------------------------------------------------------
-
-
 
 # Comparison density plots
 
@@ -5702,4 +5706,385 @@ p |>
        50k 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
        Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
   theme_minimal()
+
+
+
+
+
+# WETLANDS ----------------------------------------------------------------
+
+# aKa Riparian areas
+
+## Wetland component ####
+
+# Create a df of data to plot - our elk data
+# merged with the random sampling data
+p <- rbind(data.frame("val" = random_pts$wetland_component,
+                      "type" = "Random wetlands",
+                      "season" = random_pts$season,
+                      "pool" = "random",
+                      "dttm" = NA,
+                      "year" = NA,
+                      "yday" = random_pts$yday,
+                      "swp" = random_pts$SWP),
+           data.frame("val" = elk$wetland_component,
+                      "type" = "Elk wetlands",
+                      "season" = elk$season,
+                      "pool" = "real",
+                      "dttm" = elk$dttm,
+                      "year" = elk$year,
+                      "yday" = elk$yday,
+                      "swp" = elk$swp))
+
+# DENSITY PLOT - Random vs Selected
+p |>
+  ggplot(aes(x = val)) +
+  geom_density(aes(color = type,
+                   fill = type),
+               alpha = 0.1) +
+  scale_fill_manual(values = c("#E69F00", "#009E73", "#CC79A7"),
+                    name = "Type",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = c("#E69F00", "#009E73", "#CC79A7"),
+                     name = "Type",
+                     #labels = c()
+  ) +
+  labs(title = "Wetland Component - available vs elk",
+       subtitle = "All dates",
+       x = "Wetland Component",
+       y = "Density",
+       caption = paste0("A subsample of 100k random points are drawn from the sum of all seasonal MCPs.
+                        N elk pts = ", nrow(p[p$pool == "real",]),
+                        "\nN random pts = ", nrow(p[p$pool == "random",]))) +
+  theme_minimal()
+
+# Seasonal differences
+
+# Set factor for plotting
+p$season <- factor(p$season, levels = c("Spring", "Summer", "Winter"))
+
+## BOXPLOT
+n_label <- p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(!is.na(val)) |>
+  units::drop_units() |>
+  dplyr::group_by(season, type) |>
+  dplyr::mutate(N = dplyr::n()) |>
+  dplyr::slice_max(val) |>
+  dplyr::select(season, type, val, N) |>
+  dplyr::mutate(N = paste0("N = ", N)) |>
+  dplyr::distinct()
+
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(season %in% c("Winter", "Spring", "Summer")) |>
+  dplyr::filter(!is.na(val)) |>
+  units::drop_units() |> 
+  dplyr::bind_rows(n_label) |>
+  ggplot(aes(x = type,
+             y = val)) +
+  geom_jitter(aes(color = season),
+              pch = ".",
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual("Season", values = okabe[1:4]) +
+  geom_signif(comparisons = list(c("Elk wetlands", "Random wetlands")),
+              test = "wilcox.test",
+              map_signif_level = TRUE,
+              y_position = 10) +
+  geom_text(aes(label = N),
+            nudge_y = 1.5) +
+  facet_wrap(~ season) +
+  labs(x = "",
+       y = "Wetland Component") +
+  theme_minimal()
+
+
+
+## DENSITY PLOT
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::mutate(season = dplyr::if_else(pool == "real",
+                                        season,
+                                        "Random points")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season)) +
+  geom_density(alpha = 0.2) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  labs(x = "Wetland Component",
+       y = "Density") +
+  theme_minimal()
+
+
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::mutate(season = dplyr::if_else(pool == "real",
+                                        season,
+                                        "Random points")) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season)) +
+  geom_density(alpha = 0.2) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  scale_x_continuous(limits = c(8, 10)) +
+  labs(x = "Wetland Component",
+       y = "Density") +
+  theme_minimal()
+
+
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::filter(pool == "real") |>
+  units::drop_units() |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season)) +
+  geom_density(alpha = 0.2) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  labs(x = "Wetland Component",
+       y = "Density") +
+  theme_minimal()
+
+
+## DENSITY PLOT SPLIT BY SEASON
+p |>
+  dplyr::filter(!is.na(season)) |>
+  dplyr::mutate(season = factor(season, levels = c("Spring", "Summer", "Winter", "Random points"))) |>
+  ggplot(aes(x = val,
+             color = season,
+             fill = season,
+             linetype = type)) +
+  geom_density(alpha = 0.2) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_color_manual("Season",
+                     values = okabe[1:4]) +
+  scale_fill_manual("Season",
+                    values = okabe[1:4]) +
+  facet_wrap(~ season) +
+  labs(x = "Wetland Component",
+       y = "Density",
+       caption = "100k random data points for each season are sampled from that season's MCP. \nSeasonal MCPs are derived by merging all the MCPs from each elk-season into a single polygon.") +
+  theme_minimal()
+
+
+
+# SWP plots
+
+## BOXPLOT - Yearly variation WITHOUT random
+p |>
+  dplyr::filter(pool == "real") |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021", "2021-2022",
+                            "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:5],
+                     name = "Type") +
+  labs(title = "Wetland Component - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Wetland Components",
+       caption = "2021-2022 was the 'Severe' year.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 10,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 11,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 12,
+              color = "black") +
+  theme_minimal()
+
+
+## BOXPLOT - Yearly variation WITH RANDOM
+p |>
+  dplyr::filter(swp == TRUE) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::mutate(year = dplyr::if_else(pool == "random", "Random", year)) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021", "2021-2022",
+                            "2022-2023", "2023-2024", "Random")) |>
+  #units::drop_units() |>
+  ggplot(aes(x = as.factor(year),
+             y = val)) +
+  geom_jitter(aes(color = as.factor(year)),
+              alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_color_manual(values = okabe[1:6],
+                     name = "Type") +
+  labs(title = "Disturbance Year - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Year",
+       y = "Disturbance Year",
+       caption = "2021-2022 was the 'Severe' year.
+       50k 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  geom_signif(comparisons = list(c("2019-2020", "2020-2021"),
+                                 c("2021-2022", "2020-2021"),
+                                 c("2021-2022", "2022-2023"),
+                                 c("2022-2023", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              color = "black") +
+  geom_signif(comparisons = list(c("2021-2022", "2019-2020"),
+                                 c("2021-2022", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 10,
+              color = "black") +
+  geom_signif(comparisons = list(c("2020-2021", "2022-2023")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 11,
+              color = "black") +
+  geom_signif(comparisons = list(c("2019-2020", "2023-2024")),
+              map_signif_level = TRUE,
+              test = "wilcox.test",
+              y_position = 12,
+              color = "black") +
+  theme_minimal()
+
+
+## DENSITY PLOT
+p |>
+  units::drop_units() |>
+  dplyr::filter(pool == "real") |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021", "2021-2022",
+                            "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot(aes(x = val,
+             color = as.factor(year))) +
+  geom_density(aes(color = year,
+                   fill = year),
+               alpha = 0.1) +
+  scale_fill_manual(values = okabe[1:5],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:5],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  labs(title = "Wetland Component - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Wetland Component",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.") +
+  theme_minimal()
+
+
+
+## SWP ACTUAL VS RANDOM
+# Random SWP points are sampled from the the pooled Winter MCPs
+# of elk individuals that have experienced a severe winter.
+p |>
+  dplyr::filter(swp == TRUE & pool == "random") |>
+  dplyr::select(val, yday, year, type, pool) |>
+  # Duplicate random dataset for each year
+  dplyr::mutate(year = purrr::map2(2019, 2024, `:`)) |>
+  tidyr::unnest(cols = c(year)) |>
+  # Bind in the real data now
+  dplyr::bind_rows(p[which(p$swp == TRUE & p$pool == "real"), ]) |>
+  dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
+  dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021",
+                            "2021-2022", "2022-2023", "2023-2024")) |>
+  #units::drop_units() |>
+  ggplot() +
+  geom_density(aes(x = val,
+                   color = year,
+                   fill = year,
+                   linetype = type),
+               alpha = 0.1) +
+  scale_linetype("Source", labels = c("Real data", "Random data")) +
+  scale_fill_manual(values = okabe[1:7],
+                    name = "Year",
+                    #labels = c()
+  ) +
+  scale_color_manual(values = okabe[1:7],
+                     name = "Year",
+                     #labels = c()
+  ) +
+  facet_wrap(~ year) +
+  labs(title = "Wetland Component - SWP across years",
+       subtitle = "During the Severe Winter Period (18 Dec - 14 Jan)",
+       x = "Wetland Component",
+       y = "Density",
+       caption = "2021-2022 was the 'Severe' year.
+       50k 'Random' points are drawn from the pooled Winter MCPs of elk that experienced the 2021-2022 severe winter.
+       Note that the 'Winter' MCP date range runs from Jan 01-Mar 31.") +
+  theme_minimal()
+
+
+
+
+## Wetlands x Elevation ####
+
+ggplot(elk, aes(x = factor(wetland_component), y = elevation_m)) +
+  geom_jitter(aes(alpha = 0.1, 
+                  color = wetland_component),
+              show.legend = FALSE,
+              pch = ".") +
+  geom_boxplot(fill = NA) +
+  labs(title = "Elk wetland x elevation pts",
+       x = "Wetland Component",
+       y = "Elevation (m)") +
+  theme_minimal()
+
+elk |>
+  sf::st_drop_geometry() |>
+  dplyr::filter(!is.na(wetland_component)) |>
+  dplyr::mutate(season = factor(season, levels = c("Winter", "Spring", "Summer"))) |>
+  ggplot(aes(x = factor(wetland_component), y = elevation_m)) +
+  geom_jitter(aes(alpha = 0.1, 
+                  color = season),
+              show.legend = FALSE,
+              pch = ".") +
+  geom_boxplot(fill = NA) +
+  facet_wrap(~season) +
+  scale_color_manual("Season",
+                     values = c(okabe[3], okabe[1], okabe[2])) +
+  labs(title = "Elk wetland x elevation pts",
+       x = "Wetland Component",
+       y = "Elevation (m)") +
+  theme_minimal()
+
 
