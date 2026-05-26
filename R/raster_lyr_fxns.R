@@ -315,6 +315,9 @@ calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, ch
 
 
 calc_wetlands_lyr <- function(TEM, wetland_codes, land_class, study_area, res) {
+  # Make study_area a solid block - don't cut out estuary areas
+  study_area <- sf::st_concave_hull(study_area, 1)
+  
   # First, load up TEM layer. `prepare_tem_wetlands` then
   # extracts out wetland polygons (defined in R/TEM_fxns.R).
   tem_wetlands <- prepare_tem_wetlands(TEM, wetland_codes)
