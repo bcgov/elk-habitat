@@ -354,8 +354,17 @@ calc_wetlands_lyr <- function(TEM, wetland_codes, land_class, study_area, res) {
                          crs = terra::crs(tem_wetlands)) # the CRS will be that of VRI (which is that of every other layer)
   
   # Now rasterize TEM
-  tem_wetland_comp <- fasterize::fasterize(tem_wetlands, temp, field = "wetland_component")
-  tem_wetland_comp <- terra::rast(tem_wetland_comp)
+  # Turns out that because the TEM has many overlapping polygons, 
+  # The rasterization can get confused. So, rasterize everything that 
+  # is a wetland first, then rasterize everything else, and layer them
+  # up.
+  r_tem_wetlands <- fasterize::fasterize(tem_wetlands[which(tem_wetlands$wetland_component > 0), ], temp, field = "wetland_component")
+  r_tem_wetlands <- terra::rast(r_tem_wetlands)
+  
+  r_tem_dry <- fasterize::fasterize(tem_wetlands[which(tem_wetlands$wetland_component == 0), ], temp, field = "wetland_component")
+  r_tem_dry <- terra::rast(r_tem_dry)
+  
+  tem_wetland_comp <- terra::merge(r_tem_wetlands, r_tem_dry, first = TRUE)
   
   # Resample land_class to be same res as TEM
   land_class <- terra::resample(land_class, tem_wetland_comp)
@@ -368,6 +377,11 @@ calc_wetlands_lyr <- function(TEM, wetland_codes, land_class, study_area, res) {
   # re-crop to study area
   w <- terra::ifel(is.na(w), 0, w)
   w <- terra::crop(w, study_area, mask = TRUE)
+  
+  # Finally, this whole process has added some icky floating
+  # decimals to our values (only discovered in QGIS later). 
+  # Round the values to nearest whole number.
+  terra::values(w) <- as.integer(terra::values(w))
   
   return(w)
 }
