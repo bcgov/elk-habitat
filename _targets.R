@@ -862,6 +862,12 @@ list(
   # Aka riparian areas
   tar_target(elk_wetlands, extract_wetland_component(pts = elk,
                                                      wetlands = wetlands)),
+  ##### EXPLORATORY PLOTS #####
+  tar_render(nsd_plus_elev_plots,
+             "reports/elk_nsd_plus_elevation.Rmd",
+             output_file = "elk_nsd_plus_elevation.pdf",
+             params = list(elk_data = elk,
+                           dem_data = elk_dem)),
 
   #### RANDOM DATA EXTRACTION ####
   ##### DEM attributes #####

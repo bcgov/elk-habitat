@@ -1,0 +1,161 @@
+---
+title: "NSD & delta Elevation"
+output: pdf_document
+date: "`r Sys.Date()`"
+params: 
+  elk_data: "elk"
+  dem_data: "elk_dem"
+editor_options: 
+  chunk_output_type: console
+---
+
+Note that net squared displacement is measured from the initial collaring location.
+
+Delta elevation is calculated as an elk's current elevation minus the minimum elevation of that elk. Therefore, all elk are measured from a baseline elevation of 0 meters for the purposes of plotting. This is done to account for elk that live close to shore, and therefore have a lower baseline elevation, versus elk that live more in the interior, which has a higher baseline elevation, even when that elk is in a valley bottom.
+
+NSD and delta elevation are both normalized to run from 0 to 1 for the plots where both NSD and elevation show up simultaneously, to ensure they both share the same y-axis. *This erases the magnitude of change.* Only use these plots to see if the pattern of movement (NSD vs delta elevation) lines up.
+
+Finally, for the NSD vs Elevation plots, I don't know if these are useful at all, but I threw them in thinking points falling along a 1:1 line indicates that NSD and delta elevation are tightly correlated. 
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(ggrastr) # to rasterize the point geoms, for faster pdf loading
+
+knitr::opts_chunk$set(echo = FALSE)
+
+elk <- sf::st_drop_geometry(params$elk_data)
+
+elk_dem <- params$dem_data
+
+elk <- merge(elk, elk_dem, by = "idposition")
+
+elk <- elk |> 
+  dplyr::group_by(animal_id, collar_id) |>
+  dplyr::arrange(dttm) |>
+  dplyr::mutate(min_elevation_m = min(elevation_m),
+                d_elevation_m = elevation_m - min_elevation_m)
+
+quad_plot <- function(elk, id) {
+  # p1
+  # dttm vs NSD
+  p1 <- elk |>
+    dplyr::filter(animal_id == id) |>
+    dplyr::mutate(date = lubridate::date(dttm),
+                  NSD = NSD / 1000 / 1000) |> # Convert NSD in meters to NSD in km
+    ggplot(aes(x = date,
+               y = NSD)) +
+    geom_path(aes(group = as.factor(collar_id)),
+              alpha = 0.3, 
+              color = "black") +
+    geom_point_rast(pch = ".",
+                    color = "darkgreen") +
+    ggplot2::scale_x_date(labels = scales::date_format("%b %y"),
+                          date_breaks = "3 months") +
+    labs(title = "NSD",
+         y = "Net Squared Dislacement (km)") +
+    theme_minimal() +
+    ggplot2::theme(title = element_text(size = 8),
+                   axis.title = element_text(size = 8),
+                   axis.title.x = element_blank(),
+                   axis.ticks.x = element_line(color = "black"),
+                   axis.text.x = element_text(size = 7, angle = 90))
+
+  # p2 
+  # dttm vs delta elevation
+  p2 <- elk |> 
+    sf::st_drop_geometry() |>
+    dplyr::group_by(animal_id) |>
+    dplyr::arrange(dttm) |>
+    dplyr::mutate(min_elevation_m = min(elevation_m),
+                  d_elevation_m = elevation_m - min_elevation_m) |>
+    dplyr::filter(animal_id == id) |>
+    dplyr::mutate(date = lubridate::date(dttm)) |> 
+    ggplot(aes(x = date,
+               y = elevation_m)) +
+    geom_path(aes(group = as.factor(collar_id)),
+              alpha = 0.3, 
+              color = "black") +
+    geom_point_rast(pch = ".",
+                    color = "orangered") +
+    ggplot2::scale_x_date(labels = scales::date_format("%b %y"),
+                          date_breaks = "3 months") +
+    labs(title = "Elevation",
+         y = "delta elevation (m)") +
+    theme_minimal() +
+    ggplot2::theme(title = element_text(size = 8),
+                   axis.title = element_text(size = 8),
+                   axis.title.x = element_blank(),
+                   axis.ticks.x = element_line(color = "black"),
+                   axis.text.x = element_text(size = 7, angle = 90))
+  
+  # p3
+  # dttm vs both NSD & elevation
+  p3 <- elk |> 
+    sf::st_drop_geometry() |>
+    dplyr::filter(animal_id == id) |> 
+    dplyr::mutate(NSD = NSD / 1000 / 1000) |> # expess in km rather than m
+    # Normalize both to run from 0 to 1
+    dplyr::mutate(NSD = NSD / max(NSD),
+                  d_elevation_m = d_elevation_m / max(d_elevation_m),
+                  date = lubridate::date(dttm)) |>
+    dplyr::select(animal_id, collar_id, date, NSD, d_elevation_m) |>
+    tidyr::pivot_longer(cols = c(NSD, d_elevation_m),
+                        values_to = "normalized_delta") |>
+    ggplot(aes(x = date,
+               y = normalized_delta)) +
+    geom_path(aes(group = interaction(name, collar_id)),
+              alpha = 0.3, 
+              color = "black") +
+    geom_point_rast(pch = ".",
+                    aes(color = name)) +
+    scale_color_manual(values = c("orangered", "darkgreen")) +
+    ggplot2::scale_x_date(labels = scales::date_format("%b %y"),
+                          date_breaks = "3 months") +
+    labs(title = "Both NSD & Elevation",
+         y = "Normalized Delta") +
+    theme_minimal() +
+    ggplot2::theme(title = element_text(size = 8),
+                   axis.title = element_text(size = 8),
+                   axis.title.x = element_blank(),
+                   axis.ticks.x = element_line(color = "black"),
+                   axis.text.x = element_text(size = 7, angle = 90),
+                   legend.position = "none")
+  
+  p4 <- elk |> 
+    sf::st_drop_geometry() |>
+    dplyr::filter(animal_id == id) |> 
+    dplyr::mutate(NSD = NSD / 1000 / 1000) |> # expess in km rather than m
+    # Normalize both to run from 0 to 1
+    dplyr::mutate(NSD = NSD / max(NSD),
+                  d_elevation_m = d_elevation_m / max(d_elevation_m)) |>
+    ggplot(aes(x = NSD, 
+               y = d_elevation_m)) +
+    geom_point_rast(pch = ".",
+                    color = "slateblue") +
+    geom_abline(slope = 1) +
+    labs(title = "NSD vs Elevation",
+         x = "Normalized NSD",
+         y = "Normalized delta elevation (m)") +
+    theme_minimal() +
+    ggplot2::theme(title = element_text(size = 8),
+                   axis.title = element_text(size = 8),
+                   axis.ticks.x = element_line(color = "black"),
+                   axis.text.x = element_text(size = 7, angle = 90))
+
+  p <- ggpubr::ggarrange(p1, p2, p3, p4) |>
+    ggpubr::annotate_figure(top = ggpubr::text_grob(id,
+                                                    color = "black",
+                                                    face = "bold",
+                                                    size = 12))
+  return(p)
+}
+
+ids <- unique(elk$animal_id)
+```
+
+```{r plots, fig.align='center', fig.height=4.2}
+for (i in ids) {
+  p <- suppressMessages(quad_plot(elk, i))
+  print(p)
+}
+```
