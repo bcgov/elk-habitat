@@ -5,17 +5,10 @@ date: "`r Sys.Date()`"
 params: 
   elk_data: "elk"
   dem_data: "elk_dem"
+  ei: "elevation_index"
 editor_options: 
   chunk_output_type: console
 ---
-
-Note that net squared displacement is measured from the initial collaring location.
-
-Delta elevation is calculated as an elk's current elevation minus the minimum elevation of that elk. Therefore, all elk are measured from a baseline elevation of 0 meters for the purposes of plotting. This is done to account for elk that live close to shore, and therefore have a lower baseline elevation, versus elk that live more in the interior, which has a higher baseline elevation, even when that elk is in a valley bottom.
-
-NSD and delta elevation are both normalized to run from 0 to 1 for the plots where both NSD and elevation show up simultaneously, to ensure they both share the same y-axis. *This erases the magnitude of change.* Only use these plots to see if the pattern of movement (NSD vs delta elevation) lines up.
-
-Finally, for the NSD vs Elevation plots, I don't know if these are useful at all, but I threw them in thinking points falling along a 1:1 line indicates that NSD and delta elevation are tightly correlated. 
 
 ```{r setup, include=FALSE}
 library(ggplot2)
@@ -34,6 +27,12 @@ elk <- elk |>
   dplyr::arrange(dttm) |>
   dplyr::mutate(min_elevation_m = min(elevation_m),
                 d_elevation_m = elevation_m - min_elevation_m)
+
+ei <- params$ei
+
+# Filter to only elk w summer data
+elk <- elk |>
+  dplyr::filter(animal_id %in% ei$animal_id)
 
 quad_plot <- function(elk, id) {
   # p1
@@ -121,37 +120,62 @@ quad_plot <- function(elk, id) {
                    axis.text.x = element_text(size = 7, angle = 90),
                    legend.position = "none")
   
-  p4 <- elk |> 
-    sf::st_drop_geometry() |>
-    dplyr::filter(animal_id == id) |> 
-    dplyr::mutate(NSD = NSD / 1000 / 1000) |> # expess in km rather than m
-    # Normalize both to run from 0 to 1
-    dplyr::mutate(NSD = NSD / max(NSD),
-                  d_elevation_m = d_elevation_m / max(d_elevation_m)) |>
-    ggplot(aes(x = NSD, 
-               y = d_elevation_m)) +
-    geom_point_rast(pch = ".",
-                    color = "slateblue") +
-    geom_abline(slope = 1) +
-    labs(title = "NSD vs Elevation",
-         x = "Normalized NSD",
-         y = "Normalized delta elevation (m)") +
-    theme_minimal() +
-    ggplot2::theme(title = element_text(size = 8),
-                   axis.title = element_text(size = 8),
-                   axis.ticks.x = element_line(color = "black"),
-                   axis.text.x = element_text(size = 7, angle = 90))
+  # Not using anymore
+  # p4 <- elk |> 
+  #   sf::st_drop_geometry() |>
+  #   dplyr::filter(animal_id == id) |> 
+  #   dplyr::mutate(NSD = NSD / 1000 / 1000) |> # expess in km rather than m
+  #   # Normalize both to run from 0 to 1
+  #   dplyr::mutate(NSD = NSD / max(NSD),
+  #                 d_elevation_m = d_elevation_m / max(d_elevation_m)) |>
+  #   ggplot(aes(x = NSD, 
+  #              y = d_elevation_m)) +
+  #   geom_point_rast(pch = ".",
+  #                   color = "slateblue") +
+  #   geom_abline(slope = 1) +
+  #   labs(title = "NSD vs Elevation",
+  #        x = "Normalized NSD",
+  #        y = "Normalized delta elevation (m)") +
+  #   theme_minimal() +
+  #   ggplot2::theme(title = element_text(size = 8),
+  #                  axis.title = element_text(size = 8),
+  #                  axis.ticks.x = element_line(color = "black"),
+  #                  axis.text.x = element_text(size = 7, angle = 90))
+  
+  # Pull migration index for the individual
+  ei_0 <- data.frame(x = 1, y = 1, val = round(ei[["elev_index"]][ei$animal_id == id], 2))
+
+  # Turn it into a plot
+  p4 <- ggplot(ei_0, aes(x = x, y = y)) +
+    geom_text(aes(label = val), size = 20, fontface = "bold") +
+    theme_void()
 
   p <- ggpubr::ggarrange(p1, p2, p3, p4) |>
     ggpubr::annotate_figure(top = ggpubr::text_grob(id,
                                                     color = "black",
                                                     face = "bold",
                                                     size = 12))
+  
+  
+  
   return(p)
 }
 
 ids <- unique(elk$animal_id)
 ```
+
+Note that net squared displacement is measured from the initial collaring location.
+
+Delta elevation is calculated as an elk's current elevation minus the minimum elevation of that elk. Therefore, all elk are measured from a baseline elevation of 0 meters for the purposes of plotting. This is done to account for elk that live close to shore, and therefore have a lower baseline elevation, versus elk that live more in the interior, which has a higher baseline elevation, even when that elk is in a valley bottom.
+
+NSD and delta elevation are both normalized to run from 0 to 1 for the plots where both NSD and elevation show up simultaneously, to ensure they both share the same y-axis. *This erases the magnitude of change.* Only use these plots to see if the pattern of movement (NSD vs delta elevation) lines up.
+
+Lastly is the **elevation index** - the mean summer elevation of that individual elk divided by the maximum attained summer elevation across the population (`r paste(unique(ei$max_elev))` m). The minimum index value for this population is `r paste(round(min(ei$elev_index), 2))`, while the maximum is `r paste(round(max(ei$elev_index), 2))`.
+
+```{r density plot, fig.align = 'center', fig.height=4.2}
+plot(density(ei$elev_index), main = "Distribution of Elevation Index")
+```
+
 
 ```{r plots, fig.align='center', fig.height=4.2}
 for (i in ids) {
