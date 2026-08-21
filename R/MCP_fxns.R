@@ -128,8 +128,80 @@ individual_mcp <- function(elk_dat, percent = 0.99, area_unit = "ha",...) {
   
 }
 
+# Unfortunately individual_mcp isn't vectorized/even when I vectorize it
+# it doesn't play nice w dplyr::group_by. So then following fxns are necessary
+# to calc MCPs at different groupings.
+
+# MCP containing entire SWP 
 # min_days is expressed as a percentage. What percentage of days must have a detection
 # in order to accept that subset of data for the MCP?
+# dots = params for find_center
+severe_mcp <- function(elk, non_swp_elk, swp_dates, min_days, ...) {
+  
+  # First unpack dots to check if percent cutoff and center method supplied
+  dots <- list(...)
+  args <- match(names(formals(individual_mcp)), names(dots))
+  mcp_dots <- dots[args[!is.na(args)]]
+  
+  # Then subset elk dataset down to SWP data
+  swp_dat <- elk |>
+    dplyr::filter(!animal_id %in% non_swp_elk) |>
+    dplyr::filter(lubridate::date(dttm) %in% swp_dates)
+  
+  swp_list <- unique(swp_dat$animal_id)
+  
+  # Subset to only include MCPs with fixes on at least X% of days
+  if (!missing(min_days)) {
+    if (min_days > 1) min_days <- min_days / 100 # ensure it's a percentage
+    n_days_min <- as.numeric(max(swp_dates) - min(swp_dates))
+    n_days_min <- n_days_min * min_days # if we want to ensure one point per day SS, fix_days should == 1. Otherwise, if we want, e.g., 90% days covered, fix_days = 0.9
+    tmp <- swp_dat |>
+        sf::st_drop_geometry() |>
+        dplyr::mutate(date = lubridate::date(dttm)) |>
+        dplyr::select(animal_id, date) |>
+        dplyr::distinct() |>
+        dplyr::group_by(animal_id) |>
+        dplyr::summarise(n_days = dplyr::n()) |>
+        dplyr::mutate(enough_days = n_days >= n_days_min)
+    # Now subset to only animals to keep
+    swp_list <- tmp[["animal_id"]][tmp$enough_days == TRUE]
+  }
+  
+  hulls <- lapply(swp_list, function(i) { tryCatch({
+    message("Calculating MCP for ", i, "...")
+    # Subset to individual
+    e <- swp_dat[which(swp_dat$animal_id == i), ]
+    # Calculate MCP
+    if (length(mcp_dots) == 0) {
+      out <- individual_mcp(elk_dat = e)
+    } else {
+      out <- do.call("individual_mcp", args = c(list(e), mcp_dots))
+    }
+    return(out)
+  }, # end first tryCatch {}
+  error = function(i) {
+    message("Error with ", i)
+  }) # end tryCatch
+  }) # end hulls lapply
+  
+  # Bind into one df
+  out <- hulls[!is.na(hulls)]
+  out <- dplyr::bind_rows(out)
+  
+  # Clean up
+  out$season <- "SWP"
+  out$elk_season <- paste0(out$animal_id, "_", out$season)
+  #out$year <- "2021-2022" # Creates issues down the road w bind_rows of character vs numeric data
+  sf::st_geometry(out) <- "geometry"
+  out <- out[,c("elk_season", "animal_id", "season", "area", "geometry")] # Reorder cols
+  
+  return(out)
+  
+}
+
+# min_days is expressed as a percentage. What percentage of days must have a detection
+# in order to accept that subset of data for the MCP?
+# dots = params for find_center
 seasonal_mcp <- function(elk, season, min_days, ...) {
   # Dots = args to pass on to `individual_mcp` (percent, area_unit) and `find_center` (method)
   # Parse seasons into POSIX dates
