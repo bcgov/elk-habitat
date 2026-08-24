@@ -573,6 +573,11 @@ list(
                                                    year + 1,
                                                    year)) |>
                dplyr::mutate(season = paste0(year - 1, "-", year)) |>
+               dplyr::group_by(animal_id, season) |> # ensure all days present prior to including in summary stats
+               dplyr::mutate(day352 = any(352 %in% doy),
+                             day14 = any(14 %in% doy),
+                             all_days = (day352 & day14)) |> 
+               dplyr::filter(all_days == TRUE) |> # must have days 352 and 14 to be included in calculation
                dplyr::group_by(season) |>
                dplyr::summarise(N = dplyr::n(),
                                 min = min(centroid_dist, na.rm = TRUE),
@@ -598,6 +603,11 @@ list(
                dplyr::mutate(year = isoyear) |>
                dplyr::mutate(year = dplyr::if_else(week < 3, year-1, year)) |>
                dplyr::mutate(season = paste0(year, "-", year+1)) |>
+               dplyr::group_by(animal_id, season, method) |> # ensure all weeks present prior to including in summary stats
+               dplyr::mutate(week50 = any(50 %in% week),
+                             week2 = any(2 %in% week),
+                             all_weeks = (week50 & week2)) |> 
+               dplyr::filter(all_weeks == TRUE) |> # must have weeks 50 and 2 to be included in calculation
                dplyr::group_by(season, method) |>
                dplyr::summarise(N = dplyr::n(),
                                 min = min(centroid_dist, na.rm = TRUE),
