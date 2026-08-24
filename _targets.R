@@ -246,11 +246,13 @@ list(
                             append = FALSE)),
   # Special case - SWP 'season'
   tar_target(swp_mcp, severe_mcp(elk = elk, 
-                              non_swp_elk = non_swp_elk, 
-                              swp_dates = swp_dates, 
-                              min_days = 0.9)),
-  tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp, swp_mcp)),
+                                 non_swp_elk = non_swp_elk, 
+                                 swp_days = swp_days, 
+                                 min_days = 0.9)),
+  # Merge all seasons into single object
+  tar_target(all_seasons_mcp, dplyr::bind_rows(winter_mcp, spring_mcp, summer_mcp)),
   tar_target(mcp_seasonal_summary, summarize_area(all_seasons_mcp, group_by = "season")),
+  tar_target(mcp_swp_summary, summarize_area(swp_mcp, group_by = "year")),
   # TODO: summary plots of MCP areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   ##### Dynamic Brownian Bridge Movement Models #####
   tar_target(winter_dbbmm, seasonal_dbbmm(elk = elk,
@@ -280,8 +282,15 @@ list(
                                           ud_percent = dBBMM_seasonal_ud) |>
                sf::st_write(paste0("temp/Pipeline outputs/dBBMM_Summer_window", szn_window, "_margin", szn_margin, "_", (dBBMM_seasonal_ud * 100), "ud.shp"),
                             append = FALSE)),
+  # Special case - SWP 'season'
+  tar_target(swp_dbbmm, severe_dbbmm(elk = elk, 
+                                     non_swp_elk = non_swp_elk, 
+                                     swp_days = swp_days, 
+                                     min_days = 0.9)),
+  # Merge all seasons into single object
   tar_target(all_seasons_dbbmm, dplyr::bind_rows(winter_dbbmm, spring_dbbmm, summer_dbbmm)),
   tar_target(dbbmm_seasonal_summary, summarize_area(all_seasons_dbbmm, group_by = "season")),
+  tar_target(dbbmm_swp_summary, summarize_area(swp_dbbmm, group_by = "year")),
   # TODO: summary plots of dBBMM areas (currently stored in `dBBMM_MCP_summary_plots.R`)
   #### WEEKLY HOME RANGE ESTIMATES ####
   ##### MCP #####
