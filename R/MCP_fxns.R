@@ -128,8 +128,113 @@ individual_mcp <- function(elk_dat, percent = 0.99, area_unit = "ha",...) {
   
 }
 
+# Unfortunately individual_mcp isn't vectorized/even when I vectorize it
+# it doesn't play nice w dplyr::group_by. So then following fxns are necessary
+# to calc MCPs at different groupings.
+
+# MCP containing entire SWP 
 # min_days is expressed as a percentage. What percentage of days must have a detection
 # in order to accept that subset of data for the MCP?
+# dots = params for find_center
+severe_mcp <- function(elk, non_swp_elk, swp_days, min_days, ...) {
+  
+  # First unpack dots to check if percent cutoff and center method supplied
+  dots <- list(...)
+  args <- match(names(formals(individual_mcp)), names(dots))
+  mcp_dots <- dots[args[!is.na(args)]]
+  
+  # Ceate year column for SWP (since it crosses Dec 31-Jan 01)
+  # and subset to SWP-only days
+  swp_dat <- elk |>
+    dplyr::filter(!animal_id %in% non_swp_elk) |>
+    dplyr::mutate(doy = lubridate::yday(dttm)) |>
+    dplyr::filter(doy %in% swp_days) |>
+    dplyr::mutate(year = dplyr::if_else(doy < 15, year-1, year)) |>
+    dplyr::mutate(year = paste0(year, "-", year+1))
+  
+  # Create list for each year to make MCPs for
+  yrs <- unique(swp_dat$year)
+  elk_seasons <- lapply(yrs, function(x) swp_dat[which(swp_dat$year == x), ])
+  names(elk_seasons) <- paste0("x", yrs) # R doesn't play nice with names that start w a number
+  
+  # Drop any empty seasons
+  elk_seasons <- Filter(function(x) dim(x) [1] > 0, elk_seasons)
+  
+  # Subset to only include MCPs with fixes on at least X% of days
+  if (!missing(min_days)) {
+    if (min_days > 1) min_days <- min_days / 100 # ensure it's a percentage
+    n_days_min <- as.numeric(max(swp_dates) - min(swp_dates))
+    n_days_min <- n_days_min * min_days # if we want to ensure one point per day SS, fix_days should == 1. Otherwise, if we want, e.g., 90% days covered, fix_days = 0.9
+    elk_seasons <- lapply(elk_seasons, function(x) {
+      tmp <- x |> 
+        dplyr::mutate(date = lubridate::date(dttm)) |>
+        dplyr::select(animal_id, date) |>
+        dplyr::distinct() |>
+        dplyr::group_by(animal_id) |>
+        dplyr::summarise(n_days = dplyr::n()) |>
+        dplyr::mutate(enough_days = n_days >= n_days_min)
+      animals_to_keep <- tmp[["animal_id"]][tmp$enough_days == TRUE]
+      # Now subset to only animals_to_keep
+      x <- x[which(x$animal_id %in% animals_to_keep), ]
+      return(x)
+    })
+  }
+  
+  # Once again drop any empty seasons (can happen if you're running
+  # this function on a single individual)
+  elk_seasons <- Filter(function(x) dim(x) [1] > 0, elk_seasons)
+  
+  # Loop through each season, then create MCP for each 
+  # individual within that season
+  tmp <- lapply(elk_seasons, function(x) {
+    elk_dat <- x
+    individuals <- unique(elk_dat[["animal_id"]])
+    hulls <- lapply(individuals, function(i) { tryCatch({
+      message("Calculating MCP for ", i, "...")
+      # Subset to individual
+      e <- elk_dat[which(elk_dat$animal_id == i), ]
+      # Calculate MCP
+      if (length(mcp_dots) == 0) {
+        out <- individual_mcp(elk_dat = e)
+      } else {
+        out <- do.call("individual_mcp", args = c(list(e), mcp_dots))
+      }
+      return(out)
+    }, # end first tryCatch {}
+    error = function(i) {
+      message("Error with ", i)
+    }) # end tryCatch
+    }) # end hulls lapply
+    
+    names(hulls) <- individuals
+    return(hulls)
+    
+  }) # end tmp lapply
+  
+  # Bind into one df
+  out <- lapply(tmp, dplyr::bind_rows)
+  out <- out[!is.na(out)]
+  filter <- lapply(out, nrow) |> unlist(use.names = FALSE) # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  filter <- filter > 0 # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  out <- out[filter] # Filter out dfs in the list with zero rows, otherwise dplyr::bind_rows fails
+  # Assign year to the polygons
+  invisible(lapply(names(out), function(x) {
+    year <- gsub("x", "", x)
+    out[[x]]$year <<- year
+  }))
+  out <- dplyr::bind_rows(out)
+  out$season <- "SWP"
+  out$elk_season <- paste0(out$animal_id, "_", out$season, "_", out$year)
+  sf::st_geometry(out) <- "geometry"
+  out <- out[,c("elk_season", "animal_id", "season", "year", "area", "geometry")] # Reorder cols
+  
+  return(out)
+  
+}
+
+# min_days is expressed as a percentage. What percentage of days must have a detection
+# in order to accept that subset of data for the MCP?
+# dots = params for find_center
 seasonal_mcp <- function(elk, season, min_days, ...) {
   # Dots = args to pass on to `individual_mcp` (percent, area_unit) and `find_center` (method)
   # Parse seasons into POSIX dates
