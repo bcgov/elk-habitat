@@ -1105,7 +1105,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1126,7 +1127,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1149,7 +1151,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1168,18 +1171,20 @@ list(
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
-  # All DEM vars, + height + edge_dist
+  # All DEM vars, + height + edge_dist + wetland component
   tar_target(rsfD_swp, swp_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                     + sin(slope_aspect) + cos(slope_aspect)
                                     + proj_height_1 + edge_dist_m
+                                    + wetland_component
                                     + (1|animal_id) # random intercept
                                     # followed by random slopes of all predictor vars
                                     + (0+elevation_m|animal_id)
@@ -1187,23 +1192,26 @@ list(
                                     + (0+sin(slope_aspect)|animal_id)
                                     + (0+cos(slope_aspect)|animal_id)
                                     + (0+proj_height_1|animal_id)
-                                    + (0+edge_dist_m|animal_id),
+                                    + (0+edge_dist_m|animal_id)
+                                    + (0+wetland_component|animal_id),
                                     data = _,
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
-  # All DEM vars, + crown closure + edge_dist
+  # All DEM vars, + crown closure + edge_dist + wetland_component
   tar_target(rsfE_swp, swp_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                     + sin(slope_aspect) + cos(slope_aspect)
                                     + crown_closure + edge_dist_m
+                                    + wetland_component
                                     + (1|animal_id) # random intercept
                                     # followed by random slopes of all predictor vars
                                     + (0+elevation_m|animal_id)
@@ -1211,23 +1219,26 @@ list(
                                     + (0+sin(slope_aspect)|animal_id)
                                     + (0+cos(slope_aspect)|animal_id)
                                     + (0+crown_closure|animal_id)
-                                    + (0+edge_dist_m|animal_id),
+                                    + (0+edge_dist_m|animal_id)
+                                    + (0+wetland_component|animal_id),
                                     data = _,
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
-  # All DEM vars, + disturbance year + edge_dist
+  # All DEM vars, + disturbance year + edge_dist + wetland_component
   tar_target(rsfF_swp, swp_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                     + sin(slope_aspect) + cos(slope_aspect)
                                     + disturbance_year + edge_dist_m
+                                    + wetland_component
                                     + (1|animal_id) # random intercept
                                     # followed by random slopes of all predictor vars
                                     + (0+elevation_m|animal_id)
@@ -1235,41 +1246,48 @@ list(
                                     + (0+sin(slope_aspect)|animal_id)
                                     + (0+cos(slope_aspect)|animal_id)
                                     + (0+disturbance_year|animal_id)
-                                    + (0+edge_dist_m|animal_id),
+                                    + (0+edge_dist_m|animal_id)
+                                    + (0+wetland_component|animal_id),
                                     data = _,
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
-  # Tree species 1 + VRI age
+  # Tree species 1 + VRI age + wetland_component
   tar_target(rsfG_swp, swp_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
-               glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1
+               glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1 
+                                    + wetland_component
                                     + (1|animal_id) # random intercept
                                     # followed by random slopes of all predictor vars
-                                    + (0+proj_age_1|animal_id),
+                                    + (0+proj_age_1|animal_id)
+                                    + (0+wetland_component|animal_id),
                                     data = _,
                                     weights = w,
                                     family = "binomial",
                                     control = glmmTMB::glmmTMBControl(parallel = nt))),
-  # Tree species 1 + height
+  # Tree species 1 + height + wetland_component
   tar_target(rsfH_swp, swp_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1, 
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_height_1
+                                    + wetland_component
                                     + (1|animal_id) # random intercept
                                     # followed by random slopes of all predictor vars
-                                    + (0+proj_height_1|animal_id),
+                                    + (0+proj_height_1|animal_id)
+                                    + (0+wetland_component|animal_id),
                                     data = _,
                                     weights = w,
                                     family = "binomial",
@@ -1281,7 +1299,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1301,7 +1320,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1323,7 +1343,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1341,18 +1362,20 @@ list(
                                         data = _,
                                         weights = w,
                                         family = "binomial")),
-  # All DEM vars, + height + edge_dist
+  # All DEM vars, + height + edge_dist + wetland_component
   tar_target(rsfD_winter, winter_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                         + sin(slope_aspect) + cos(slope_aspect)
                                         + proj_height_1 + edge_dist_m
+                                        + wetland_component
                                         + (1|animal_id) # random intercept
                                         # followed by random slopes of all predictor vars
                                         + (0+elevation_m|animal_id)
@@ -1360,22 +1383,25 @@ list(
                                         + (0+sin(slope_aspect)|animal_id)
                                         + (0+cos(slope_aspect)|animal_id)
                                         + (0+proj_height_1|animal_id)
-                                        + (0+edge_dist_m|animal_id),
+                                        + (0+edge_dist_m|animal_id)
+                                        + (0+wetland_component|animal_id),
                                         data = _,
                                         weights = w,
                                         family = "binomial")),
-  # All DEM vars, + crown closure + edge_dist
+  # All DEM vars, + crown closure + edge_dist + wetland_component
   tar_target(rsfE_winter, winter_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                         + sin(slope_aspect) + cos(slope_aspect)
                                         + crown_closure + edge_dist_m
+                                        + wetland_component
                                         + (1|animal_id) # random intercept
                                         # followed by random slopes of all predictor vars
                                         + (0+elevation_m|animal_id)
@@ -1383,22 +1409,25 @@ list(
                                         + (0+sin(slope_aspect)|animal_id)
                                         + (0+cos(slope_aspect)|animal_id)
                                         + (0+crown_closure|animal_id)
-                                        + (0+edge_dist_m|animal_id),
+                                        + (0+edge_dist_m|animal_id)
+                                        + (0+wetland_component|animal_id),
                                         data = _,
                                         weights = w,
                                         family = "binomial")),
-  # All DEM vars, + disturbance year + edge_dist
+  # All DEM vars, + disturbance year + edge_dist + wetland_component
   tar_target(rsfF_winter, winter_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                         + sin(slope_aspect) + cos(slope_aspect)
                                         + disturbance_year + edge_dist_m
+                                        + wetland_component
                                         + (1|animal_id) # random intercept
                                         # followed by random slopes of all predictor vars
                                         + (0+elevation_m|animal_id)
@@ -1406,39 +1435,46 @@ list(
                                         + (0+sin(slope_aspect)|animal_id)
                                         + (0+cos(slope_aspect)|animal_id)
                                         + (0+disturbance_year|animal_id)
-                                        + (0+edge_dist_m|animal_id),
+                                        + (0+edge_dist_m|animal_id)
+                                        + (0+wetland_component|animal_id),
                                         data = _,
                                         weights = w,
                                         family = "binomial")),
-  # Tree species 1 + VRI age
+  # Tree species 1 + VRI age + wetland_component
   tar_target(rsfG_winter, winter_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1
+                                        + wetland_component
                                         + (1|animal_id) # random intercept
                                         # followed by random slopes of all predictor vars
-                                        + (0+proj_age_1|animal_id),
+                                        + (0+proj_age_1|animal_id)
+                                        + (0+wetland_component|animal_id),
                                         data = _,
                                         weights = w,
                                         family = "binomial")),
-  # Tree species 1 + height
+  # Tree species 1 + height + wetland_component
   tar_target(rsfH_winter, winter_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_height_1
+                                        + wetland_component
                                         + (1|animal_id) # random intercept
                                         # followed by random slopes of all predictor vars
-                                        + (0+proj_height_1|animal_id),
+                                        + (0+proj_height_1|animal_id)
+                                        + (0+wetland_component|animal_id),
                                         data = _,
                                         weights = w,
                                         family = "binomial")),
@@ -1449,7 +1485,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1469,7 +1506,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1491,7 +1529,8 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
@@ -1509,18 +1548,20 @@ list(
                                 data = _,
                                 weights = w,
                                 family = "binomial")),
-  # All DEM vars, + height + edge_dist
+  # All DEM vars, + height + edge_dist + wetland_component
   tar_target(rsfD_spring, spring_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                 + sin(slope_aspect) + cos(slope_aspect)
                                 + proj_height_1 + edge_dist_m
+                                + wetland_component
                                 + (1|animal_id) # random intercept
                                 # followed by random slopes of all predictor vars
                                 + (0+elevation_m|animal_id)
@@ -1528,22 +1569,25 @@ list(
                                 + (0+sin(slope_aspect)|animal_id)
                                 + (0+cos(slope_aspect)|animal_id)
                                 + (0+proj_height_1|animal_id)
-                                + (0+edge_dist_m|animal_id),
+                                + (0+edge_dist_m|animal_id)
+                                + (0+wetland_component|animal_id),
                                 data = _,
                                 weights = w,
                                 family = "binomial")),
-  # All DEM vars, + crown closure + edge_dist
+  # All DEM vars, + crown closure + edge_dist + wetland_component
   tar_target(rsfE_spring, spring_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                 + sin(slope_aspect) + cos(slope_aspect)
                                 + crown_closure + edge_dist_m
+                                + wetland_component
                                 + (1|animal_id) # random intercept
                                 # followed by random slopes of all predictor vars
                                 + (0+elevation_m|animal_id)
@@ -1551,22 +1595,25 @@ list(
                                 + (0+sin(slope_aspect)|animal_id)
                                 + (0+cos(slope_aspect)|animal_id)
                                 + (0+crown_closure|animal_id)
-                                + (0+edge_dist_m|animal_id),
+                                + (0+edge_dist_m|animal_id)
+                                + (0+wetland_component|animal_id),
                                 data = _,
                                 weights = w,
                                 family = "binomial")),
-  # All DEM vars, + disturbance year + edge_dist
+  # All DEM vars, + disturbance year + edge_dist + wetland_component
   tar_target(rsfF_spring, spring_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
                                 + sin(slope_aspect) + cos(slope_aspect)
                                 + disturbance_year + edge_dist_m
+                                + wetland_component
                                 + (1|animal_id) # random intercept
                                 # followed by random slopes of all predictor vars
                                 + (0+elevation_m|animal_id)
@@ -1574,234 +1621,249 @@ list(
                                 + (0+sin(slope_aspect)|animal_id)
                                 + (0+cos(slope_aspect)|animal_id)
                                 + (0+disturbance_year|animal_id)
-                                + (0+edge_dist_m|animal_id),
+                                + (0+edge_dist_m|animal_id)
+                                + (0+wetland_component|animal_id),
                                 data = _,
                                 weights = w,
                                 family = "binomial")),
-  # Tree species 1 + VRI age
+  # Tree species 1 + VRI age + wetland_component
   tar_target(rsfG_spring, spring_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1
+                                + wetland_component
                                 + (1|animal_id) # random intercept
                                 # followed by random slopes of all predictor vars
-                                + (0+proj_age_1|animal_id),
+                                + (0+proj_age_1|animal_id)
+                                + (0+wetland_component|animal_id),
                                 data = _,
                                 weights = w,
                                 family = "binomial")),
-  # Tree species 1 + height
+  # Tree species 1 + height + wetland_component
   tar_target(rsfH_spring, spring_mod_dat |>
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, w) |>
+                             disturbance_year, species_cd_1,
+                             wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
                glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_height_1
+                                + wetland_component
                                 + (1|animal_id) # random intercept
                                 # followed by random slopes of all predictor vars
-                                + (0+proj_height_1|animal_id),
+                                + (0+proj_height_1|animal_id)
+                                + (0+wetland_component|animal_id),
                                 data = _,
                                 weights = w,
-                                family = "binomial"))
-  # 
-  # ###### Summer ######
-  # # DEM only
-  # tar_target(rsfA_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1, 
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
-  #                               + sin(slope_aspect) + cos(slope_aspect)
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+elevation_m|animal_id)
-  #                               + (0+slope_prct|animal_id)
-  #                               + (0+sin(slope_aspect)|animal_id)
-  #                               + (0+cos(slope_aspect)|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial")),
-  # # DEM + edge distance
-  # tar_target(rsfB_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1,
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
-  #                               + sin(slope_aspect) + cos(slope_aspect)
-  #                               + edge_dist_m
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+elevation_m|animal_id)
-  #                               + (0+slope_prct|animal_id)
-  #                               + (0+sin(slope_aspect)|animal_id)
-  #                               + (0+cos(slope_aspect)|animal_id)
-  #                               + (0+edge_dist_m|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial")),
-  # # All DEM vars, + age + edge_dist
-  # tar_target(rsfC_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1,
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
-  #                               + sin(slope_aspect) + cos(slope_aspect)
-  #                               + proj_age_1 + edge_dist_m
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+elevation_m|animal_id)
-  #                               + (0+slope_prct|animal_id)
-  #                               + (0+sin(slope_aspect)|animal_id)
-  #                               + (0+cos(slope_aspect)|animal_id)
-  #                               + (0+proj_age_1|animal_id)
-  #                               + (0+edge_dist_m|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial")),
-  # # All DEM vars, + height + edge_dist
-  # tar_target(rsfD_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1, 
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
-  #                               + sin(slope_aspect) + cos(slope_aspect)
-  #                               + proj_height_1 + edge_dist_m
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+elevation_m|animal_id)
-  #                               + (0+slope_prct|animal_id)
-  #                               + (0+sin(slope_aspect)|animal_id)
-  #                               + (0+cos(slope_aspect)|animal_id)
-  #                               + (0+proj_height_1|animal_id)
-  #                               + (0+edge_dist_m|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial")),
-  # # All DEM vars, + crown closure + edge_dist
-  # tar_target(rsfE_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1,
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
-  #                               + sin(slope_aspect) + cos(slope_aspect)
-  #                               + crown_closure + edge_dist_m
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+elevation_m|animal_id)
-  #                               + (0+slope_prct|animal_id)
-  #                               + (0+sin(slope_aspect)|animal_id)
-  #                               + (0+cos(slope_aspect)|animal_id)
-  #                               + (0+crown_closure|animal_id)
-  #                               + (0+edge_dist_m|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial")),
-  # # All DEM vars, + disturbance year + edge_dist
-  # tar_target(rsfF_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1,
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ elevation_m + slope_prct
-  #                               + sin(slope_aspect) + cos(slope_aspect)
-  #                               + disturbance_year + edge_dist_m
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+elevation_m|animal_id)
-  #                               + (0+slope_prct|animal_id)
-  #                               + (0+sin(slope_aspect)|animal_id)
-  #                               + (0+cos(slope_aspect)|animal_id)
-  #                               + (0+disturbance_year|animal_id)
-  #                               + (0+edge_dist_m|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial")),
-  # # Tree species 1 + VRI age
-  # tar_target(rsfG_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1,
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+proj_age_1|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial")),
-  # # Tree species 1 + height
-  # tar_target(rsfH_summer, summer_mod_dat |>
-  #              dplyr::select(presence, animal_id, elevation_m, slope_prct,
-  #                            slope_aspect, edge_dist_m, proj_age_1,
-  #                            proj_height_1, crown_closure,
-  #                            disturbance_year, species_cd_1,
-  #                            elev_index, w) |>
-  #              dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
-  #                                          scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
-  #              na.omit() |>
-  #              glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_height_1
-  #                               + elev_index
-  #                               + (1|animal_id) # random intercept
-  #                               # followed by random slopes of all predictor vars
-  #                               + (0+proj_height_1|animal_id)
-  #                               + (0+elev_index|animal_id),
-  #                               data = _,
-  #                               weights = w,
-  #                               family = "binomial"))#,
+                                family = "binomial")),
+
+  ###### Summer ######
+  # DEM only
+  tar_target(rsfA_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ slope_prct
+                                + sin(slope_aspect) + cos(slope_aspect)
+                                + elevation_m * elev_index
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+elevation_m|animal_id)
+                                + (0+slope_prct|animal_id)
+                                + (0+sin(slope_aspect)|animal_id)
+                                + (0+cos(slope_aspect)|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial")),
+  # DEM + edge distance
+  tar_target(rsfB_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ slope_prct
+                                + sin(slope_aspect) + cos(slope_aspect)
+                                + edge_dist_m
+                                + elevation_m * elev_index
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+elevation_m|animal_id)
+                                + (0+slope_prct|animal_id)
+                                + (0+sin(slope_aspect)|animal_id)
+                                + (0+cos(slope_aspect)|animal_id)
+                                + (0+edge_dist_m|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial")),
+  # All DEM vars, + age + edge_dist
+  tar_target(rsfC_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ slope_prct
+                                + sin(slope_aspect) + cos(slope_aspect)
+                                + proj_age_1 + edge_dist_m
+                                + elevation_m * elev_index
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+elevation_m|animal_id)
+                                + (0+slope_prct|animal_id)
+                                + (0+sin(slope_aspect)|animal_id)
+                                + (0+cos(slope_aspect)|animal_id)
+                                + (0+proj_age_1|animal_id)
+                                + (0+edge_dist_m|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial")),
+  # All DEM vars, + height + edge_dist + wetland_component
+  tar_target(rsfD_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ slope_prct
+                                + sin(slope_aspect) + cos(slope_aspect)
+                                + proj_height_1 + edge_dist_m
+                                + elevation_m * elev_index + wetland_component
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+elevation_m|animal_id)
+                                + (0+slope_prct|animal_id)
+                                + (0+sin(slope_aspect)|animal_id)
+                                + (0+cos(slope_aspect)|animal_id)
+                                + (0+proj_height_1|animal_id)
+                                + (0+edge_dist_m|animal_id)
+                                + (0+wetland_component|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial")),
+  # All DEM vars, + crown closure + edge_dist + wetland_component
+  tar_target(rsfE_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ slope_prct
+                                + sin(slope_aspect) + cos(slope_aspect)
+                                + crown_closure + edge_dist_m
+                                + elevation_m * elev_index + wetland_component
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+elevation_m|animal_id)
+                                + (0+slope_prct|animal_id)
+                                + (0+sin(slope_aspect)|animal_id)
+                                + (0+cos(slope_aspect)|animal_id)
+                                + (0+crown_closure|animal_id)
+                                + (0+edge_dist_m|animal_id)
+                                + (0+wetland_component|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial")),
+  # All DEM vars, + disturbance year + edge_dist + wetland_component
+  tar_target(rsfF_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ slope_prct
+                                + sin(slope_aspect) + cos(slope_aspect)
+                                + disturbance_year + edge_dist_m
+                                + elevation_m * elev_index + wetland_component
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+elevation_m|animal_id)
+                                + (0+slope_prct|animal_id)
+                                + (0+sin(slope_aspect)|animal_id)
+                                + (0+cos(slope_aspect)|animal_id)
+                                + (0+disturbance_year|animal_id)
+                                + (0+edge_dist_m|animal_id)
+                                + (0+wetland_component|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial")),
+  # Tree species 1 + VRI age + wetland_component
+  tar_target(rsfG_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ species_cd_1 * elev_index 
+                                + proj_age_1
+                                + wetland_component
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+proj_age_1|animal_id)
+                                + (0+wetland_component|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial")),
+  # Tree species 1 + height + wetland_component
+  tar_target(rsfH_summer, summer_mod_dat |>
+               dplyr::select(presence, animal_id, elevation_m, slope_prct,
+                             slope_aspect, edge_dist_m, proj_age_1,
+                             proj_height_1, crown_closure,
+                             disturbance_year, species_cd_1,
+                             wetland_component,
+                             elev_index, w) |>
+               dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
+                                           scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
+               na.omit() |>
+               glmmTMB::glmmTMB(presence ~ species_cd_1 * elev_index 
+                                + proj_height_1
+                                + wetland_component
+                                + (1|animal_id) # random intercept
+                                # followed by random slopes of all predictor vars
+                                + (0+proj_height_1|animal_id)
+                                + (0+elev_index|animal_id)
+                                + (0+wetland_component|animal_id),
+                                data = _,
+                                weights = w,
+                                family = "binomial"))#,
 
   # ##### Predictive modelling #####
   # # TODO: For models w/o VRI age - in cases where disturbance is NA, set height & crown_closure == 0
