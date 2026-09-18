@@ -729,6 +729,8 @@ list(
   # We can take advantage of slope algorithms to extract stand edges from
   # the disturbance layer.
   tar_terra_rast(edginess, terra::terrain(disturbance, "slope")), # continuous variable from 0-90, w higher number = harder edge
+  # Attempt #2 - only hard edges only at cutblocks
+  tar_terra_rast(edginess2, calc_stand_edge(disturbance)),
   # Categorize anything with an edge hardness value >= 60 as a 'hard edge'
   tar_terra_rast(stand_edge, terra::ifel(edginess >= 60, 1, 0)),
   ##### Distance to Edge #####
