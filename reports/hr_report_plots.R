@@ -35,23 +35,44 @@ weekly_mcps |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   dplyr::mutate(swp = (year == "2021-2022"),
                 year = ifelse(swp,
-                              paste0(year, "\n(severe)"),
-                              paste0(year, "\n(mild)"))) |>
+                              paste0(year, "\n(deep)"),
+                              paste0(year, "\n(shallow)"))) |>
   sf::st_drop_geometry() |>
   ggplot(aes(x = as.factor(year), 
              y = area,
              color = as.factor(swp))) +
-  geom_jitter(alpha = 0.6, 
+  geom_jitter(alpha = 0.1, 
               pch = 16) +
   geom_boxplot(fill = NA, 
                outliers = FALSE,
                linewidth = 0.8) +
-  scale_color_manual(values = c("grey10", "grey40")) +
+  scale_color_manual(values = c("grey10", "grey70")) +
+  # Stacking red on top of white for better readability
+  stat_summary(
+    fun = quantile,
+    geom = "text",
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.3,
+    #position = position_nudge(x = -0.3),
+    color = "white",
+    fontface = "bold"
+  ) +
+  stat_summary(
+    fun = quantile, 
+    geom = "text", 
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.2,
+    #position = position_nudge(x = -0.3),
+    color = "darkred",
+    fontface = "bold"
+  ) +
   coord_transform(y = "log10") +
   labs(x = "",
        y = "Hectares") +
   theme_minimal() +
   theme(legend.position = "none")
+
+ggsave("reports/weekly_mcp_box.png")
 
 
 # Daily SWP MCP
@@ -67,23 +88,44 @@ daily_mcps |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   dplyr::mutate(swp = (year == "2021-2022"),
                 year = ifelse(swp,
-                              paste0(year, "\n(severe)"),
-                              paste0(year, "\n(mild)"))) |>
+                              paste0(year, "\n(deep)"),
+                              paste0(year, "\n(shallow)"))) |>
   sf::st_drop_geometry() |>
   ggplot(aes(x = as.factor(year), 
              y = area,
              color = as.factor(swp))) +
-  geom_jitter(alpha = 0.6, 
+  geom_jitter(alpha = 0.1, 
               pch = 16) +
   geom_boxplot(fill = NA, 
                outliers = FALSE,
                linewidth = 0.8) +
-  scale_color_manual(values = c("grey10", "grey40")) +
+  scale_color_manual(values = c("grey10", "grey70")) +
+  # Stacking red on top of white for better readability
+  stat_summary(
+    fun = quantile,
+    geom = "text",
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.3,
+    #position = position_nudge(x = -0.3),
+    color = "white",
+    fontface = "bold"
+  ) +
+  stat_summary(
+    fun = quantile, 
+    geom = "text", 
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.2,
+    #position = position_nudge(x = -0.3),
+    color = "darkred",
+    fontface = "bold"
+  ) +
   coord_transform(y = "log10") +
   labs(x = "",
        y = "Hectares") +
   theme_minimal() +
   theme(legend.position = "none")
+
+ggsave("reports/daily_mcp_box.png")
 
 
 # Step lengths SWP
@@ -101,23 +143,43 @@ step_lengths_3hr |>
   dplyr::mutate(season = paste0(year - 1, "-", year)) |>
   dplyr::mutate(swp = (season == "2021-2022"),
                 season = ifelse(swp,
-                                paste0(season, "\n(severe)"),
-                                paste0(season, "\n(mild)"))) |>
+                                paste0(season, "\n(deep)"),
+                                paste0(season, "\n(shallow)"))) |>
   ggplot(aes(x = as.factor(season), 
              y = step,
              color = as.factor(swp))) +
-  geom_jitter(alpha = 0.6, 
+  geom_jitter(alpha = 0.1, 
               pch = 20) +
   geom_boxplot(fill = NA, 
                outliers = FALSE,
-               linewidth = 0.8,
-               color = "orange2") +
-  scale_color_manual(values = c("grey10", "grey40")) +
+               linewidth = 0.8) +
+  scale_color_manual(values = c("grey10", "grey70")) +
+  # Stacking red on top of white for better readability
+  stat_summary(
+    fun = quantile,
+    geom = "text",
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.3,
+    #position = position_nudge(x = -0.3),
+    color = "white",
+    fontface = "bold"
+  ) +
+  stat_summary(
+    fun = quantile, 
+    geom = "text", 
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.2,
+    #position = position_nudge(x = -0.3),
+    color = "darkred",
+    fontface = "bold"
+  ) +
   coord_transform(y = "log10") +
   labs(x = "",
        y = "Step-length (m)") +
   theme_minimal() +
   theme(legend.position = "none")
+
+ggsave("reports/step_lengths_box.png")
 
 
 # Daily SWP centroid displacement
@@ -133,22 +195,43 @@ daily_step |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   dplyr::mutate(swp = (year == "2021-2022"),
                 year = ifelse(swp,
-                              paste0(year, "\n(severe)"),
-                              paste0(year, "\n(mild)"))) |>
+                              paste0(year, "\n(deep)"),
+                              paste0(year, "\n(shallow)"))) |>
   ggplot(aes(x = as.factor(year), 
              y = centroid_dist,
              color = as.factor(swp))) +
-  geom_jitter(alpha = 0.6, 
+  geom_jitter(alpha = 0.1, 
               pch = 16) +
   geom_boxplot(fill = NA, 
                outliers = FALSE,
                linewidth = 0.8) +
-  scale_color_manual(values = c("grey10", "grey40")) +
+  scale_color_manual(values = c("grey10", "grey70")) +
+  # Stacking red on top of white for better readability
+  stat_summary(
+    fun = quantile,
+    geom = "text",
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.3,
+    #position = position_nudge(x = -0.3),
+    color = "white",
+    fontface = "bold"
+  ) +
+  stat_summary(
+    fun = quantile, 
+    geom = "text", 
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.2,
+    #position = position_nudge(x = -0.3),
+    color = "darkred",
+    fontface = "bold"
+  ) +
   coord_transform(y = "log10") +
   labs(x = "",
        y = "Step-length (m)") +
   theme_minimal() +
   theme(legend.position = "none")
+
+ggsave("reports/daily_steps_box.png")
 
 
 # Weekly SWP centroid displacement
@@ -164,22 +247,43 @@ weekly_step |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   dplyr::mutate(swp = (year == "2021-2022"),
                 year = ifelse(swp,
-                              paste0(year, "\n(severe)"),
-                              paste0(year, "\n(mild)"))) |>
+                              paste0(year, "\n(deep)"),
+                              paste0(year, "\n(shallow)"))) |>
   ggplot(aes(x = as.factor(year), 
              y = centroid_dist,
              color = as.factor(swp))) +
-  geom_jitter(alpha = 0.6, 
+  geom_jitter(alpha = 0.1, 
               pch = 16) +
   geom_boxplot(fill = NA, 
                outliers = FALSE,
                linewidth = 0.8) +
-  scale_color_manual(values = c("grey10", "grey40")) +
+  scale_color_manual(values = c("grey10", "grey70")) +
+  # Stacking red on top of white for better readability
+  stat_summary(
+    fun = quantile,
+    geom = "text",
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.3,
+    #position = position_nudge(x = -0.3),
+    color = "white",
+    fontface = "bold"
+  ) +
+  stat_summary(
+    fun = quantile, 
+    geom = "text", 
+    aes(label = sprintf("%0.0f", after_stat(y))),
+    vjust = -0.2,
+    #position = position_nudge(x = -0.3),
+    color = "darkred",
+    fontface = "bold"
+  ) +
   coord_transform(y = "log10") +
   labs(x = "",
        y = "Step-length (m)") +
   theme_minimal() +
   theme(legend.position = "none")
+
+ggsave("reports/weekly_steps_box.png")
 
 
 # Buy why tho?
