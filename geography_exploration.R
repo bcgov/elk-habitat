@@ -28,7 +28,7 @@ library(targets)
 library(sf)
 library(ggplot2)
 library(ggsignif)
-library(ggmosaic)
+library(ggmosaic2)
 library(DataExplorer)
 library(units)
 
@@ -70,7 +70,7 @@ swp_elk <- unique(elk[["animal_id"]][lubridate::date(elk$dttm) %in% swp_dates])
 
 # Set up SWP flag
 elk$swp <- FALSE
-elk[["SWP"]][which(elk$animal_id %in% swp_elk & lubridate::yday(elk$dttm) %in% swp_days)] <- TRUE
+elk[["swp"]][which(elk$animal_id %in% swp_elk & lubridate::yday(elk$dttm) %in% swp_days)] <- TRUE
 
 # Set up other date cols
 elk$year <- lubridate::year(elk$dttm)
@@ -4199,11 +4199,12 @@ p <- p |> dplyr::mutate(val = dplyr::if_else(val %in% c("HE", "HG", "SL", "TB", 
 # SEASONAL MOSAIC
 p |> 
   dplyr::filter(pool == "real") |> 
-  dplyr::select(val, type) |>
+  dplyr::select(val, type, season) |>
   dplyr::filter(!is.na(type)) |>
   ggplot() +
   geom_mosaic(aes(x = product(val),
-                  fill = type)) +
+                  fill = type,
+                  color = season)) +
   scale_fill_manual("Season",
                     values = okabe[1:3]) +
   #scale_fill_manual(values = c("#E69F00", "#009E73", "#CC79A7")) +
