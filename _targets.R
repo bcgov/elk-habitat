@@ -730,7 +730,9 @@ list(
   # the disturbance layer.
   tar_terra_rast(edginess, terra::terrain(disturbance, "slope")), # continuous variable from 0-90, w higher number = harder edge
   # Categorize anything with an edge hardness value >= 60 as a 'hard edge'
-  tar_terra_rast(stand_edge, terra::ifel(edginess >= 60, 1, 0)),
+  #tar_terra_rast(stand_edge, terra::ifel(edginess >= 60, 1, 0)),
+  # Attempt #2 - only hard edges only at cutblocks
+  tar_terra_rast(stand_edge, calc_stand_edge(disturbance)),
   ##### Distance to Edge #####
   tar_terra_rast(edge_dist, terra::distance(stand_edge, target = 0, exclude = NA)),
   ##### Land Cover classification #####
@@ -1105,7 +1107,7 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
@@ -1127,7 +1129,7 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
@@ -1151,7 +1153,7 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
@@ -1176,7 +1178,7 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
@@ -1203,7 +1205,7 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
@@ -1230,7 +1232,7 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
@@ -1257,12 +1259,12 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
-               glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1 
+               glmmTMB::glmmTMB(presence ~ species_cd_1 + proj_age_1
                                     + wetland_component
                                     + (1|animal_id) # random intercept
                                     # followed by random slopes of all predictor vars
@@ -1277,7 +1279,7 @@ list(
                dplyr::select(presence, animal_id, elevation_m, slope_prct,
                              slope_aspect, edge_dist_m, proj_age_1,
                              proj_height_1, crown_closure,
-                             disturbance_year, species_cd_1, 
+                             disturbance_year, species_cd_1,
                              wetland_component, w) |>
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
@@ -1832,7 +1834,7 @@ list(
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
-               glmmTMB::glmmTMB(presence ~ species_cd_1 * elev_index 
+               glmmTMB::glmmTMB(presence ~ species_cd_1 * elev_index
                                 + proj_age_1
                                 + wetland_component
                                 + (1|animal_id) # random intercept
@@ -1853,7 +1855,7 @@ list(
                dplyr::mutate(dplyr::across(c(dplyr::where(is.numeric), -presence, -w),
                                            scale.simple)) |> # center & scale all numeric values (BEFORE na.omit)
                na.omit() |>
-               glmmTMB::glmmTMB(presence ~ species_cd_1 * elev_index 
+               glmmTMB::glmmTMB(presence ~ species_cd_1 * elev_index
                                 + proj_height_1
                                 + wetland_component
                                 + (1|animal_id) # random intercept

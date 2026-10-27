@@ -28,7 +28,7 @@ library(targets)
 library(sf)
 library(ggplot2)
 library(ggsignif)
-library(ggmosaic)
+library(ggmosaic2)
 library(DataExplorer)
 library(units)
 
@@ -69,8 +69,8 @@ non_swp_elk <- c("20-1001", "20-1002")
 swp_elk <- unique(elk[["animal_id"]][lubridate::date(elk$dttm) %in% swp_dates])
 
 # Set up SWP flag
-elk$SWP <- FALSE
-elk[["SWP"]][which(elk$animal_id %in% swp_elk & lubridate::yday(elk$dttm) %in% swp_days)] <- TRUE
+elk$swp <- FALSE
+elk[["swp"]][which(elk$animal_id %in% swp_elk & lubridate::yday(elk$dttm) %in% swp_days)] <- TRUE
 
 # Set up other date cols
 elk$year <- lubridate::year(elk$dttm)
@@ -400,7 +400,7 @@ p <- rbind(data.frame("val" = random_pts$elevation_m,
                           "dttm" = elk$dttm,
                           "year" = elk$year,
                           "yday" = elk$yday,
-                          "swp" = elk$SWP))
+                          "swp" = elk$swp))
 
 p |>
   ggplot(aes(x = val)) +
@@ -690,7 +690,7 @@ p <- rbind(data.frame("val" = random_pts$slope_prct,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 p <- p[p$val > 0, ] # cut out water (perfectly flat)
 
@@ -988,7 +988,7 @@ p <- rbind(data.frame("val" = random_pts$slope_aspect,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP,
+                      "swp" = elk$swp,
                       "slope" = elk$slope_prct))
 
 # Just like with slope %, cut out any points where slope == 0, i.e. flat areas.
@@ -1412,7 +1412,7 @@ p <- rbind(data.frame("val" = random_pts$roughness,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP,
+                      "swp" = elk$swp,
                       "slope" = elk$slope_prct))
 
 # Just like with slope %, cut out any points where slope == 0, i.e. flat areas.
@@ -2235,7 +2235,7 @@ p <- rbind(data.frame("val" = random_pts$PROJ_AGE_1,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -2551,7 +2551,7 @@ p <- rbind(data.frame("val" = random_pts$PROJ_HEIGHT_1,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -2867,7 +2867,7 @@ p <- rbind(data.frame("val" = random_pts$VRI_LIVE_STEMS_PER_HA,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -3202,7 +3202,7 @@ p <- rbind(data.frame("val" = random_pts$CROWN_CLOSURE,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -3515,7 +3515,7 @@ p <- rbind(data.frame("val" = random_pts$SHRUB_HEIGHT,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -3832,7 +3832,7 @@ p <- rbind(data.frame("val" = random_pts$SHRUB_CROWN_CLOSURE,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -4144,7 +4144,7 @@ p <- rbind(data.frame("val" = random_pts$BCLCS_LEVEL_4,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # Remove NA
 p <- p[!is.na(p$val), ]
@@ -4199,11 +4199,12 @@ p <- p |> dplyr::mutate(val = dplyr::if_else(val %in% c("HE", "HG", "SL", "TB", 
 # SEASONAL MOSAIC
 p |> 
   dplyr::filter(pool == "real") |> 
-  dplyr::select(val, type) |>
+  dplyr::select(val, type, season) |>
   dplyr::filter(!is.na(type)) |>
   ggplot() +
   geom_mosaic(aes(x = product(val),
-                  fill = type)) +
+                  fill = type,
+                  color = season)) +
   scale_fill_manual("Season",
                     values = okabe[1:3]) +
   #scale_fill_manual(values = c("#E69F00", "#009E73", "#CC79A7")) +
@@ -4349,7 +4350,7 @@ p <- rbind(data.frame("val" = random_pts$SPECIES_CD_1,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # Remove NA
 p <- p[!is.na(p$val), ]
@@ -4564,7 +4565,7 @@ p <- rbind(data.frame("val" = random_pts$SPECIES_CD_2,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # Remove NA
 p <- p[!is.na(p$val), ]
@@ -4788,7 +4789,7 @@ p <- rbind(data.frame("val" = random_pts$disturbance_year,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -5102,7 +5103,7 @@ p <- rbind(data.frame("val" = random_pts$edginess,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -5415,7 +5416,7 @@ p <- rbind(data.frame("val" = random_pts$edge_dist_m,
                       "dttm" = elk$dttm,
                       "year" = elk$year,
                       "yday" = elk$yday,
-                      "swp" = elk$SWP))
+                      "swp" = elk$swp))
 
 # DENSITY PLOT - Random vs Selected
 p |>
@@ -5546,9 +5547,11 @@ p |>
 ## BOXPLOT - Yearly variation WITHOUT random
 p |>
   dplyr::filter(pool == "real") |>
-  dplyr::filter(yday %in% swp_days) |>
+  dplyr::filter(swp == TRUE) |>
   dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021", "2021-2022",
+                            "2022-2023", "2023-2024")) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
              y = val)) +
@@ -5594,6 +5597,8 @@ p |>
   dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
   dplyr::mutate(year = dplyr::if_else(pool == "random", "Random", year)) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021", "2021-2022",
+                            "2022-2023", "2023-2024", "Random")) |>
   #units::drop_units() |>
   ggplot(aes(x = as.factor(year),
              y = val)) +
@@ -5642,6 +5647,8 @@ p |>
   dplyr::filter(yday %in% swp_days) |>
   dplyr::mutate(year = dplyr::if_else(yday < 15, year-1, year)) |>
   dplyr::mutate(year = paste0(year, "-", year+1)) |>
+  dplyr::filter(year %in% c("2019-2020", "2020-2021", "2021-2022",
+                            "2022-2023", "2023-2024")) |>
   #units::drop_units() |>
   ggplot(aes(x = val,
              color = as.factor(year))) +

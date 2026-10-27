@@ -314,6 +314,51 @@ calc_disturbance_lyr <- function(res, vri, depletions, retention, forest_age, ch
 }
 
 
+calc_stand_edge <- function(disturbance) {
+  d <- disturbance
+  
+  # First, convert d from disturbance year -> age
+  d <- 2024 - d
+  
+  # Anything older than 100 years -> flatline it
+  d <- terra::ifel(d > 100, 100, d) # optional but easier for visualization/debugging
+  
+  # Now calculate edges
+  # Define the Sobel filter kernels (matrices)
+  # fx detects changes in the X direction (vertical edges)
+  fx <- matrix(c(-1, -2, -1, 
+                  0,  0,  0, 
+                  1,  2,  1), nrow = 3, byrow = TRUE)
+  
+  # fy detects changes in the Y direction (horizontal edges)
+  fy <- matrix(c(-1,  0,  1, 
+                 -2,  0,  2, 
+                 -1,  0,  1), nrow = 3, byrow = TRUE)
+  
+  # Apply the focal filters to compute directional gradients
+  gx <- terra::focal(d, w = fx, fun = sum, na.rm = TRUE) / 8
+  gy <- terra::focal(d, w = fy, fun = sum, na.rm = TRUE) / 8
+  
+  # Calculate Gradient Magnitude (intensity) using Pythagoras
+  sobel_magnitude <- sqrt(gx^2 + gy^2)
+  
+  # A Sobel magnitude of 10 is equivalent to a 20 year age gap. 
+  # So, extract edges only for cases where there is at least a 
+  # 20 year gap (s.m. of 10) between them.
+  edge <- sobel_magnitude >= 10
+  
+  # Also, we only care about edges between open (recently clear cut)
+  # and grown stands - we don't really care about edges btwn, say, 
+  # an 80 yo stand to 100 yo.
+  open <- d <= 20
+  
+  # So the intersection of hard edges at cutblocks is ultimately 
+  # the edge we care about.
+  out <- edge * open
+  return(out)
+}
+
+
 calc_wetlands_lyr <- function(TEM, wetland_codes, land_class, study_area, res) {
   # Make study_area a solid block - don't cut out estuary areas
   study_area <- sf::st_concave_hull(study_area, 1)
